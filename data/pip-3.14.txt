@@ -1,0 +1,90 @@
+pip - package manager for Python packages
+
+pip <command> [options]
+
+pip is the PyPA recommended package manager for Python packages
+
+Show help.
+
+(environment variable: PIP_HELP) Let unhandled exceptions propagate outside
+the main subroutine, instead of logging them to stderr.
+
+(environment variable: PIP_DEBUG) Run pip in an isolated mode, ignoring
+environment variables and user configuration.
+
+(environment variable: PIP_ISOLATED) Allow pip to only run in a virtual
+environment; exit with an error otherwise.
+
+(environment variable: PIP_REQUIRE_VIRTUALENV, PIP_REQUIRE_VENV) Run pip with
+the specified Python interpreter.
+
+(environment variable: PIP_PYTHON) Give more output. Option is additive, and
+can be used up to 3 times.
+
+(environment variable: PIP_VERBOSE) Show version and exit.
+
+(environment variable: PIP_VERSION) Give less output. Option is additive, and
+can be used up to 3 times (corresponding to WARNING, ERROR, and CRITICAL
+logging levels).
+
+(environment variable: PIP_QUIET) Path to a verbose appending log.
+
+(environment variable: PIP_LOG, PIP_LOG_FILE, PIP_LOCAL_LOG) Disable prompting
+for input.
+
+(environment variable: PIP_NO_INPUT) Enable the credential lookup via the
+keyring library if user input is allowed. Specify which mechanism to use
+[auto, disabled, import, subprocess]. (default: auto)
+
+(environment variable: PIP_KEYRING_PROVIDER) Specify a proxy in the form
+scheme://[user:passwd@]proxy.server:port.
+
+(environment variable: PIP_PROXY) Maximum attempts to establish a new HTTP
+connection. (default: 5)
+
+(environment variable: PIP_RETRIES) Set the socket timeout (default 15
+seconds).
+
+(environment variable: PIP_TIMEOUT, PIP_DEFAULT_TIMEOUT) Default action when a
+path already exists: (s)witch, (i)gnore, (w)ipe, (b)ackup, (a)bort.
+
+(environment variable: PIP_EXISTS_ACTION) Mark this host or host:port pair as
+trusted, even though it does not have valid or any HTTPS.
+
+(environment variable: PIP_TRUSTED_HOST) Path to PEM-encoded CA certificate
+bundle. If provided, overrides the default. See 'SSL Certificate Verification'
+in pip documentation for more information.
+
+(environment variable: PIP_CERT) Path to SSL client certificate, a single file
+containing the private key and the certificate in PEM format.
+
+(environment variable: PIP_CLIENT_CERT) Store the cache data in <dir>.
+
+(environment variable: PIP_CACHE_DIR) Disable the cache.
+
+(environment variable: PIP_NO_CACHE_DIR) Don't periodically check PyPI to
+determine whether a new version of pip is available for download. Implied with
+--no-index.
+
+(environment variable: PIP_DISABLE_PIP_VERSION_CHECK) Suppress colored output.
+
+(environment variable: PIP_NO_COLOR) Enable new functionality, that may be
+backward incompatible.
+
+(environment variable: PIP_USE_FEATURE) Enable deprecated functionality, that
+will be removed in the future.
+
+(environment variable: PIP_USE_DEPRECATED) Maximum attempts to resume or
+restart an incomplete download. (default: 0)
+
+(environment variable: PIP_RESUME_RETRIES)
+
+Install packages.  Download packages.  Uninstall packages.  Output installed
+packages in requirements format.  Generate a lock file for requirements and
+their dependencies.  List installed packages.  Show information about
+installed packages.  Verify installed packages have compatible dependencies.
+Search PyPI for packages.  Build wheels from your requirements.	 Compute
+hashes of package archives.  Show help for pip commands.  pip developers The
+pip developers
+
+

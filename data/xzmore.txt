@@ -1,0 +1,12 @@
+xzmore, lzmore - view xz or lzma compressed (text) files
+(DEPRECATED) displays text from compressed files to a terminal using Files
+supported by are decompressed; other files are assumed to be in uncompressed
+form already.  If no are given, reads from standard input.  See the manual for
+the keyboard commands.	Note that scrolling backwards might not be possible
+depending on the implementation of This is because uses a pipe to pass the
+decompressed data to uses which provides more advanced features.  The command
+is provided for backward compatibility with LZMA Utils.	 It is deprecated and
+will be removed in a future version.  If is set, its value is used as the
+pager instead of
+
+

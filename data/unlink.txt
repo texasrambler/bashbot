@@ -1,0 +1,14 @@
+unlink - call the unlink function to remove the specified file FILE
+OPTION Call the unlink function to remove the specified FILE.  --help display
+this help and exit --version output version information and exit Written by
+Michael Stone.	GNU coreutils online help:
+<https://www.gnu.org/software/coreutils/>
+Report any translation bugs to <https://translationproject.org/team/>
+Copyright © 2025 Free Software Foundation, Inc.	 License GPLv3+: GNU GPL
+version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.  There is
+NO WARRANTY, to the extent permitted by law.  unlink(2)
+Full documentation <https://www.gnu.org/software/coreutils/unlink>
+or available locally via: info '(coreutils) unlink invocation'
+
+

@@ -1,0 +1,66 @@
+dumpkeys - dump keyboard translation tables [OPTIONS] writes, to the standard
+output, the current contents of the keyboard driver's translation tables, in
+the format specified by Using the various options, the format of the output
+can be controlled and also other information from the kernel and the programs
+and can be obtained.  Prints the program's version number and a short usage
+message to the program's standard error output and exits.  Prints some
+characteristics of the kernel's keyboard driver. The items shown are: Keycode
+range supported by the kernel This tells what values can be used after the
+keyword in keytable files. See for more information and the syntax of these
+files.	Number of actions bindable to a key This tells how many different
+actions a single key can output using various modifier keys. If the value is
+16 for example, you can define up to 16 different actions to a key combined
+with modifiers. When the value is 16, the kernel probably knows about four
+modifier keys, which you can press in different combinations with the key to
+access all the bound actions.  Ranges of action codes supported by the kernel
+This item contains a list of action code ranges in hexadecimal notation.
+These are the values that can be used in the right hand side of a key
+definition, ie. the in a line = (see for more information about the format of
+key definition lines).	and support a symbolic notation, which is preferable
+to the numeric one, as the action codes may vary from kernel to kernel while
+the symbolic names usually remain the same. However, the list of action code
+ranges can be used to determine, if the kernel actually supports all the
+symbols knows, or are there maybe some actions supported by the kernel that
+have no symbolic name in your program. To see this, you compare the range list
+with the action symbol list, see option below.	Number of function keys
+supported by kernel This tells the number of action codes that can be used to
+output strings of characters. These action codes are traditionally bound to
+the various function and editing keys of the keyboard and are defined to send
+standard escape sequences. However, you can redefine these to send common
+command lines, email addresses or whatever you like.  Especially if the number
+of this item is greater than the number of function and editing keys in your
+keyboard, you may have some "spare" action codes that you can bind to AltGr-
+letter combinations, for example, to send some useful strings. See for more
+details.  Function strings You can see you current function key definitions
+with the command This option instructs to print a long information listing.
+The output is the same as with the appended with the list of action symbols
+supported by and along with the symbols' numeric values.  This option causes
+to by-pass the conversion of action code values to symbolic notation and to
+print the in hexadecimal format instead.  This makes skip all the short-hand
+heuristics (see and output the key bindings in the canonical form. First a
+keymaps line describing the currently defined modifier combinations is
+printed. Then for each key a row with a column for each modifier combination
+is printed. For example, if the current keymap in use uses seven modifiers,
+every row will have seven action code columns. This format can be useful for
+example to programs that post-process the output of Available shapes: default
+output.	 one line for each keycode.  one line for each (modifier,keycode)
+pair.  one line for each keycode until 1st hole.  This forces to write one
+line per (modifier,keycode) pair. It prefixes the word for plain keycodes.
+When this option is given, prints only the function key string definitions.
+Normally prints both the key bindings and the string definitions.  When this
+option is given, prints only the key bindings. Normally prints both the key
+bindings and the string definitions.  When this option is given, prints only
+the compose key combinations.  This option is available only if your kernel
+has compose key support.  This instructs to interpret character code values
+according to the specified character set. This affects only the translation of
+character code values to symbolic names. Valid values for currently are Where
+X is a digit in 1-9.  If no is specified, is used as a default.	 This option
+produces an output line `charset "iso-8859-X"', telling loadkeys how to
+interpret the keymap. (For example, "division" is 0xf7 in iso-8859-1 but 0xba
+in iso-8859-8.)	 The affected console device can be specified using the (or )
+option. This option supports exactly one device name.  Turn on verbose output.
+Prints version number and exits.  The recommended directory for keytable
+files.
+
+
+

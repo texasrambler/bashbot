@@ -1,0 +1,13 @@
+semodule_unpackage - Extract policy module and file context file from an
+SELinux policy module package.
+
+semodule_unpackage is a tool used to extract SELinux policy module file and
+file context file from an SELinux Policy Package.
+
+# Extract the httpd module file from httpd policy package.
+$ semodule_unpackage httpd.pp httpd.mod httpd.fc
+
+This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by Stephen Smalley <stephen.smalley.work@gmail.com>
+
+

@@ -1,0 +1,574 @@
+strace - trace system calls and signals In its simplest use case, runs the
+specified until it exits.  It intercepts and records the system calls made by
+a process and the signals a process receives.  The name of each system call,
+its arguments, and its return value are printed to standard error or to the
+file specified with the option.	 is a useful diagnostic, instructional, and
+debugging tool.	 System administrators, diagnosticians, and troubleshooters
+will find it invaluable for solving problems with programs for which source
+code is not readily available, as recompilation is not required for tracing.
+Students, hackers, and the overly-curious will discover that a great deal can
+be learned about a system and its system calls by tracing even ordinary
+programs.  Programmers will find that since system calls and signals occur at
+the user/kernel interface, a close examination of this boundary is very useful
+for bug isolation, sanity checking, and attempting to capture race conditions.
+Each line in the trace contains the system call name, followed by its
+arguments in parentheses and its return value.	An example from tracing the
+command "cat /dev/null" is:
+
+open("/dev/null", O_RDONLY) = 3
+
+Errors, typically indicated by a return value of -1, have the symbol and error
+string appended.
+
+open("/foo/bar", O_RDONLY) = -1 ENOENT (No such file or directory)
+
+Signals are printed as a signal symbol and a decoded structure.	 An excerpt
+from tracing and interrupting the command "sleep 666" is:
+
+sigsuspend([] <unfinished ...>
+--- SIGINT {si_signo=SIGINT, si_code=SI_USER, si_pid=...} ---
++++ killed by SIGINT +++
+
+If a system call is being executed while another is called from a different
+thread or process, will attempt to preserve the order of these events and mark
+the ongoing call as When the call returns, it will be marked as
+
+[pid 28772] select(4, [3], NULL, NULL, NULL <unfinished ...>
+[pid 28779] clock_gettime(CLOCK_REALTIME, {tv_sec=1130322148, tv_nsec=3977000}) = 0
+[pid 28772] <... select resumed> )	= 1 (in [3])
+
+The interruption of a (restartable) system call by a signal delivery is
+handled differently, as the kernel terminates the system call and arranges for
+its immediate re-execution after the signal handler completes.
+
+read(0, 0x7ffff72cf5cf, 1)		= ? ERESTARTSYS (To be restarted)
+--- SIGALRM {si_signo=SIGALRM, si_code=SI_KERNEL} ---
+rt_sigreturn({mask=[]})			= 0
+read(0, "", 1)				= 0
+
+Arguments are printed in symbolic form with passion.  This example shows the
+shell performing ">>xyzzy" output redirection:
+
+open("xyzzy", O_WRONLY|O_APPEND|O_CREAT, 0666) = 3
+
+Here, the second and third arguments of are decoded by breaking down the flag
+argument into its three bitwise-OR constituents and printing the mode value in
+octal, following tradition.  Where traditional or native usage differs from
+ANSI or POSIX, the latter forms are preferred.	In some cases, output has
+proven to be more readable than the source code itself.	 Structure pointers
+are dereferenced, and their members are displayed as appropriate.  In most
+cases, arguments are formatted in the most C-like fashion possible.  For
+example, the essence of the command "ls -l /dev/null" is captured as:
+
+lstat("/dev/null", {st_mode=S_IFCHR|0666, st_rdev=makedev(0x1, 0x3), ...}) = 0
+
+Notice how the argument is dereferenced and how each member is displayed
+symbolically.  In particular, observe how the member is carefully decoded into
+a bitwise-OR of symbolic and numeric values.  Also, note that in this example,
+the first argument to is an input to the system call, and the second argument
+is an output.  Since output arguments are not modified if the system call
+fails, arguments may not always be dereferenced.  For example, retrying the
+"ls -l" example with a non-existent file produces the following line:
+
+lstat("/foo/bar", 0xb004) = -1 ENOENT (No such file or directory)
+
+In this case, the porch light is on but nobody is home.	 The pointer's value
+is displayed because the structure it points to was not populated due to the
+error.	System calls unknown to are printed in a raw format, with the
+hexadecimal system call number prefixed with "syscall_":
+
+syscall_0xbad(0x1, 0x2, 0x3, 0x4, 0x5, 0x6) = -1 ENOSYS (Function not implemented)
+
+Character pointers are dereferenced and printed as C strings.  Non-printing
+characters in strings are normally represented by standard C escape codes.
+Only the first (32 by default) bytes of strings are printed; longer strings
+have an ellipsis appended following the closing quote.	Here is a line from
+"ls -l" where the library routine is reading the password file:
+
+read(3, "root::0:0:System Administrator:/"..., 1024) = 422
+
+While structures are annotated using curly braces, pointers to basic types and
+arrays are printed using square brackets with commas separating the elements.
+Here is an example from the command on a system with supplementary group IDs:
+
+getgroups(32, [100, 0]) = 2
+
+On the other hand, bit-sets are also shown using square brackets, but set
+elements are separated only by a space.	 Here is the shell, preparing to
+execute an external command:
+
+sigprocmask(SIG_BLOCK, [CHLD TTOU], []) = 0
+
+Here, the second argument is a bit-set of two signals, In some cases, the bit-
+set is so full that it is more valuable to print the unset elements.  In that
+case, the bit-set is prefixed by a tilde, like this:
+
+sigprocmask(SIG_UNBLOCK, ~[], NULL) = 0
+
+Here, the second argument represents the full set of all signals.  Modifies
+which events to trace or how to trace them by specifying a qualifying
+expression.  The format of the expression is: [qualifier=][!]value[,value]...
+where is one of or and is a qualifier-dependent symbol or number.  The default
+qualifier is Using an exclamation mark negates the set of values.  For
+example, is equivalent to which in turn means trace only the system call.  By
+contrast, means to trace every system call except In addition, the special
+values and may be used to trace every event or no events, respectively.	 Note
+that some shells use the exclamation mark for history expansion even inside
+quoted arguments.  In that case, the exclamation mark must be escaped with a
+backslash.  -E var=val Runs the command with the environment variable set for
+execution.  Removes from the inherited environment variables before executing
+the command.  Attaches to the process with the process and begin tracing.  The
+trace may be terminated at any time by a keyboard interrupt signal will
+respond by detaching itself from the traced processes, leaving them to
+continue running.  Multiple options can be used to attach to several processes
+in addition to the command, which is optional if at least one option is given.
+A single option can accept multiple process IDs separated by a comma (“,”),
+space (“ ”), tab, or newline.  Consequently, syntaxes like "$(pidof PROG)" and
+"$(pgrep PROG)" are supported.	Runs command with the user ID, group ID, and
+supplementary groups of This option is only useful when running as root, as it
+enables the correct execution of setuid and/or setgid binaries.	 Unless this
+option is used, setuid and setgid programs are executed without their
+effective privileges.  Alternative syntax where the program is started with
+exactly the given user and group IDs, and an empty list of supplementary
+groups.	 In this case, user and group name lookups are not performed.  Sets
+the executed command's argv[0] to This is useful for tracing multi-call
+executables that interpret argv[0], such as busybox or kmod.  Detaches from
+the traced process if the specified system call is reached.  Currently, only
+keyword is supported, which includes and system calls.	This option is useful
+for tracing a multi-threaded process with without also tracing its
+(potentially very complex) child processes.  Runs the tracer process as a
+grandchild of the tracee, not as its parent.  This reduces the visible effect
+of by keeping the tracee a direct child of the calling process.	 Runs tracer
+process as tracee's grandchild in a separate process group.  In addition to
+reducing the visible effect of this also prevents from being terminated by a
+signal sent to the entire process group.  Runs the tracer process as the
+tracee's grandchild in a separate session (known as "true daemonisation").  In
+addition to reduction of the visible effect of this also prevents from being
+terminated upon session termination.  Traces child processes as they are
+created by currently traced processes as a result of the and system calls.
+Note that if process is multi-threaded, using attaches to all of its threads,
+not just the one with If the option is in effect, the trace for each process
+is written to a separate file, where is the process ID.	 Combines the effects
+of and options.	 This is incompatible with since no per-process counts are
+kept.  Use to get a combined view of the log files.  Controls when can be
+interrupted by signals (such as pressing no signals are blocked; fatal signals
+are blocked while decoding system call (default); fatal signals are always
+blocked (default if fatal signals and are always blocked (useful to make not
+stop on default if Detaches all tracees after system calls have been captured.
+System calls filtered out via or options are not considered when keeping track
+of the number of system calls that are captured.  Applies the ptrace option to
+all tracees, which sends a SIGKILL signal to a tracee if the tracer exits.
+This prevents tracees from being left running after the tracer exits, as they
+will not be detached on cleanup.  is not compatible with options.
+-e trace=syscall_set -e t=syscall_set --trace=syscall_set Traces only the
+specified set of system calls.	is defined as [!]value[,value], and can be one
+of the following: Traces specific system call, specified by its name (see for
+a reference, but also see A question mark preceding the qualification
+suppresses errors if no matching system calls are found.  Limits the system
+call specification described by to the 64-bit personality.  Limits the system
+call specification described by to the 32-bit personality.  Limits the system
+call specification described by to the x32 personality.	 Traces all system
+calls.	Traces only those system calls that match the You can use Extended
+Regular Expression syntax (see Traces all system calls that take a file name
+as an argument.	 You can think of this as an abbreviation for which is useful
+to seeing what files the process is referencing.  Furthermore, using the
+abbreviation will ensure that you don't accidentally forget to include a call
+like in the list.  The syntax without a preceding percent sign is deprecated.
+Traces system calls associated with process lifecycle (creation, exec,
+termination).  The syntax without a preceding percent sign is deprecated.
+Traces all the network related system calls.  The syntax without a preceding
+percent sign is deprecated.  Traces all signal related system calls.  The
+syntax without a preceding percent sign is deprecated.	Traces all IPC related
+system calls.  The syntax without a preceding percent sign is deprecated.
+Traces all file descriptor related system calls.  The syntax without a
+preceding percent sign is deprecated.  Traces all memory mapping related
+system calls.  The syntax without a preceding percent sign is deprecated.
+Traces system calls that read or modify user and group identifiers or
+capability sets.  Traces stat system call variants.  Traces lstat system call
+variants.  Traces fstat, fstatat, and statx system call variants.  Traces
+system calls used for requesting file status (stat, lstat, fstat, fstatat,
+statx, and their variants).  Traces statfs, statfs64, statvfs, osf_statfs, and
+osf_statfs64 system calls.  The same effect can be achieved with regular
+expression.  Traces fstatfs, fstatfs64, fstatvfs, osf_fstatfs, and
+osf_fstatfs64 system calls.  The same effect can be achieved with regular
+expression.  Traces system calls related to file system statistics (statfs-
+like, fstatfs-like, and ustat).	 The same effect can be achieved with regular
+expression.  Traces system calls that read or modify system clocks.  Traces
+system calls that always succeed and have no arguments.	 Currently, this list
+includes (on architectures other than x86), system calls.  The option is
+useful for determining which system calls might be useful to trace.  For
+example, means to only trace those four system calls.  Be careful when making
+inferences about the user/kernel boundary if only a subset of system calls are
+being monitored.  The default is -e trace-fd=set -e trace-fds=set -e fd=set
+-e fds=set --trace-fds=set Traces only the system calls that operate on the
+specified subset of (non-negative) file descriptors.  Note that usage of this
+option also filters out all the system calls that do not operate on file
+descriptors at all.  This filter is combined with the filter; a system call is
+traced if it matches either of them.  -e signal=set -e signals=set -e s=set
+--signal=set Traces only the specified subset of signals.  The default is For
+example, (or causes signals not to be traced.  -e status=set --status=set
+Prints only system calls with the specified return status.  The default is
+When using the qualifier, the chronological order of events may not be
+preserved.  This is because must wait for a system call to complete before
+deciding whether to print it.  If two system calls are executed by concurrent
+threads, will first print both the entry and exit of the first system call to
+exit, regardless of their respective entry time.  The entry and exit of the
+second system call to exit will be printed afterwards.	Here is an example
+when is called, but a different thread calls before finishes:
+
+[pid 28779] 1130322148.939977 clock_gettime(CLOCK_REALTIME, {1130322148, 939977000}) = 0
+[pid 28772] 1130322148.438139 select(4, [3], NULL, NULL, NULL) = 1 (in [3])
+
+can include the following elements: Traces system calls that returned without
+an error code.	The option has the effect of Traces system calls that returned
+with an error code.  The option has the effect of Traces system calls that did
+not return.  This might happen, for example, due to an execve call in a
+different thread from the same thread group.  Traces system calls that
+returned but strace failed to fetch the error status.  Traces system calls for
+which strace detached before the return.  Traces only system calls accessing
+Multiple options can be used to specify several paths.	This filter is
+combined with the filter; a system call is traced if it matches either option.
+Prints only system calls that returned without an error code.  Prints only
+system calls that returned with an error code.	Aligns return values in a
+specific column (default column 40).  -e abbrev=syscall_set -e a=syscall_set
+--abbrev=syscall_set Abbreviates the output from printing each member of large
+structures.  The syntax of the specification is the same as in the option.
+The default is The option has the effect of -e verbose=syscall_set
+-e v=syscall_set --verbose=syscall_set Dereferences structures for the
+specified set of system calls.	The syntax of the specification is the same as
+in the option.	The default is -e raw=syscall_set -e x=syscall_set
+--raw=syscall_set Prints raw, undecoded arguments for the specified set of
+system calls.  The syntax of the specification is the same as in the option.
+This option has the effect of causing all arguments to be printed in
+hexadecimal.  This option is useful if the decoding is not trusted, or if the
+actual numeric value of an argument is needed.	See also option.  -e read=set
+-e reads=set -e r=set --read=set Performs a full hexadecimal and ASCII dump of
+all the data read from file descriptors listed in the specified set.  For
+example, to see all input activity on file descriptors and use --read=3,5.
+Note that this is independent from the normal tracing of the system call that
+is controlled by the option -e write=set -e writes=set -e w=set --write=set
+Performs a full hexadecimal and ASCII dump of all the data written to file
+descriptors listed in the specified set.  For example, to see all output
+activity on file descriptors and use --write=3,5.  Note that this is
+independent from the normal tracing of the system call that is controlled by
+the option -e quiet=set -e silent=set -e silence=set -e q=set --quiet=set
+--silent=set --silence=set Suppresses various information messages.  The
+default is can include the following elements: Suppresses messages about
+attaching and detaching Suppress messages about process exits Suppress
+messages about resolution of paths provided via the option Suppress messages
+about process personality changes Suppress messages about process being
+superseded by in another thread -e decode-fds=set --decode-fds=set Decodes
+various information associated with file descriptors.  The default is can
+include the following elements: Prints file paths.  Also enables printing of
+tracee's current working directory when constant is used.  Prints socket
+protocol-specific information.	Prints character/block device numbers.	Prints
+eventfd object details associated with eventfd file descriptors.  Prints PIDs
+associated with pidfd file descriptors.	 Prints signal masks associated with
+signalfd file descriptors.  -e decode-pids=set --decode-pids=set Decodes
+various information associated with process IDs (and also thread IDs, process
+group IDs, and session IDs).  The default is can include the following
+elements: Prints command names associated with thread or process IDs.  Prints
+thread, process, process group, and session IDs in strace's PID namespace if
+the tracee is in a different PID namespace.  Prints the exit reason of kvm
+vcpu (=vcpu), or prints the whole kvm_run struct including the reason
+(=vcpu+).  Requires Linux kernel version 4.16.0 or higher.  The vcpu+ output
+uses prefixes VCPU:CPU#< and VCPU:CPU#>.  Lines starting with the former
+indicate the state of the structure before calling KVM_RUN, and those starting
+with the latter show the state after calling KVM_RUN.  Prints the new
+namespaces entered by the tracee.  The following system calls are supported:
+and Prints the instruction pointer at the time of the system call.  Prints the
+system call number.  Prints the system call argument names.  Prints the
+execution stack trace of the traced processes after each system call.  Prints
+the execution stack trace and source code information of the traced processes
+after each system call.	 This option expects the target program is compiled
+with appropriate debug options: "-g" (gcc), or "-g -gdwarf-aranges" (clang).
+Prints no more than this amount of stack trace frames when backtracing a
+system call (the default is 256).  Use this option with the (or option.
+Writes the trace output to the file rather than to stderr.  form is used if
+option is supplied.  If the argument begins with '|' or '!', the rest of the
+argument is treated as a command and all output is piped to it.	 This is
+convenient for piping the debugging output to a program without affecting the
+redirections of executed programs.  Piping output to a command is not
+currently compatible with the option.  Opens the file provided in the option
+in append mode.	 Suppresses messages about attaching, detaching, and
+personality changes.  This happens automatically when output is redirected to
+a file and the command is run directly instead of attaching.  Suppresses
+messages about attaching, detaching, personality changes, and process exit
+status.	 Suppresses all suppressible messages (please refer to the option
+description for the full list of suppressible messages).  Prints a relative
+timestamp upon entry to each system call.  This records the time difference
+between the beginning of successive system calls.  can be one of
+(nanoseconds), and allows setting the precision of time value being printed.
+Default is (microseconds).  Note that because the option uses the monotonic
+clock, its measurements may differ from the time differences reported by the
+option, which uses the wall clock.  Specifies the maximum string size to print
+(the default is 32).  Note that filenames are not considered strings and are
+always printed in full.	 Prefixes each line of the trace with the wall clock
+time in the specified with the specified can be one of the following: No time
+stamp is printed.  Can be used to override the previous setting.  Wall clock
+time format string is Number of seconds since the epoch format string is can
+be one of (nanoseconds).  Default arguments for the option are Prefixes each
+line of the trace with the wall clock time.  Prints the wall clock time with
+microsecond precision.	Prints the wall clock time as seconds since the epoch,
+with microsecond precision.  Shows the time spent in system calls.  This
+records the time difference between the beginning and the end of each system
+call.  can be one of (nanoseconds), and allows setting the precision of time
+value being printed.  Default is (microseconds).  Prints unabbreviated
+versions of environment, stat, termios, etc. calls.  These structures are very
+common, so the default behavior is to display a reasonable subset of their
+members.  Use this option to see all members in full detail.  Controls the use
+of hexadecimal escape sequences when printing strings.	This option alters the
+default escaping behavior.  Normally (when neither this option nor -x is
+used), introduces escape sequences in two situations: to represent non-
+printable and non-ASCII characters (i.e., those with character codes less than
+32 or greater than 127), or to disambiguate output, for example, by escaping
+the quotation marks that enclose a string or the angle brackets used in file
+descriptor paths.  When a character must be escaped, prioritizes symbolic C-
+standard sequences if one exists: “\t” (tab), “\n” (newline), “\v” (vertical
+tab), “\f” (form feed), and “\r” (carriage return).  For all other characters
+that require escaping, defaults to using an octal representation of the
+character's byte value.	 This option allows you to override this default
+behavior and use hexadecimal escapes instead of octal ones.  can be one of the
+following: Hexadecimal numbers are not used in the output at all.  When there
+is a need to emit an escape sequence, octal numbers are used.  Hexadecimal
+numbers are used instead of octal in the escape sequences.  Strings that
+contain non-ASCII characters are printed using escape sequences with
+hexadecimal numbers.  All strings are printed using escape sequences with
+hexadecimal numbers.  When the option is supplied without an argument, is
+assumed.  Prints all non-ASCII strings in hexadecimal string format.  Prints
+all strings in hexadecimal string format.  Sets the format for printing of
+named constants and flags.  Supported values are: Raw number output, without
+decoding.  Outputs a named constant or a set of flags instead of the raw
+number if they are found.  This is the default behaviour.  Outputs both the
+raw value and the decoded string (as a comment).  Prints paths associated with
+file descriptor arguments and with the constant.  Prints all available
+information associated with file descriptors: protocol-specific information
+associated with socket file descriptors, block/character device number
+associated with device file descriptors, and PIDs associated with pidfd file
+descriptors.  If strace and tracee are in different PID namespaces, print PIDs
+in strace's namespace, too.  Prints command names for PIDs.  When SELinux is
+available and is not disabled, prints in square brackets SELinux contexts of
+processes, files, and descriptors.  The argument is a comma-separated list of
+items being one of the following: Prints the full context (user, role, type
+level and category).  Also prints the context recorded by the SELinux database
+in case the current context differs.  The latter is printed after two
+exclamation marks (!!).	 The default value for is that prints only the type
+instead of full context and doesn't check for context mismatches.  Shows PID
+prefix also for the process started by strace.	Implied when -f and -o are
+both specified.	 Counts time, calls, and errors for each system call and
+report a summary on program exit, suppressing the regular output.  This shows
+system time (CPU time spent in the kernel), which is independent of wall clock
+time.  If is used with only aggregate totals for all traced processes are
+kept.  Like but also prints the regular output while processes are running.
+Sets the overhead for tracing system calls to This is useful for overriding
+the default heuristic, which estimates the time spent in the measurement
+process itself when timing system calls with the option.  The accuracy of the
+heuristic can be gauged by timing a given program run without tracing (using
+and comparing the accumulated system call time to the total produced using The
+format of specification is described in section Sorts the output of the
+histogram printed by the option by the specified criterion.  Valid values are
+and default is Configures the set and order of columns shown in the call
+summary.  The argument is a comma-separated list containing one or more of the
+following values: Percentage of cumulative time consumed by a specific system
+call.  Total system (or wall clock, if option is provided) time consumed by a
+specific system call.  Minimum observed call duration.	Maximum observed call
+duration.  Average call duration.  Call count.	Error count.  System call
+name.  The default value is If the field is not supplied explicitly, it is
+added as the last column.  Summarizes the wall clock time for each system
+call, measured from its beginning to its end.  The default is to summarize the
+system time.
+--inject=syscall_set[:error=errno|:retval=value][:signal=sig][:syscall=syscall][:delay_enter=delay][:delay_exit=delay][:poke_enter=@argN=DATAN,@argM=DATAM...][:poke_exit=@argN=DATAN,@argM=DATAM...][:when=expr]
+Performs system call tampering for the specified set of system calls.  The
+syntax of the specification is the same as in the option.  At least one of or
+action options must be specified.  and are mutually exclusive.	If the
+error=errno option is specified, a fault is injected into the system call.
+This is achieved by replacing the system call number with -1 (representing an
+invalid system call) and setting the error code to the specified This behavior
+of replacing the syscall number with -1 can be overridden using the option.
+The can be a symbolic name like or a numeric value in the range 1..4095.  If
+the retval=value option is specified, a success value is injected.  The system
+call number is replaced as with the option, but instead of an error, the
+specified success is returned to the caller process.  If the signal=sig option
+is specified with either a symbolic value like or a numeric value within
+1..SIGRTMAX range, that signal is delivered on entering every system call
+specified by the If the delay_enter=delay or delay_exit=delay options are
+specified, delay injection is performed: the tracee is delayed by time period
+specified by on entering or exiting the system call, respectively.  The format
+of specification is described in section If the
+poke_enter=@argN=DATAN,@argM=DATAM... or poke_exit=@argN=DATAN,@argM=DATAM...
+options are specified, tracee's memory at locations, pointed to by system call
+arguments and (going from to is overwritten by data and (specified in
+hexadecimal format; for example poke_enter=@arg1=0000DEAD0000BEEF).  The
+poke_enter option modifies memory on system call enter, while poke_exit does
+so on system call exit.	 The injection actions are independent.	 For example,
+specifying only delivers a signal without altering the system call's outcome
+or delaying it.	 Similarly, specifying only injects a system call fault
+without adding a signal or delay.  If the signal=sig option is specified
+together with error=errno or retval=value, then both injection of a fault or
+success and signal delivery are performed.  If the syscall=syscall option is
+specified, the given is injected instead of the default -1.  The specified
+must have no side effects; currently, only system calls from the set are
+supported.  Unless the when=expr subexpression is specified, an injection is
+being made into every invocation of each system call from the The format of
+the subexpression is: first[..last][+[step]] Number stands for the first
+invocation number in the range, number stands for the last invocation number
+in the range, and stands for the step between two consecutive invocations.
+The following combinations are useful: Injects into invocation number only for
+each system call in the first..last Injects into invocations from through
+(inclusive) for each system call in the first+ Injects into every invocation,
+starting with number for each system call in the first+step Injects into
+invocations number and so on, for each system call in the first..last+step
+Same as the previous, but consider only invocations with numbers up to
+(inclusive).  For example, to fail each third and subsequent chdir system
+calls with use --inject=chdir:error=ENOENT:when=3+.  The valid range for
+numbers and is 1..65535, and for number is 1..65534.  An injection expression
+can contain at most one fault or return value specification (i.e., either or
+and at most one specification.	If an injection expression contains multiple
+specifications, the last one takes precedence.	Accounting of system calls
+that are subject to injection is done per system call and per tracee.
+Specification of system call injection can be combined with other system call
+filtering options, for example, -P /dev/urandom --inject=file:error=ENOENT.
+-e inject=args This is equivalent to --inject=args.
+--fault=syscall_set[:error=errno][:when=expr] Performs system call fault
+injection for the specified set of system calls.  This is a shortcut for the
+more general option, using a default of -e fault=args This is equivalent to
+--fault=args.  Shows some debugging output of itself on the standard error.
+This option is deprecated.  It is retained for backward compatibility only and
+may be removed in future releases.  Using multiple options is equivalent to a
+single This option is ignored entirely if used in conjunction with one or more
+options.  Prints the help summary.  Attempts to use seccomp-bpf (see to cause
+the kernel to stop the tracee only for the system calls that are being traced.
+This option has no effect unless is also specified.  is not compatible with
+and options.  It is also not applicable to processes attached using option.
+An attempt to enable system calls filtering using seccomp-bpf may fail for
+various reasons, e.g. there are too many system calls to filter, the seccomp
+API is not available, or itself is being traced.  If the seccomp-bpf filter
+setup fails, proceeds as usual, stopping traced processes on every system
+call.  When is activated and option is not used, option is activated as well.
+Note that in cases when the tracee has another seccomp filter that returns an
+action value with a precedence greater than will not be notified.  That is, if
+another seccomp filter, for example, disables the system call or kills the
+tracee, then will not be aware of that system call invocation at all.  Shows
+strace tips, tricks, and tweaks before exit.  The can be a non-negative
+integer to print a specific tip (note: these IDs are not guaranteed to be
+stable).  It can also be (the default), in which case a random tip is printed.
+can be one of the following: No tip is printed.	 Can be used to override the
+previous setting.  Prints the tip just big enough to contain all the text.
+Prints the tip in its full glory.  Default is Prints the version number of and
+the list of enabled optional features.	Multiple instances of this option
+beyond specific threshold tend to increase der Strauss awareness.  Time values
+are specified as a decimal floating point number (in a format accepted by
+optionally followed by a suffix to indicate the unit of time: (seconds),
+(milliseconds), (microseconds), or (nanoseconds).  If no suffix is specified,
+the value defaults to microseconds.  The described format is used for options.
+When exits, exits with the same exit status.  If is terminated by a signal,
+terminates itself with the same signal, so that can be used as a wrapper
+process transparent to the invoking parent process.  Note that the parent-
+child relationship (signal stop notifications, the value, etc) between the
+traced process and its parent is not preserved unless is used.	When using
+without a the exit status of is zero unless no processes have been attached or
+an unexpected error occurred during tracing.  If is installed setuid to root,
+then the invoking user will be able to attach to and trace processes owned by
+any user.  In addition, setuid and setgid programs will be executed and traced
+with the correct effective privileges.	Since these capabilities should only
+be granted to users with full root privileges, installing as setuid to root is
+only appropriate when its use is restricted to such trusted users.  For
+example, a special version of could be installed with mode 'rwsr-x---', user
+and group In this configuration, only trusted users who are members of the
+group could execute it.	 If you use this feature, remember to also install a
+regular, non-setuid version of for ordinary users.  On some architectures, can
+decode system calls for processes that use a different Application Binary
+Interface (ABI) from the one uses.  Specifically, in addition to decoding
+native ABI, can decode the following ABIs on the following architectures:
+┌───────────────────┬─────────────────────────┐
+│Architecture	    │ ABIs supported	      │
+├───────────────────┼─────────────────────────┤
+│x86_64		    │ i386, x32 [1]; i386 [2] │
+├───────────────────┼─────────────────────────┤
+│AArch64	    │ ARM 32-bit EABI	      │
+├───────────────────┼─────────────────────────┤
+│PowerPC 64-bit [3] │ PowerPC 32-bit	      │
+├───────────────────┼─────────────────────────┤
+│s390x		    │ s390		      │
+├───────────────────┼─────────────────────────┤
+│SPARC 64-bit	    │ SPARC 32-bit	      │
+├───────────────────┼─────────────────────────┤
+│TILE 64-bit	    │ TILE 32-bit	      │
+└───────────────────┴─────────────────────────┘
+[1] When is built as an x86_64 application [2] When is built as an x32
+application [3] Big endian only This support is optional and depends on the
+ability to generate and parse structure definitions at build time.  Refer to
+the output of the command to determine which ABIs are supported by your build.
+In this context, "non-native" refers to an ABI that differs from the one is
+using: can trace and properly decode non-native 32-bit binaries.  can trace,
+but cannot properly decode non-native 32-bit binaries.	can trace and properly
+decode non-native 32-on-64-bit binaries.  can trace, but cannot properly
+decode non-native 32-on-64-bit binaries.  If the output contains neither nor
+it means that support for decoding non-native 32-bit binaries is not
+applicable to the architecture.	 Likewise, if the output contains neither nor
+it means that support for decoding non-native 32-on-64-bit binaries is not
+applicable to the architecture.	 Systems that use shared libraries often
+produce a large amount of tracing output when loading them.  It is instructive
+to think about system call inputs and outputs as data-flow across the
+user/kernel boundary.  Because user-space and kernel-space are separate and
+address-protected, it is sometimes possible to make deductive inferences about
+process behavior using inputs and outputs as propositions.  In some cases, a
+system call will differ from the documented behavior or have a different name.
+For example, the underlying system call does not have a argument, and the
+library function is implemented using system call on modern (2.6.38+) kernels.
+These discrepancies are normal characteristics of the system call interface
+and are handled by C library wrapper functions.	 Some system calls have
+different names in different architectures and personalities.  In these cases,
+system call filtering and printing uses the names that match corresponding
+kernel macros of the tracee's architecture and personality.  There are two
+exceptions from this general rule: ARM system call and Xtensa system call are
+filtered and printed as On the x32 ABI, some system calls are intended for
+64-bit processes but can be invoked from x32 by setting the flag.  When this
+occurs, designates these calls with a suffix.  An example is which is syscall
+number 19 on x86_64, whereas its distinct x32 counterpart is syscall number
+515.  On some platforms, a process attached with the option may receive a
+spurious error from a non-restartable system call.  This can have an
+unpredictable effect on the process if it does not attempt to restart the
+call.  Ideally, all system calls should be restarted on attach, making the
+attach invisible to the traced process, but a few system calls aren't.
+Arguably, every instance of such behavior is a kernel bug.  Since executes the
+specified directly without a shell, scripts that lack a shebang line (e.g.,
+#!/bin/sh) will fail with an error, even if a shell could run them correctly.
+It is advisable to manually supply a shell as a with the script as its
+argument.  Programs that use the bit do not have effective user privileges
+while being traced.  A traced process runs more slowly than a non-traced one.
+The performance impact can be mitigated by using the option.  When tracing a
+its descendant processes may be left running after is terminated by an
+interrupt signal (such as This can be prevented by using the option, or by
+using option in a way that implies A traced process can use the flag with the
+system call to create a child process that is not traced by strace.  This
+breaks a guarantee of the option, as this untraced child may be left with an
+active seccomp filter after strace terminates.	The original was written by
+Paul Kranenburg for SunOS and was inspired by its utility.  The SunOS version
+of was ported to Linux and enhanced by Branko Lankester, who also wrote the
+Linux kernel support.  Even though Paul released 2.5 in 1992, Branko's work
+was based on Paul's 1.5 release from 1991.  In 1993, Rick Sladkey took on the
+project.  He merged 2.5 for SunOS with the second release of for Linux, added
+many features from SVR4's and produced a version of that worked on both
+platforms.  In 1994 Rick ported to SVR4 and Solaris and wrote the automatic
+configuration support.	In 1995 he ported to Irix (and became tired of writing
+about himself in the third person).  Beginning with 1996, was maintained by
+Wichert Akkerman.  During his tenure, development migrated to CVS; ports to
+FreeBSD and many architectures on Linux (including ARM, IA-64, MIPS, PA-RISC,
+PowerPC, s390, SPARC) were introduced.	In 2002, responsibility for
+maintenance was transferred to Roland McGrath.	Since then, gained support for
+several new Linux architectures (AMD64, s390x, SuperH), bi-architecture
+support for some of them, and received numerous additions and improvements in
+system calls decoders on Linux; development migrated to during that period.
+Since 2009, has been actively maintained by Dmitry Levin.  During this period,
+has gained support for the AArch64, ARC, AVR32, Blackfin, C-SKY, LoongArch,
+Meta, Nios II, OpenRISC 1000, RISC-V, Tile/TileGx, and Xtensa architectures.
+In 2012, unmaintained and apparently broken support for non-Linux operating
+systems was removed.  Also, in 2012 gained support for path tracing and file
+descriptor path decoding.  In 2014, support for stack trace printing was
+added.	In 2016, system call tampering was implemented.	 For the additional
+information, please refer to the file and repository commit log.  Problems
+with should be reported to the mailing list Home Page The complete list of
+contributors can be found in the file.
+
+

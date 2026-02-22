@@ -1,0 +1,53 @@
+soelim - recursively interpolate source requests in or other text files GNU is
+a preprocessor for the document formatting system.  works as a filter to
+eliminate source requests in input files; that is, it replaces lines of the
+form within each text with the contents of recursively.	 By default, it writes
+requests as well to record the name and line number of each and so that any
+diagnostics produced by later processing can be accurately traced to the
+original input.	 Options allow this information to be suppressed or supplied
+in TeX comments instead In the absence of arguments, reads the standard input
+stream.	 Output is written to the standard output stream.  If the name of a
+contains a backslash, use or to embed it.  To embed a space, write (backslash
+followed by a space).  Any other escape sequence in including prevents from
+replacing the source request.  The dot must be at the beginning of a line and
+must be followed by without intervening spaces or tabs for to handle it.  This
+convention allows source requests to be “protected” from processing by for
+instance as part of macro definitions or requests.  There must also be at
+least one space between and its argument.  The option overrides this
+requirement.  The foregoing is the limit of understanding of the language; it
+does not, for example, replace the input line .if 1 .so otherfile with the
+contents of With its option, therefore, can be used to process text files in
+general, to flatten a tree of input documents.	was designed to handle
+situations where the target of a source request requires a preprocessor such
+as or The usual processing sequence of is as follows.
+	  input	       sourced
+	  file		file
+	    ⎪		  ⎪
+	    ↓		  ↓
+	preprocessor ⎯→ troff ⎯→ postprocessor
+				      ⎪
+				      ↓
+				   output
+				    file That is, files sourced with are
+normally read by the formatter, is required for to source files.  If a file to
+be sourced should also be preprocessed, it must already be read the input file
+passes through the preprocessor.  normally invoked via option, handles this.
+	  input
+	  file
+	    ⎪
+	    ↓
+	  soelim ⎯→ preprocessor ⎯→ troff ⎯→ postprocessor
+	    ↑					  ⎪
+	    ⎪					  ↓
+	 sourced			       output
+	  file					file displays a usage message,
+while and show version information; all exit afterward.	 Recognize an input
+line starting with even if a character other than a space or newline follows.
+Search the directory path for and may be specified more than once; each is
+searched in the given order.  To search the current working directory before
+others, add at the desired place; it is otherwise searched last.  Write files
+“raw”; do not add requests.  Emit TeX comment lines starting with indicating
+the current file and line number, rather than requests for the same purpose.
+If both and are given, the last one specified controls.
+
+

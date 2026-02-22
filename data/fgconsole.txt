@@ -1,0 +1,17 @@
+
+fgconsole - print the number of the active VT.
+
+[options] If the active Virtual Terminal is then prints on standard output.
+
+If the console is a serial console, then "serial" is printed instead.
+
+-n, --next-available Will show the next unallocated virtual terminal. Normally
+6 virtual terminals are allocated, with number 7 used for X; this will return
+"8" in this case.  -C, --console=DEV the console device to be used.  -V,
+--version print version number.	 -h, --help print this usage message.
+
+Under the consoles are in may maintain symlinks for compatibility.  Andries
+Brouwer <aeb@cwi.nl>
+Manpage by Alastair McKinstry <mckinstry@computer.org>
+
+

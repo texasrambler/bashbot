@@ -1,0 +1,5 @@
+neqn - format equations for character-cell terminal output invokes the command
+with the output device.	 does not support low-resolution, typewriter-like
+devices, although it may work adequately for very simple input.
+
+

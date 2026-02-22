@@ -1,0 +1,99 @@
+NAME
+     makewhatis – index UNIX manuals
+
+SYNOPSIS
+     makewhatis [-aDnpQ] [-T utf8] [-C file]
+     makewhatis [-aDnpQ] [-T utf8] dir ...
+     makewhatis [-DnpQ] [-T utf8] -d dir [file ...]
+     makewhatis [-Dnp] [-T utf8] -u dir [file ...]
+     makewhatis [-DQ] -t file ...
+
+DESCRIPTION
+     The makewhatis utility extracts keywords from UNIX manuals and indexes
+     them in a database for fast retrieval by apropos(1), whatis(1), and
+     man(1)'s -k option.
+
+     By default, makewhatis creates a database in each dir using the files
+     mansection/[arch/]title.section and catsection/[arch/]title.0 in that
+     directory.	 Existing databases are replaced.  If a directory contains no
+     manual pages, no database is created in that directory.  If dir is not
+     provided, makewhatis uses the default paths stipulated by man.conf(5).
+
+     The arguments are as follows:
+
+     -a	      Use all directories and files found below dir ....
+
+     -C file  Specify an alternative configuration file in man.conf(5) format.
+
+     -D	      Display all files added or removed to the index.	With a second
+	      -D, also show all keywords added for each file.
+
+     -d dir   Merge (remove and re-add) file ... to the database in dir.
+
+     -n	      Do not create or modify any database; scan and parse only, and
+	      print manual page names and descriptions to standard output.
+
+     -p	      Print warnings about potential problems with manual pages to the
+	      standard error output.
+
+     -Q	      Quickly build reduced-size databases by reading only the NAME
+	      sections of manuals.  The resulting databases will usually
+	      contain names and descriptions only.
+
+     -T utf8  Use UTF-8 encoding instead of ASCII for strings stored in the
+	      databases.
+
+     -t file ...
+	      Check the given files for potential problems.  Implies -a, -n,
+	      and -p.  All diagnostic messages are printed to the standard
+	      output; the standard error output is not used.
+
+     -u dir   Remove file ... from the database in dir.	 If that causes the
+	      database to become empty, also delete the database file.
+
+     If fatal parse errors are encountered while parsing, the offending file
+     is printed to stderr, omitted from the index, and the parse continues
+     with the next input file.
+
+ENVIRONMENT
+     MANPATH  A colon-separated list of directories to create databases in.
+	      Ignored if a dir argument or the -t option is specified.
+
+FILES
+     mandoc.db
+	     A database of manpages relative to the directory of the file.
+	     This file is portable across architectures and systems, so long
+	     as the manpage hierarchy it indexes does not change.
+
+     /etc/man.conf
+	     The default man(1) configuration file.
+
+EXIT STATUS
+     The makewhatis utility exits with one of the following values:
+
+     0	     No errors occurred.
+     5	     Invalid command line arguments were specified.  No input files
+	     have been read.
+     6	     An operating system error occurred, for example memory exhaustion
+	     or an error accessing input files.	 Such errors cause makewhatis
+	     to exit at once, possibly in the middle of parsing or formatting
+	     a file.  The output databases are corrupt and should be removed.
+
+SEE ALSO
+     apropos(1), man(1), whatis(1), man.conf(5)
+
+HISTORY
+     A makewhatis utility first appeared in 2BSD.  It was rewritten in perl(1)
+     for OpenBSD 2.7 and in C for OpenBSD 5.6.
+
+     The dir argument first appeared in NetBSD 1.0; the options -dpt in
+     OpenBSD 2.7; the option -u in OpenBSD 3.4; and the options -aCDnQT in
+     OpenBSD 5.6.
+
+AUTHORS
+     Bill Joy wrote the original BSD makewhatis in February 1979, Marc Espie
+     started the Perl version in 2000, and the current version of makewhatis
+     was written by Kristaps Dzonsons <kristaps@bsd.lv> and Ingo Schwarze
+     <schwarze@openbsd.org>.
+
+Linux 6.17.1-300.fc43.x86_64	 May 17, 2017	  Linux 6.17.1-300.fc43.x86_64

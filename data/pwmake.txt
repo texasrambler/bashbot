@@ -1,0 +1,18 @@
+pwmake - simple tool for generating random relatively easily pronounceable
+passwords pwmake <entropy-bits> pwmake is a simple configurable tool for
+generating random and relatively easily pronounceable passwords. The tool
+allows you to specify the number of entropy bits that are used to generate the
+password.  The entropy is pulled from /dev/urandom.  The minimum number of
+bits is 56 which is usable for passwords on systems/services where brute force
+attacks are of very limited rate of tries.  The 64 bits should be adequate for
+applications where the attacker does not have direct access to the password
+hash file. For situations where the attacker might obtain the direct access to
+the password hash or the password is used as an encryption key 80 to 128 bits
+should be used depending on your level of paranoia.  Any entropy-bits value
+outside of the 56 to 256 bits range will be adjusted to fit within the allowed
+range.	The first and only argument is the number of bits of entropy used to
+generate the password.	/etc/security/pwquality.conf - The configuration file
+for the libpwquality library.  pwmake returns 0 on success, non zero on error.
+pwscore(1), pam_pwquality(8) Tomas Mraz <tmraz@redhat.com>
+
+

@@ -1,0 +1,79 @@
+ipcs - show information on IPC facilities
+
+ipcs [options]
+
+ipcs shows information on System V inter-process communication facilities. By
+default it shows information about all three resources: shared memory
+segments, message queues, and semaphore arrays.
+
+-i, --id id Show full details on just the one resource element identified by
+id. This option needs to be combined with one of the three resource options:
+-m, -q or -s.
+
+-h, --help Display help text and exit.
+
+-V, --version Display version and exit.
+
+-m, --shmems Write information about active shared memory segments.
+
+-q, --queues Write information about active message queues.
+
+-s, --semaphores Write information about active semaphore sets.
+
+-a, --all Write information about all three resources (default).
+
+Of these options only one takes effect: the last one specified.
+
+-c, --creator Show creator and owner.
+
+-l, --limits Show resource limits.
+
+-p, --pid Show PIDs of creator and last operator.
+
+-t, --time Write time information. The time of the last control operation that
+changed the access permissions for all facilities, the time of the last
+msgsnd(2) and msgrcv(2) operations on message queues, the time of the last
+shmat(2) and shmdt(2) operations on shared memory, and the time of the last
+semop(2) operation on semaphores.
+
+-u, --summary Show status summary.
+
+These affect only the -l (--limits) option.
+
+-b, --bytes Print the sizes in bytes rather than in a human-readable format.
+
+By default, the unit, sizes are expressed in, is byte, and unit prefixes are
+in power of 2^10 (1024). Abbreviations of symbols are exhibited truncated in
+order to reach a better readability, by exhibiting alone the first letter of
+them; examples: "1 KiB" and "1 MiB" are respectively exhibited as "1 K" and "1
+M", then omitting on purpose the mention "iB", which is part of these
+abbreviations.
+
+--human Print sizes in human-readable format.
+
+The Linux ipcs utility is not fully compatible to the POSIX ipcs utility. The
+Linux version does not support the POSIX -a, -b and -o options, but does
+support the -l and -u options not defined by POSIX. A portable application
+shall not use the -a, -b, -o, -l, and -u options.
+
+The current implementation of ipcs obtains information about available IPC
+resources by parsing the files in /proc/sysvipc. Before util-linux version
+v2.23, an alternate mechanism was used: the IPC_STAT command of msgctl(2),
+semctl(2), and shmctl(2). This mechanism is also used in later util-linux
+versions in the case where /proc is unavailable. A limitation of the IPC_STAT
+mechanism is that it can only be used to retrieve information about IPC
+resources for which the user has read permission.
+
+Krishna Balasubramanian <balasub@cis.ohio-state.edu>
+
+ipcmk(1), ipcrm(1), msgrcv(2), msgsnd(2), semget(2), semop(2), shmat(2),
+shmdt(2), shmget(2), sysvipc(7)
+
+For bug reports, use the issue tracker
+<https://github.com/util-linux/util-linux/issues>.
+
+The ipcs command is part of the util-linux package which can be downloaded
+from Linux Kernel Archive
+<https://www.kernel.org/pub/linux/utils/util-linux/>.
+
+

@@ -1,0 +1,21 @@
+
+happrox - returns a simplified triangulation of a set of points using
+algorithm III of Garland and Heckbert (1995).
+
+
+This manual page documents briefly the command.
+
+This program follow the usual GNU command line syntax, with long options
+starting with two dashes (`-').	 A summary of options is included below.  Stop
+the refinement process if the number of vertices is larger than N.  Stop the
+refinement process if the cost of insertion of a vertex is smaller than C.
+Input is a flat file with three x,y,z columns (default is PGM file).  Use
+relative height cost for all heights larger than Z.  Keep enclosing triangle.
+Close the surface.  Log evolution of cost.  Display surface statistics.
+Display the help and exit.
+
+happrox was written by Stephane Popinet <popinet@users.sourceforge.net>.  This
+manual page was written by Ruben Molina <rmolina@udea.edu.co>, for the Debian
+project (but may be used by others).
+
+

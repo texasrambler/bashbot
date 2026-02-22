@@ -1,0 +1,64 @@
+nologin - politely refuse a login
+
+nologin [-V] [-h]
+
+nologin displays a message that an account is not available and exits
+non-zero. It is intended as a replacement shell field to deny login access to
+an account.
+
+If the file /etc/nologin.txt exists, nologin displays its contents to the user
+instead of the default message.
+
+The exit status returned by nologin is always 1.
+
+-c, --command command
+
+--init-file
+
+-i --interactive
+
+--init-file file
+
+-i, --interactive
+
+-l, --login
+
+--noprofile
+
+--norc
+
+--posix
+
+--rcfile file
+
+-r, --restricted
+
+These shell command-line options are ignored to avoid nologin error.
+
+-h, --help Display help text and exit.
+
+-V, --version Display version and exit.
+
+nologin is a per-account way to disable login (usually used for system
+accounts like http or ftp). nologin uses /etc/nologin.txt as an optional
+source for a non-default message, the login access is always refused
+independently of the file.
+
+pam_nologin(8) PAM module usually prevents all non-root users from logging
+into the system. pam_nologin(8) functionality is controlled by
+/var/run/nologin or the /etc/nologin file.
+
+The nologin command appeared in 4.4BSD.
+
+Karel Zak <kzak@redhat.com>
+
+login(1), passwd(5), pam_nologin(8)
+
+For bug reports, use the issue tracker
+<https://github.com/util-linux/util-linux/issues>.
+
+The nologin command is part of the util-linux package which can be downloaded
+from Linux Kernel Archive
+<https://www.kernel.org/pub/linux/utils/util-linux/>.
+
+

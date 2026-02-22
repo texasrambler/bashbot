@@ -1,0 +1,19 @@
+lessecho - expand metacharacters is a program that simply echos its arguments
+on standard output.  But any metacharacter in the output is preceded by an
+"escape" character, which by default is a backslash.  is invoked internally by
+and is not intended to be used directly by humans.  A summary of options is
+included below.	 Specifies "x", rather than backslash, to be the escape char
+for metachars.	If x is "-", no escape char is used and arguments containing
+metachars are surrounded by quotes instead.  Specifies "x", rather than
+double-quote, to be the open quote character, which is used if the -e- option
+is specified.  Specifies "x" to be the close quote character.  Specifies "n"
+to be the open quote character, as an integer.	Specifies "n" to be the close
+quote character, as an integer.	 Specifies "x" to be a metachar.  By default,
+no characters are considered metachars.	 Specifies "n" to be a metachar, as an
+integer.  Specifies "n" to be the escape char for metachars, as an integer.
+Specifies that all arguments are to be quoted.	The default is that only
+arguments containing metacharacters are quoted.	 This manual page was written
+by Thomas Schoepf <schoepf@debian.org>, for the Debian GNU/Linux system (but
+may be used by others).	 Report bugs at
+
+

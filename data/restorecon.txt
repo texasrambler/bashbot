@@ -1,0 +1,79 @@
+restorecon - restore file(s) default SELinux security contexts.
+
+
+This manual page describes the program.	 This program is primarily used to set
+the security context (extended attributes) on one or more files.  It can also
+be run at any other time to correct inconsistent labels, to add support for
+newly-installed policy or, by using the option, to passively check whether the
+file contexts are all set as specified by the active policy (default
+behavior).  If a file object does not have a context, will write the default
+context to the file object's extended attributes. If a file object has a
+context, will only modify the type portion of the security context.  The and
+options will force a replacement of the entire context.	 If a file is labeled
+with SELinux type (for list of customizable types see
+/etc/selinux/{SELINUXTYPE}/contexts/customizable_types), restorecon won't
+reset the label unless the -F option is used.  It is the same executable as
+but operates in a slightly different manner depending on its argv[0].
+
+exclude a directory (repeat the option to exclude more than one directory,
+Requires full path).  contains a list of files to be processed. Use for Force
+reset of context to match file_context for customizable files, and the default
+file context, changing the user, role, range portion as well as the type.  In
+addition to the type portion also change the user and role portions, but not
+the range portion.  display usage information and exit.	 ignore files that do
+not exist.  ignore digest to force checking of labels even if the stored
+SHA256 digest matches the specfiles SHA256 digest. The digest will then be
+updated provided there are no errors. See the section for further details.
+Set or update any directory SHA256 digests. Use this option to enable usage of
+the extended attribute.	 do not read to obtain a list of non-seclabel mounts
+to be excluded from relabeling checks.	Setting this option is useful where
+there is a non-seclabel fs mounted with a seclabel fs mounted on a directory
+below this.  don't change any file labels (passive check).  To display the
+files whose labels would be changed, add Deprecated - This option is no longer
+supported.  show progress by printing the number of files in 1k blocks unless
+relabeling the entire OS, that will then show the approximate percentage
+complete. Note that the and options are mutually exclusive.  change files and
+directories file labels recursively (descend directories).
+show changes in file labels. Multiple -v options increase the verbosity. Note
+that the and options are mutually exclusive.  display warnings about entries
+that had no matching files by outputting the results.  the separator for the
+input items is assumed to be the null character (instead of the white space).
+The quotes and the backslash characters are also treated as normal characters
+that can form valid input.  This option finally also disables the end of file
+string, which is treated like any other argument.  Useful when input items
+might contain white space, quote marks or backslashes.	The option of GNU
+produces input suitable for this mode.	prevent from crossing file system
+boundaries.  use up to threads.	 Specify 0 to create as many threads as there
+are available CPU cores; 1 to use only a single thread (default); or any
+positive number to use the given number of threads (if possible).  The
+pathname for the file(s) to be relabeled.  by default does not operate
+recursively on directories. Paths leading up the final component of the
+file(s) are canonicalized using before labeling.  If the specifies the root
+directory and the or options are set and the audit system is running, then an
+audit event is automatically logged stating that a "mass relabel" took place
+using the message label To improve performance when relabeling file systems
+recursively (i.e. the or option is set), the option to will cause it to store
+a SHA256 digest of the default specfiles set in an extended attribute named on
+each directory specified in once the relabeling has been completed
+successfully. These digests will be checked should be rerun with the same
+parameters. See for further details.
+
+The option will ignore the SHA256 digest from each directory specified in and
+provided the option is NOT set and recursive mode is set, files will be
+relabeled as required with the digests then being updated provided there are
+no errors.
+
+Fix labeling of /var/www/ including all sub-directories and list all context changes
+# restorecon -rv /var/www/
+List mislabeled files in user home directory and what the correct label should be
+# restorecon -nvr ~
+Fix labeling of files listed in file_list file, ignoring any that do not exist
+# restorecon -vif file_list
+
+This man page was written by Dan Walsh <dwalsh@redhat.com>.
+Some of the content of this man page was taken from the setfiles
+man page written by Russell Coker <russell@coker.com.au>.
+The program was written by Dan Walsh <dwalsh@redhat.com>.
+
+
+

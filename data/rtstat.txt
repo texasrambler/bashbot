@@ -1,0 +1,152 @@
+lnstat - unified linux network statistics This manual page documents briefly
+the command.  lnstat is a generalized and more feature-complete replacement
+for the old rtstat program. It is commonly used to periodically print a
+selection of statistical values exported by the kernel.	 In addition to
+routing cache statistics, it supports any kind of statistics the linux kernel
+exports via a file in /proc/net/stat/.	Each file in /proc/net/stat/ contains
+a header line listing the column names.	 These names are used by lnstat as
+keys for selecting which statistics to print. For every CPU present in the
+system, a line follows which lists the actual values for each column of the
+file. lnstat sums these values up (which in fact are counters) before printing
+them. After each interval, only the difference to the last value is printed.
+Files and columns may be selected by using the -f and -k parameters. By
+default, all columns of all files are printed.	lnstat supports the following
+options.  Show summary of options.  Show version of program.  Print <count>
+number of intervals.  Dump list of available files/keys.  Statistics file to
+use, may be specified multiple times. By default all files in /proc/net/stat
+are scanned.  Set interval to 'intv' seconds.  Display results in JSON format
+Display only keys specified. Each key k is of the form [file:]key. If <file>
+is given, the search for the given key is limited to that file. Otherwise the
+first file containing the searched key is being used.  Specify display of
+subject/header. '0' means no header at all, '1' prints a header only at start
+of the program and '2' prints a header every 20 lines.	Width for each field.
+Get a list of supported statistics files.  Select the specified files and
+keys.  Use an interval of 10 seconds.  Use only the specified file for
+statistics.  Do not print a header at all.  Print a header at start and every
+20 lines.  Display statistics for keys entries, in_hit and in_slow_tot of
+field rt_cache every second.
+
+Statistics around neighbor cache and ARP. arp_cache is for IPv4, ndisc_cache
+is the same for IPv6.
+
+Number of entries in the neighbor table.
+
+How many neighbor entries have been allocated.
+
+How many neighbor entries have been removed.
+
+How often the neighbor (hash) table was increased.
+
+How many lookups were performed.
+
+How many lookups were successful.
+
+How many neighbor lookups failed.
+
+How many multicast neighbor solicitations were received. (IPv6 only.)
+
+How many unicast neighbor solicitations were received. (IPv6 only.)
+
+How many garbage collection runs were executed.
+
+How many forced garbage collection runs were executed. Happens when adding an
+entry and the table is too full.
+
+How many neighbor table entries were discarded due to lookup failure.
+
+Number of table overflows. Happens if table is full and forced GC run (see
+forced_gc_runs) has failed.
+
+Conntrack related counters. ip_conntrack is for backwards compatibility with
+older userspace only and shows the same data as nf_conntrack.
+
+Number of entries in conntrack table.
+
+Number of conntrack table lookups performed.
+
+Number of searched entries which were successful.
+
+Number of conntrack entries added which were not expected before.
+
+Number of packets seen which can not be tracked.
+
+Number of packets seen which are already connected to a conntrack entry.
+
+Number of conntrack entries which were removed.
+
+Number of conntrack entries which were put to dying list.
+
+Number of entries inserted into the list.
+
+Number of entries for which list insertion was attempted but failed (happens
+if the same entry is already present).
+
+Number of packets dropped due to conntrack failure. Either new conntrack entry
+allocation failed, or protocol helper dropped the packet.
+
+Number of dropped conntrack entries to make room for new ones, if maximum
+table size was reached.
+
+Number of packets which could not be tracked due to error situation. This is a
+subset of invalid.
+
+Number of conntrack entries added after an expectation for them was already
+present.
+
+Number of expectations added.
+
+Number of expectations deleted.
+
+Number of conntrack table lookups which had to be restarted due to hashtable
+resizes.
+
+Routing cache statistics.
+
+Number of entries in routing cache.
+
+Number of route cache hits for incoming packets. Deprecated since IP route
+cache removal, therefore always zero.
+
+Number of routing cache entries added for input traffic.
+
+Number of multicast routing cache entries added for input traffic.
+
+Number of input packets for which no routing table entry was found.
+
+Number of matched input broadcast packets.
+
+Number of incoming martian destination packets.
+
+Number of incoming martian source packets.
+
+Number of route cache hits for outgoing packets. Deprecated since IP route
+cache removal, therefore always zero.
+
+Number of routing cache entries added for output traffic.
+
+Number of multicast routing cache entries added for output traffic.
+
+Total number of garbage collection runs. Deprecated since IP route cache
+removal, therefore always zero.
+
+Number of ignored garbage collection runs due to minimum GC interval not
+reached and routing cache not full. Deprecated since IP route cache removal,
+therefore always zero.
+
+Number of garbage collector goal misses. Deprecated since IP route cache
+removal, therefore always zero.
+
+Number of destination cache overflows. Deprecated since IP route cache
+removal, therefore always zero.
+
+Number of hash table list traversals for input traffic. Deprecated since IP
+route cache removal, therefore always zero.
+
+Number of hash table list traversals for output traffic. Deprecated since IP
+route cache removal, therefore always zero.
+
+lnstat was written by Harald Welte <laforge@gnumonks.org>.  This manual page
+was written by Michael Prokop <mika@grml.org> for the Debian project (but may
+be used by others).
+
+

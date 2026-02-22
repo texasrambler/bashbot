@@ -1,0 +1,200 @@
+select, pselect, FD_CLR, FD_ISSET, FD_SET, FD_ZERO, fd_set - synchronous I/O
+multiplexing Standard C library
+Feature Test Macro Requirements for glibc (see
+    _POSIX_C_SOURCE >= 200112L
+can monitor only file descriptors numbers that are less than (1024)—an
+unreasonably low limit for many modern applications—and this limitation will
+not change.  All modern applications should instead use or which do not suffer
+this limitation.  allows a program to monitor multiple file descriptors,
+waiting until one or more of the file descriptors become "ready" for some
+class of I/O operation (e.g., input possible).	A file descriptor is
+considered ready if it is possible to perform a corresponding I/O operation
+(e.g., or a sufficiently small without blocking.  A structure type that can
+represent a set of file descriptors.  According to POSIX, the maximum number
+of file descriptors in an structure is the value of the macro The principal
+arguments of are three "sets" of file descriptors (declared with the type
+which allow the caller to wait for three classes of events on the specified
+set of file descriptors.  Each of the arguments may be specified as NULL if no
+file descriptors are to be watched for the corresponding class of events.
+Upon return, each of the file descriptor sets is modified in place to indicate
+which file descriptors are currently "ready".  Thus, if using within a loop,
+the sets must be reinitialized before each call.  The contents of a file
+descriptor set can be manipulated using the following macros: This macro
+clears (removes all file descriptors from) It should be employed as the first
+step in initializing a file descriptor set.  This macro adds the file
+descriptor to Adding a file descriptor that is already present in the set is a
+no-op, and does not produce an error.  This macro removes the file descriptor
+from Removing a file descriptor that is not present in the set is a no-op, and
+does not produce an error.  modifies the contents of the sets according to the
+rules described below.	After calling the macro can be used to test if a file
+descriptor is still present in a set.  returns nonzero if the file descriptor
+is present in and zero if it is not.  The arguments of are as follows: The
+file descriptors in this set are watched to see if they are ready for reading.
+A file descriptor is ready for reading if a read operation will not block; in
+particular, a file descriptor is also ready on end-of-file.  After has
+returned, readfds will be cleared of all file descriptors except for those
+that are ready for reading.  The file descriptors in this set are watched to
+see if they are ready for writing.  A file descriptor is ready for writing if
+a write operation will not block.  However, even if a file descriptor
+indicates as writable, a large write may still block.  After has returned,
+writefds will be cleared of all file descriptors except for those that are
+ready for writing.  The file descriptors in this set are watched for
+"exceptional conditions".  For examples of some exceptional conditions, see
+the discussion of in After has returned, exceptfds will be cleared of all file
+descriptors except for those for which an exceptional condition has occurred.
+This argument should be set to the highest-numbered file descriptor in any of
+the three sets, plus 1.	 The indicated file descriptors in each set are
+checked, up to this limit (but see BUGS).  The argument is a structure (shown
+below) that specifies the interval that should block waiting for a file
+descriptor to become ready.  The call will block until either: a file
+descriptor becomes ready; the call is interrupted by a signal handler; or the
+timeout expires.  Note that the interval will be rounded up to the system
+clock granularity, and kernel scheduling delays mean that the blocking
+interval may overrun by a small amount.	 If both fields of the structure are
+zero, then returns immediately.	 (This is useful for polling.)	If is
+specified as NULL, blocks indefinitely waiting for a file descriptor to become
+ready.	The system call allows an application to safely wait until either a
+file descriptor becomes ready or until a signal is caught.  The operation of
+and is identical, other than these three differences: uses a timeout that is a
+(with seconds and microseconds), while uses a (with seconds and nanoseconds).
+may update the argument to indicate how much time was left.  does not change
+this argument.	has no argument, and behaves as called with NULL is a pointer
+to a signal mask (see if it is not NULL, then first replaces the current
+signal mask by the one pointed to by then does the "select" function, and then
+restores the original signal mask.  (If is NULL, the signal mask is not
+modified during the call.)  Other than the difference in the precision of the
+argument, the following call: ready = pselect(nfds, &readfds, &writefds,
+&exceptfds,
+		timeout, &sigmask); is equivalent to executing the following
+calls: sigset_t origmask;  pthread_sigmask(SIG_SETMASK, &sigmask, &origmask);
+ready = select(nfds, &readfds, &writefds, &exceptfds, timeout);
+pthread_sigmask(SIG_SETMASK, &origmask, NULL); The reason that is needed is
+that if one wants to wait for either a signal or for a file descriptor to
+become ready, then an atomic test is needed to prevent race conditions.
+(Suppose the signal handler sets a global flag and returns.  Then a test of
+this global flag followed by a call of could hang indefinitely if the signal
+arrived just after the test but just before the call.  By contrast, allows one
+to first block signals, handle the signals that have come in, then call with
+the desired avoiding the race.)	 The argument for is a structure of the
+following type: struct timeval {
+    time_t	tv_sec;		/* seconds */
+    suseconds_t tv_usec;	/* microseconds */ }; The corresponding
+argument for is a structure.  On Linux, modifies to reflect the amount of time
+not slept; most other implementations do not do this.  (POSIX.1 permits either
+behavior.)  This causes problems both when Linux code which reads is ported to
+other operating systems, and when code is ported to Linux that reuses a struct
+timeval for multiple in a loop without reinitializing it.  Consider to be
+undefined after returns.  On success, and return the number of file
+descriptors contained in the three returned descriptor sets (that is, the
+total number of bits that are set in The return value may be zero if the
+timeout expired before any file descriptors became ready.  On error, -1 is
+returned, and is set to indicate the error; the file descriptor sets are
+unmodified, and becomes undefined.  An invalid file descriptor was given in
+one of the sets.  (Perhaps a file descriptor that was already closed, or one
+on which an error has occurred.)  However, see BUGS.  A signal was caught; see
+is negative or exceeds the resource limit (see The value contained within is
+invalid.  Unable to allocate memory for internal tables.  On some other UNIX
+systems, can fail with the error if the system fails to allocate kernel-
+internal resources, rather than as Linux does.	POSIX specifies this error for
+but not for Portable programs may wish to check for and loop, just as with
+POSIX.1-2008.  POSIX.1-2001, 4.4BSD (first appeared in 4.2BSD).	 Generally
+portable to/from non-BSD systems supporting clones of the BSD socket layer
+(including System V variants).	However, note that the System V variant
+typically sets the timeout variable before returning, but the BSD variant does
+not.  Linux 2.6.16.  POSIX.1g, POSIX.1-2001.  Prior to this, it was emulated
+in glibc (but see BUGS).  POSIX.1-2001.	 The following header also provides
+the type: An is a fixed size buffer.  Executing or with a value of that is
+negative or is equal to or larger than will result in undefined behavior.
+Moreover, POSIX requires to be a valid file descriptor.	 The operation of and
+is not affected by the flag.  On systems that lack reliable (and more
+portable) signal trapping can be achieved using the self-pipe trick.  In this
+technique, a signal handler writes a byte to a pipe whose other end is
+monitored by in the main program.  (To avoid possibly blocking when writing to
+a pipe that may be full or reading from a pipe that may be empty, nonblocking
+I/O is used when reading from and writing to the pipe.)	 Before the advent of
+some code employed a call to with all three sets empty, zero, and a non-NULL
+as a fairly portable way to sleep with subsecond precision.  Within the Linux
+kernel source, we find the following definitions which show the correspondence
+between the readable, writable, and exceptional condition notifications of and
+the event notifications provided by and #define POLLIN_SET  (EPOLLRDNORM |
+EPOLLRDBAND | EPOLLIN |
+		     EPOLLHUP | EPOLLERR)
+		   /* Ready for reading */ #define POLLOUT_SET (EPOLLWRBAND |
+EPOLLWRNORM | EPOLLOUT |
+		     EPOLLERR)
+		   /* Ready for writing */ #define POLLEX_SET  (EPOLLPRI)
+		   /* Exceptional condition */ If a file descriptor being
+monitored by is closed in another thread, the result is unspecified.  On some
+UNIX systems, unblocks and returns, with an indication that the file
+descriptor is ready (a subsequent I/O operation will likely fail with an
+error, unless another process reopens the file descriptor between the time
+returned and the I/O operation is performed).  On Linux (and some other
+systems), closing the file descriptor in another thread has no effect on In
+summary, any application that relies on a particular behavior in this scenario
+must be considered buggy.  The Linux kernel allows file descriptor sets of
+arbitrary size, determining the length of the sets to be checked from the
+value of However, in the glibc implementation, the type is fixed in size.  See
+also BUGS.  The interface described in this page is implemented by glibc.  The
+underlying Linux system call is named This system call has somewhat different
+behavior from the glibc wrapper function.  The Linux system call modifies its
+argument.  However, the glibc wrapper function hides this behavior by using a
+local variable for the timeout argument that is passed to the system call.
+Thus, the glibc function does not modify its argument; this is the behavior
+required by POSIX.1-2001.  The final argument of the system call is not a
+pointer, but is instead a structure of the form: struct {
+    const kernel_sigset_t *ss;	 /* Pointer to signal set */
+    size_t ss_len;		 /* Size (in bytes) of object
+				    pointed to by 'ss' */ }; This allows the
+system call to obtain both a pointer to the signal set and its size, while
+allowing for the fact that most architectures support a maximum of 6 arguments
+to a system call.  See for a discussion of the difference between the kernel
+and libc notion of the signal set.  glibc 2.0 provided an incorrect version of
+that did not take a argument.  From glibc 2.1 to glibc 2.2.1, one must define
+in order to obtain the declaration of from POSIX allows an implementation to
+define an upper limit, advertised via the constant on the range of file
+descriptors that can be specified in a file descriptor set.  The Linux kernel
+imposes no fixed limit, but the glibc implementation makes a fixed-size type,
+with defined as 1024, and the macros operating according to that limit.	 To
+monitor file descriptors greater than 1023, use or instead.  The
+implementation of the arguments as value-result arguments is a design error
+that is avoided in and According to POSIX, should check all specified file
+descriptors in the three file descriptor sets, up to the limit However, the
+current implementation ignores any file descriptor in these sets that is
+greater than the maximum file descriptor number that the process currently has
+open.  According to POSIX, any such file descriptor that is specified in one
+of the sets should result in the error Starting with glibc 2.1, glibc provided
+an emulation of that was implemented using and This implementation remained
+vulnerable to the very race condition that was designed to prevent.  Modern
+versions of glibc use the (race-free) system call on kernels where it is
+provided.  On Linux, may report a socket file descriptor as "ready for
+reading", while nevertheless a subsequent read blocks.	This could for example
+happen when data has arrived but upon examination has the wrong checksum and
+is discarded.  There may be other circumstances in which a file descriptor is
+spuriously reported as ready.  Thus it may be safer to use on sockets that
+should not block.  On Linux, also modifies if the call is interrupted by a
+signal handler (i.e., the error return).  This is not permitted by POSIX.1.
+The Linux system call has the same behavior, but the glibc wrapper hides this
+behavior by internally copying the to a local variable and passing that
+variable to the system call.  #include <stdio.h> #include <stdlib.h> #include
+<sys/select.h> #include <sys/time.h>  int main(void) {
+    int		    retval;
+    fd_set	    rfds;
+    struct timeval  tv;
+    /* Watch stdin (fd 0) to see when it has input. */
+    FD_ZERO(&rfds);
+    FD_SET(0, &rfds);
+    /* Wait up to five seconds. */
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    retval = select(1, &rfds, NULL, NULL, &tv);
+    /* Don't rely on the value of tv now! */
+    if (retval == -1)
+	perror("select()");
+    else if (retval)
+	printf("Data is available now.\n");
+	/* FD_ISSET(0, &rfds) will be true. */
+    else
+	printf("No data within five seconds.\n");
+    exit(EXIT_SUCCESS); } For a tutorial with discussion and examples, see
+
+

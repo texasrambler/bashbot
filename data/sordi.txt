@@ -1,0 +1,54 @@
+NAME
+     sordi – load and rewrite RDF data
+
+SYNOPSIS
+     sordi [-hv] [-i syntax] [-o syntax] [-s string] input [base_uri]
+
+DESCRIPTION
+     sordi is a command-line utility for loading RDF data into a model, and
+     writing it out again.
+
+     sordi is mainly useful for things like removing duplicate statements,
+     merging data files, or aggressive pretty-printing with statement
+     reordering.
+
+     The options are as follows:
+
+     -h, --help
+	  Print the command line options.
+
+     -i syntax
+	  Read input as syntax.	 Case is ignored, valid values are: “NQuads”,
+	  “NTriples”, “TriG”, “Turtle”.
+
+     -o syntax
+	  Write output as syntax.  Case is ignored, valid values are:
+	  “NQuads”, “NTriples”, “TriG”, “Turtle”.
+
+     -s string
+	  Parse string input instead of a file (terminates options).
+
+     -v	  Display version information and exit.
+
+EXIT STATUS
+     sordi exits with a status of 0, or non-zero if an error occurred.
+
+SEE ALSO
+     serdi(1)
+     sord_validate(1)
+     http://drobilla.net/software/sord/
+     http://gitlab.com/drobilla/sord/
+
+STANDARDS
+     W3C, RDF 1.1 NQuads, February 2014.  https://www.w3.org/TR/n-quads/
+
+     W3C, RDF 1.1 NTriples, February 2014.  https://www.w3.org/TR/n-triples/
+
+     W3C, RDF 1.1 TriG, February 2014.	https://www.w3.org/TR/trig/
+
+     W3C, RDF 1.1 Turtle, February 2014.  https://www.w3.org/TR/turtle/
+
+AUTHORS
+     sordi is a part of sord, by David Robillard <d@drobilla.net>.
+
+Sord 0.30.17		       November 29, 2022		  Sord 0.30.17

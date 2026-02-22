@@ -1,0 +1,8 @@
+avcstat - Display SELinux AVC statistics Display SELinux AVC statistics.  If
+the parameter is specified, the program will loop, displaying updated
+statistics every seconds.  Relative values are displayed by default.  Display
+the cumulative values.	Specifies the location of the AVC statistics file,
+defaulting to This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by James Morris <jmorris@redhat.com>.
+
+

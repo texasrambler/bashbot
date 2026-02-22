@@ -1,0 +1,19 @@
+
+
+bzgrep, bzfgrep, bzegrep - search possibly bzip2 compressed files for a
+regular expression [ grep_options ]
+[ egrep_options ]
+[ fgrep_options ] is used to invoke the on bzip2-compressed files. All options
+specified are passed directly to If no file is specified, then the standard
+input is decompressed if necessary and fed to grep.  Otherwise the given files
+are uncompressed if necessary and fed to If is invoked as or then or is used
+instead of If the GREP environment variable is set, uses it as the program to
+be invoked. For example:
+
+    for sh:  GREP=fgrep	 bzgrep string files
+    for csh: (setenv GREP fgrep; bzgrep string files) Charles Levert
+(charles@comm.polymtl.ca). Adapted to bzip2 by Philippe Troin <phil@fifi.org>
+for Debian GNU/Linux.  grep(1), egrep(1), fgrep(1), bzdiff(1), bzmore(1),
+bzless(1), bzip2(1)
+
+

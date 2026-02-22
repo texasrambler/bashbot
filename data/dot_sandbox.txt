@@ -1,0 +1,11 @@
+dot_sandbox - Graphviz sandbox dot_sandbox options... This program is a
+wrapper around Graphviz. It aims to provide a safe environment for the
+processing of untrusted input graphs and command line options. More precisely:
+No network access will be allowed.  The file system will be read-only. Command
+line options like -o ... and -O will not work. It is expected that the caller
+will render to stdout and pipe the output to their desired file.  The command
+line options to dot_sandbox are command line options to be passed to dot.
+Options are passed through unmodified.	The following sandboxing mechanisms
+are supported: Bubblewrap macOS sandbox-exec
+
+

@@ -1,0 +1,15 @@
+tty - print the file name of the terminal connected to standard input
+[OPTION]...  Print the file name of the terminal connected to standard input.
+-s, --silent, --quiet print nothing, only return an exit status --help display
+this help and exit --version output version information and exit Written by
+David MacKenzie.  GNU coreutils online help:
+<https://www.gnu.org/software/coreutils/>
+Report any translation bugs to <https://translationproject.org/team/>
+Copyright © 2025 Free Software Foundation, Inc.	 License GPLv3+: GNU GPL
+version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.  There is
+NO WARRANTY, to the extent permitted by law.  Full documentation
+<https://www.gnu.org/software/coreutils/tty>
+or available locally via: info '(coreutils) tty invocation'
+
+

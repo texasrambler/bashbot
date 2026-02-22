@@ -1,0 +1,12 @@
+pam_namespace_helper - Helper binary that creates home directories
+pam_namespace_helper pam_namespace_helper is a helper program for the
+pam_namespace module that sets up a private namespace for a session with
+polyinstantiated directories. The helper ensures that the namespace mount
+points exist before they are started to be used for the polyinstantiated
+directories. Mount points for home directories (lines with $HOME) are not
+created.  pam_namespace_helper should be run by systemd at system startup. It
+should also be run by the administrator after defining the polyinstantiated
+directories but before enabling them.  pam_namespace(8) Written by Topi
+Miettinen.
+
+

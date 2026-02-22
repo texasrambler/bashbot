@@ -1,0 +1,63 @@
+stapdyn - systemtap dyninst runtime
+
+
+[ ] [ ]
+
+
+The program is the dyninst back-end of the Systemtap tool.  It expects a
+shared library produced by the front-end tool, when run with
+
+Splitting the systemtap tool into a front-end and a back-end allows a user to
+compile a systemtap script on a development machine that has the debugging
+information (need to compile the script) and then transfer the resulting
+shared object to a production machine that doesn't have any development tools
+or debugging information installed.  Please refer to stappaths (7) for the
+version number, or run rpm -q systemtap (fedora/red hat) apt-get -v systemtap
+(ubuntu)
+
+The program supports the following options.  Any other option prints a list of
+supported options.  Verbose mode.  Print version number and exit.  Suppress
+warnings from the script.  Command CMD will be run and the program will exit
+when CMD does.	The '_stp_target' variable will contain the pid for CMD.  The
+'_stp_target' variable will be set to PID.  Send output to FILE. If the module
+uses bulk mode, the output will be in percpu files FILE_x(FILE_cpux in
+background and bulk mode) where 'x' is the cpu number. This supports
+strftime(3) formats for FILE.  Control coloring of error messages. WHEN must
+be either "never", "always", or "auto" (i.e. enable only if at a terminal). If
+the option is missing, then "auto" is assumed. Colors can be modified using
+the SYSTEMTAP_COLORS environment variable. See the manual page for more
+information on syntax and behaviour.  Sets the value of global variable var1
+to val. Global variables contained within a script are treated as options and
+can be set from the stapdyn command line.
+
+is either a module path or a module name.  If it is a module name, the module
+will be looked for in the following directory (where 'VERSION' is the output
+of "uname -r"): /lib/modules/VERSION/systemtap
+
+ $ stap --dyninst -p4 -m mod1 -e 'global var1="foo"; probe
+begin{printf("%s\n", var1); exit()}'
+Running this with an additional module argument:
+
+ $ stapdyn mod1.so var1="HelloWorld"
+ HelloWorld Spaces and exclamation marks currently cannot be passed into
+global variables this way.
+
+See the manual page for a collection of sample scripts.	 Here is a very basic
+example of how to use First, use to compile a script.  The program will report
+the pathname to the resulting module.	$ stap --dyninst -p4 -e 'probe begin {
+printf("Hello World!\n"); exit() }'
+ /home/user/.systemtap/cache/85/stap_8553d83f78c_265.so Run with the pathname
+to the module as an argument.	$ stapdyn
+/home/user/.systemtap/cache/85/stap_8553d83f78c_265.so
+ Hello World!
+
+Systemtap, in DynInst mode, is a developer tool, and runs completely
+unprivileged.  The Linux kernel will only permit one's own processes to be
+accessed, which is enforced by the system call.	 See the manual page for
+additional information on safety and security.
+
+
+Use the Bugzilla link of the project web page or our mailing list.
+
+
+

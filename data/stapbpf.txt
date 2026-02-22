@@ -1,0 +1,71 @@
+stapbpf - systemtap bpf runtime
+
+
+
+
+[ ]
+
+
+The program is the BPF back-end of the Systemtap tool.	It expects a bpf-elf
+file produced by the front-end tool, when run with
+
+Splitting the systemtap tool into a front-end and a back-end allows a user to
+compile a systemtap script on a development machine that has the debugging
+information needed to compile the script and then transfer the resulting
+shared object to a production machine that doesn't have any development tools
+or debugging information installed.  Please refer to for the version number,
+or run	$ rpm -q systemtap # (for Fedora/RHEL)
+ $ apt-get -v systemtap # (for Ubuntu)
+
+The program supports the following options.  Any other option prints a list of
+supported options.  Verbose mode.  Print version number and exit.  Suppress
+warnings from the script.  Print help message.	The '_stp_target' variable
+will be set to PID.  Send output to FILE.
+
+is the path of a bpf-elf file produced by the front-end tool, when run with
+
+Here is a very basic example of how to generate a module.  First, use to
+compile a script.  The program will report the name of the resulting module in
+the current working directory.	 $ stap --runtime=bpf -p4 -e 'probe begin {
+printf("Hello World!\n"); exit() }'
+ stap_28784.bo Run with the pathname to the module as an argument.   $ stapbpf
+./stap_28784.bo
+ Hello World!  If the option is omitted, will invoke automatically.
+
+This runtime is in an early stage of development and it currently lacks
+support for a number of features available in the default runtime.  A subset
+of the following probe points is supported:
+
+
+begin
+end
+kernel.*
+process.*
+timer.*
+perf.*
+procfs.*
+
+
+In general, probes based on the kprobes, uprobes, tracepoint and perf
+infrastructures are supported. See for more information on the probe points
+and which tracing infrastructures they are based on.
+
+loops, loops and loops are usable only in and probes.  statements are not
+supported.
+
+There is limited support for string operations. String variables and literals
+are limited to 64 characters, except for format strings, which are limited to
+256 characters.
+
+A subset of the statistical aggregate functionality is available, with support
+only for the extractor functions.
+
+The name of the bpf-elf file produced by the front-end tool should not be
+changed.
+
+See the manual page for additional information on safety and security.
+
+
+Use the Bugzilla link of the project web page or our mailing list.
+
+

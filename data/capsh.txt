@@ -1,0 +1,113 @@
+capsh - capability shell wrapper [OPTION]...  Linux capability support and use
+can be explored and constrained with this tool. This tool provides a handy
+wrapper for certain types of capability testing and environment creation. It
+also provides some debugging features useful for summarizing capability state.
+takes a number of optional arguments, acting on them in the order they are
+provided. They are as follows: Display the list of commands supported by
+Display prevailing capability and related state.  Display prevailing
+capability state, 1e capabilities and IAB vector.  Execute with trailing
+arguments. Note, you can use for specific commands.  Uses cap_launch(3) to
+fork a child to execute the shell. When the child exits, capsh exits with the
+status of the child or 1 in the case that the child was terminated by a
+signal.	 Execute again with the remaining arguments. Useful for testing
+behavior. Note, PATH is searched when the running was found via the shell's
+PATH searching. If the occurs after a argument the PATH located binary may not
+be resolve to the same binary as that running initially. This behavior is an
+intended feature as it can complete the chroot transition.  Uses cap_launch(3)
+to fork a child to re-execute capsh. When this child exits, capsh exits with
+the status of the child or 1 in the case that the child was terminated by a
+signal.	 Set the prevailing process capabilities to those specified by Where
+is a text-representation of a capability `Set' as per Remove the listed
+capabilities from the prevailing bounding set. The capabilities are a comma-
+separated list of capabilities as recognized by the function. Use of this
+feature requires that is operating with in its effective set.  Set the
+inheritable set of capabilities for the current process to equal those
+provided in the comma separated list. For this action to succeed, the
+prevailing process should already have each of these capabilities in the union
+of the current inheritable and permitted capability sets, or should be
+operating with in its effective set.  Assume the identity of the named user.
+That is, look up the user's UID and GID with and their group memberships with
+and set them all using and Following this command, the effective capabilities
+will be cleared, but the permitted set will not be, so the running program is
+still privileged.  Display the prevailing libcap mode as guessed by the
+function.  Force the program into a security mode. This is a set of securebits
+and prevailing capability arrangement recommended for its pre-determined
+security stance.  Lists all of the libcap modes supported by Confirm that the
+prevailing mode is that specified in or exit with a status 1.  Force all UID
+values to equal using the system call. This argument may require explicit
+preparation of the effective set.  use the function to set the UID of the
+current process. This performs all preparations for setting the UID without
+dropping capabilities in the process. Following this command the prevailing
+effective capabilities will be lowered.	 Exit with status 1 unless the current
+UID equals Force all GID values to equal using the system call.	 Exit with
+status 1 unless the current GIQ equals Set the supplementary groups to the
+numerical list provided. The groups are set with the system call. See for a
+more convenient way of doing this.  In a non-pure capability mode, the kernel
+provides liberal privilege to the super-user. However, it is normally the case
+that when the super-user changes UID to some lesser user, then capabilities
+are dropped. For these situations, the kernel can permit the process to retain
+its capabilities after a system call. This feature is known as support. The
+way to activate it using this program is with this argument. Setting the value
+to 1 will cause to be active. Setting it to 0 will cause keep-caps to
+deactivate for the current process. In all cases, is deactivated when an is
+performed. See for ways to disable this feature.  Set the security-bits for
+the program.  This is done using the operation.	 The list of supported bits
+and their meaning can be found in the header file. The program will list these
+bits via the command.  The argument is expressed as a numeric bitmask, in any
+of the formats permitted by An alternative to this bit-twiddling is embedded
+in the commandline arguments.  Execute the system call with the new root-
+directory (/) equal to This operation requires to be in effect.	 This command
+causes the program to fork a child process for so many seconds. The child will
+sleep that long and then exit with status 0. The purpose of this command is to
+support exploring the way processes are killable in the face of capability
+changes. See the command. Only one fork can be active at a time.  This
+commands causes a child to be with the specified signal. The command then
+waits for the child to exit.  If the exit status does not match the signal
+being used to kill it, the program exits with status 1.	 Give a brief textual
+description of what privileges the specified capability makes available to a
+running program. Note, instead of cap_xxx, one can provide a decimal number
+and capsh will look up the corresponding capability's description.  This
+option changes the shell that is invoked when the argument == is encountered.
+This option toggles the suppression of subsequent attempts to fixup --caps=
+and --inh= arguments. That is, when the prevailing Effective flag does not
+contain CAP_SETPCAP the to be raised Inheritable Flag values (in strict mode)
+are limited to those in the Permitted set. The strict mode defaults to off.
+Supplying this argument an even number of times restores this default
+behavior.  Scan each of the textual descriptions of capabilities, known to
+capsh, and display all descriptions that include phrase.  This is a
+convenience feature. If you look at there are some capability related fields
+of the following form:
+
+CapInh:	  0000000000000000
+CapPrm:	  0000003fffffffff
+CapEff:	  0000003fffffffff
+CapBnd:	  0000003fffffffff
+CapAmb:	  0000000000000000
+
+This option provides a quick way to decode a capability vector represented in
+this hexadecimal form.	Here's an example that decodes the two lowest
+capability bits:
+$ capsh --decode=3
+0x0000000000000003=cap_chown,cap_dac_override
+As the kernel evolves, more capabilities are added. This option can be used to
+verify the existence of a capability on the system. For example, will cause to
+promptly exit with a status of 1 when run on kernel 2.6.27.  However, when run
+on kernel 2.6.38 it will silently succeed.  Exit with status 1 unless the
+vector has capability raised.  Performs a check to see if the running kernel
+supports ambient capabilities. If not, exits with status 1.  Exit with status
+1 unless the vector has capability raised.  Exit with status 1 unless the
+vector has capability in its (default) non-blocked state.  Attempts to set the
+IAB tuple of inheritable capability vectors.  The text conventions used for
+xxx are those of and described in Adds the specified ambient capability to the
+running process.  Removes the specified ambient capability from the running
+process.  Drops all ambient capabilities from the running process.  Suppresses
+overriding of the HOME and USER environment variables when a subsequent
+argument is processed.	This argument is ignored unless it is the first one.
+If present, it suppresses the capsh runtime check to confirm the running
+libcap is recent enough that it can name all of the kernel supported
+capability values.  Following successful execution, exits with status 0.
+Following an error, immediately exits with status 1.  Written by Andrew G.
+Morgan <morgan@kernel.org>.  Please report bugs via:
+https://bugzilla.kernel.org/buglist.cgi?component=libcap&list_id=1090757 and
+
+

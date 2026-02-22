@@ -1,0 +1,12 @@
+stapsh
+
+
+
+
+The stapsh executable is used by the stap functionality, as a wrapper shell on
+the remote machines.  It is not intended to be run directly by users.
+
+
+Use the Bugzilla link of the project web page or our mailing list.
+
+

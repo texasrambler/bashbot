@@ -1,0 +1,13 @@
+pwhistory_helper - Helper binary that transfers password hashes from passwd or
+shadow to opasswd pwhistory_helper [...] pwhistory_helper is a helper program
+for the pam_pwhistory module that transfers password hashes from passwd or
+shadow file to the opasswd file and checks a password supplied by user against
+the existing hashes in the opasswd file.  The purpose of the helper is to
+enable tighter confinement of login and password changing services. The helper
+is thus called only when SELinux is enabled on the system.  The interface of
+the helper - command line options, and input/output data format are internal
+to the pam_pwhistory module and it should not be called directly from
+applications.  pam_pwhistory(8) Written by Tomas Mraz based on the code
+originally in pam_pwhistory and pam_unix modules.
+
+

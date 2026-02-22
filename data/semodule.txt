@@ -1,0 +1,73 @@
+semodule - Manage SELinux policy modules.
+
+semodule is the tool used to manage SELinux policy modules, including
+installing, upgrading, listing and removing modules.  semodule may also be
+used to force a rebuild of policy from the module store and/or to force a
+reload of policy without performing any other transaction.  semodule acts on
+module packages created by semodule_package.  Conventionally, these files have
+a .pp suffix (policy package), although this is not mandated in any way.
+
+force a reload of policy force a rebuild of policy (also reloads unless -n is
+used) Like --build, but reuses existing linked policy if no changes to module
+files are detected (by comparing with checksum from the last transaction).
+One can use this instead of -B to ensure that any changes to the module store
+done by an external tool (e.g. a package manager) are applied, while
+automatically skipping the module re-linking if there are no module changes.
+Temporarily remove dontaudits from policy.  Reverts whenever policy is rebuilt
+install/replace a module package deprecated, alias for --install deprecated,
+alias for --install remove existing module at desired priority (defaults to -X
+400) display list of installed modules (other than base) standard list highest
+priority, enabled, non-base modules full list all modules set priority for
+following operations (1-999) enable module disable module Extract a module
+from the store as an HLL or CIL file to the current directory.	A module is
+extracted as HLL by default. The name of the module written is <module-
+name>.<lang_ext> name of the store to operate on do not reload policy after
+commit prints help message and quit Preserve tunables in policy Recompile CIL
+modules built from HLL files use an alternate path for the semanage config Use
+an alternate path for the policy root Use an alternate path for the policy
+store root be verbose Extract module as a CIL file. This only affects the
+--extract option and only modules listed in --extract after this option.
+Extract module as an HLL file. This only affects the --extract option and only
+modules listed in --extract after this option.	Add SHA256 checksum of modules
+to the list output.
+
+# Install or replace a base policy package.
+$ semodule -b base.pp
+# Install or replace a non-base policy package.
+$ semodule -i httpd.pp
+# Install or replace all non-base modules in the current directory.
+# This syntax can be used with -i/u/r/E, but no other option can be entered after the module names
+$ semodule -i *.pp
+# Install or replace all modules in the current directory.
+$ ls *.pp | grep -Ev "base.pp|enableaudit.pp" | xargs /usr/sbin/semodule -b base.pp -i
+# List non-base modules.
+$ semodule -l
+# List all modules including priorities
+$ semodule -lfull
+# Remove a module at priority 100
+$ semodule -X 100 -r wireshark
+# Turn on all AVC Messages for which SELinux currently is "dontaudit"ing.
+$ semodule -DB
+# Turn "dontaudit" rules back on.
+$ semodule -B
+# Disable a module (all instances of given module across priorities will be disabled).
+$ semodule -d alsa
+# Install a module at a specific priority.
+$ semodule -X 100 -i alsa.pp
+# Set an alternate path for the policy root
+$ semodule -B -p "/tmp"
+# Set an alternate path for the policy store root
+$ semodule -B -S "/tmp/var/lib/selinux"
+# Write the HLL version of puppet and the CIL version of wireshark
+# modules at priority 400 to the current working directory
+$ semodule -X 400 --hll -E puppet --cil -E wireshark
+# Check whether a module in "localmodule.pp" file is same as installed module "localmodule"
+$ /usr/libexec/selinux/hll/pp localmodule.pp | sha256sum
+$ semodule -l -m | grep localmodule
+# Translate binary module file into CIL (useful for debugging installation errors)
+$ /usr/libexec/selinux/hll/pp alsa.pp > alsa.cil
+
+This manual page was written by Dan Walsh <dwalsh@redhat.com>.
+The program was written by Karl MacMillan <kmacmillan@tresys.com>, Joshua Brindle <jbrindle@tresys.com>, Jason Tang <jtang@tresys.com>
+
+

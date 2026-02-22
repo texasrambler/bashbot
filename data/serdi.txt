@@ -1,0 +1,111 @@
+NAME
+     serdi – read and write RDF syntax
+
+SYNOPSIS
+     serdi [-abefhlqv] [-c prefix] [-i syntax] [-o syntax] [-p prefix]
+	   [-r root] [-s string] input [base_uri]
+
+DESCRIPTION
+     serdi is a fast command-line utility for streaming and processing RDF
+     data.  It reads an RDF document and writes the data to stdout, possibly
+     transformed and/or in a different syntax.	By default, the input syntax
+     is guessed from the file extension, and output is written in NTriples or
+     NQuads.
+
+     serdi can be used to check for syntax errors, convert from one syntax to
+     another, pretty-print documents, or transform URIs and blank node IDs.
+
+     The options are as follows:
+
+     -a	  Write ASCII output.  If this is enabled, all non-ASCII characters
+	  will be escaped, even if the output syntax allows them to be written
+	  in UTF-8.
+
+     -b	  Bulk output writing.	If this is enabled, output will be written a
+	  page at a time, rather than a byte at a time.
+
+     -c prefix
+	  Chop prefix from matching blank node IDs.  This is typically used to
+	  revert the effects of -p.  For example, with prefix “doc01”, the
+	  blank node _:doc01b42 will be emitted as _:b42.
+
+     -e	  Eat input one character at a time, rather than a page at a time
+	  which is the default.	 This is useful when reading from a pipe since
+	  output will be generated immediately as input arrives, rather than
+	  waiting until an entire page of input has arrived.  With this option
+	  serdi uses one page less memory, but will likely be significantly
+	  slower.
+
+     -f	  Fast and loose URI mode: preserve full URIs (without qualifying or
+	  making relative), and pass prefixed names through as-is.
+
+     -h	  Print the command line options.
+
+     -i syntax
+	  Read input as syntax.	 Case is ignored, valid values are: “NQuads”,
+	  “NTriples”, “TriG”, “Turtle”.
+
+     -l	  Lax (non-strict) parsing.  If this is enabled, recoverable syntax
+	  errors will print a warning, but parsing will proceed starting at
+	  the next statement if possible.  Note that data may be lost when
+	  using this option.
+
+     -o syntax
+	  Write output as syntax.  Case is ignored, valid values are:
+	  “NQuads”, “NTriples”, “TriG”, “Turtle”.
+
+     -p prefix
+	  Add prefix to blank node IDs.	 This can be used to avoid clashes
+	  between blank node IDs in input documents.  The effects can be
+	  reversed in a later run with -c.  For example, with prefix “doc01”,
+	  the blank node _:b42 will be emitted as _:doc01b42.
+
+     -q	  Suppress all output except data.
+
+     -r root
+	  Keep relative URIs within a root URI.	 This will avoid creating any
+	  relative URI references with leading path segments like ../ that
+	  enter a parent of root.
+
+	  For example, if /home/you/file.ttl is written to the file
+	  /home/me/output.ttl using the destination's base URI, then it could
+	  be written as <../you/file.ttl>.  Setting -r file:///home/me/ would
+	  prevent references from “escaping” like this, so the above would
+	  instead be written as <file:///home/you/file.ttl>, since it can't be
+	  expressed relative to the root URI.
+
+	  This is useful for keeping relative references within some
+	  directory.
+
+     -s string
+	  Parse string input instead of a file (terminates options).
+
+     -v	  Display version information and exit.
+
+EXIT STATUS
+     serdi exits with a status of 0, or non-zero if an error occurred.
+
+EXAMPLES
+     Pretty-print a document:
+	  serdi -o turtle file.ttl > out.ttl
+
+     Print any errors:
+	  serdi file.ttl > /dev/null
+
+SEE ALSO
+     http://drobilla.net/software/serd/
+     http://gitlab.com/drobilla/serd/
+
+STANDARDS
+     W3C, RDF 1.1 NQuads, February 2014.  https://www.w3.org/TR/n-quads/
+
+     W3C, RDF 1.1 NTriples, February 2014.  https://www.w3.org/TR/n-triples/
+
+     W3C, RDF 1.1 TriG, February 2014.	https://www.w3.org/TR/trig/
+
+     W3C, RDF 1.1 Turtle, February 2014.  https://www.w3.org/TR/turtle/
+
+AUTHORS
+     serdi is a part of serd, by David Robillard <d@drobilla.net>.
+
+Serd 0.32.4		       January 18, 2025			   Serd 0.32.4

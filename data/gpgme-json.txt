@@ -1,0 +1,33 @@
+- Native messaging based GPGME operations
+
+gpgme-json is a JSON to GPGME bridge.  This interface allows web-browser
+extensions to communicate with the GPGME library through the Native Messaging
+facility from web-browser.
+
+
+gpgme-json accepts the following options on the command line:
+
+Enable interactive mode.  Interactive mode also provides some online help.
+
+Enable single request mode.
+
+Identify the type of the data found in ‘file’ or standard input -.
+
+Enable debug mode. Logs are saved to to ‘~/.gnupg/S.gpgme-json.log’.
+
+Note that you can also turn debug mode on and specify a custom logfile using
+the environment variable GPGME_JSON_DEBUG.
+
+Print GPGME library version.
+
+Print a usage message summarizing the most useful command-line options.
+
+Please report bugs to <https://bugs.gnupg.org>.
+
+gpgme-json is Copyright 2018-2024 g10 Code GmbH.  LGPL version 2.1 or later
+<https://www.gnu.org/licenses/>
+
+This is free software: you are free to change and redistribute it.  There is
+NO WARRANTY, to the extent permitted by law.
+
+

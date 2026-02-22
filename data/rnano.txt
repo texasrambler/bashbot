@@ -1,0 +1,21 @@
+
+rnano - a restricted nano
+
+
+rnano runs the nano editor in restricted mode.	This allows editing only the
+specified file or files, and doesn't allow the user access to the filesystem
+nor to a command shell.
+
+In restricted mode, nano will: not make backups; not allow suspending; not
+allow spell checking; not read nor write the history files; not allow saving
+the current buffer under a different name; not allow inserting another file or
+opening a new buffer; not allow appending or prepending to any file.
+
+Show the available command-line options and exit.  For all existing options,
+see the nano(1) man page.
+
+Please report bugs via
+
+
+
+

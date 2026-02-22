@@ -1,0 +1,42 @@
+chsh - change your login shell
+
+chsh [-s shell] [-l] [-h] [-V] [username]
+
+chsh is used to change your login shell. If a shell is not given on the
+command line, chsh prompts for one.
+
+chsh supports non-local entries (kerberos, LDAP, etc.) if linked with libuser,
+otherwise use ypchsh(1), lchsh(1) or any other implementation for non-local
+entries.
+
+-s, --shell shell Specify your login shell.
+
+-l, --list-shells Print the list of shells listed in /etc/shells and exit.
+
+-h, --help Display help text and exit. (Short option -h is used since version
+2.30; older versions used the now-deprecated -u).
+
+-V, --version Display version and exit. (Short option -V is used since version
+2.39; older versions used the now-deprecated -v).
+
+chsh will accept the full pathname of any executable file on the system.
+
+The default behavior for non-root users is to accept only shells listed in the
+/etc/shells file, and issue a warning for root user. It can also be configured
+at compile-time to only issue a warning for all users.
+
+Returns 0 if operation was successful, 1 if operation failed or command syntax
+was not valid.
+
+Salvatore Valente <svalente@mit.edu>
+
+login(1), login.defs(5), passwd(5), shells(5)
+
+For bug reports, use the issue tracker
+<https://github.com/util-linux/util-linux/issues>.
+
+The chsh command is part of the util-linux package which can be downloaded
+from Linux Kernel Archive
+<https://www.kernel.org/pub/linux/utils/util-linux/>.
+
+

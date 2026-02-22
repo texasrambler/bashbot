@@ -1,0 +1,70 @@
+devlink - Devlink tool
+
+
+
+
+
+
+Print the version of the utility and exit.
+
+Read commands from provided file or standard input and invoke them.  First
+failure will cause termination of devlink.
+
+Don't terminate devlink on errors in batch mode.  If there were any errors
+during execution of the commands, the application return code will be non
+zero.
+
+Turn off printing out nice names, for example netdevice ifnames instead of
+devlink port identification.
+
+Generate JSON output.
+
+When combined with -j generate a pretty JSON output.
+
+Turn on verbose output.
+
+Output statistics.
+
+Switches to the specified network namespace.
+
+Print human readable rates in IEC units (e.g. 1Ki = 1024).
+
+Print dump numbers in hexadecimal format.
+
+
+- devlink device.
+
+- devlink port.
+
+- watch for netlink messages.
+
+- devlink shared buffer configuration.
+
+- devlink device resource configuration.
+
+- devlink address region access
+
+- devlink reporting and recovery
+
+- devlink trap configuration
+
+
+Specifies the action to perform on the object.	The set of possible actions
+depends on the object type.  As a rule, it is possible to (or ) objects, but
+some objects do not allow all of these operations or have some additional
+commands. The command is available for all objects. It prints out a list of
+available commands and argument syntax conventions.
+
+If no command is given, some default command is assumed.  Usually it is or, if
+the objects of this class cannot be listed,
+
+Exit status is 0 if command was successful or a positive integer upon failure.
+
+
+Report any bugs to the Network Developers mailing list where the development
+and maintenance is primarily done.  You do not have to be subscribed to the
+list to send a message there.
+
+Jiri Pirko <jiri@mellanox.com>
+
+

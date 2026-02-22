@@ -1,0 +1,7 @@
+psfstriptable - remove the embedded Unicode character table from a console
+font reads a .psf format console font from removes the embedded Unicode font
+table if there is one, and writes the result to An input file name of "-"
+denotes standard input, and an output file name of "-" denotes standard
+output.
+
+

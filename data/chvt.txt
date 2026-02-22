@@ -1,0 +1,8 @@
+chvt - change foreground virtual terminal [option...]  [N] The command makes
+the foreground terminal.  (The corresponding screen is created if it did not
+exist yet.  To get rid of unused VTs, use The key combination (with in the
+range 1-12) usually has a similar effect.  -C, --console=DEV the console
+device to be used.  -V, --version print version number.	 -h, --help print this
+usage message.	Andries Brouwer <aeb@cwi.nl>
+
+

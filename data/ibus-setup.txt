@@ -1,0 +1,24 @@
+- configuration program for ibus
+
+
+
+IBus is an Intelligent Input Bus. It is a new input framework for Linux OS. It
+provides full featured and user friendly input method user interface.  It also
+may help developers to develop input method easily.
+
+is the configuration program for IBus.
+
+Homepage: https://github.com/ibus/ibus/wiki
+
+Use system keyboard layout If this option is enabled, use your system keymap
+instead and IBus does not change it with any input method engines. The system
+keymap is decided by your desktop session. IBus calls command internally to
+set the selected keymap and override the system keymap if this options is
+disabled.  You can check the current keymap with command.  Share the same
+input method among all applications If this option is disabled, You can choose
+an input metod engine by input context.
+
+If you find a bug, please report it at https://github.com/ibus/ibus/issues
+
+
+

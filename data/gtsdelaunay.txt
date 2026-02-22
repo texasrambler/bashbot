@@ -1,0 +1,22 @@
+
+delaunay - constructs the constrained Delaunay triangulation of the input
+
+
+This manual page documents briefly the command. This command constructs the
+constrained Delaunay triangulation of the input
+
+This program follow the usual GNU command line syntax, with long options
+starting with two dashes (`-').	 A summary of options is included below.  Do
+not keep convex hull.  Do not add constrained edges.  Split constraints
+(experimental).	 Remove holes from the triangulation.  Remove duplicate
+vertices.  Shuffle input vertex list.  Check Delaunay property.	 Generate
+evolution files.  Generate conforming triangulation.  Maximum number of
+Steiner points for conforming triangulation (default is no limit).  Set the
+minimum acceptable face quality.  Set the maximum acceptable face area.	 Print
+statistics about the triangulation.  Display the help and exit.
+
+delaunay was written by Stephane Popinet <popinet@users.sourceforge.net>.
+This manual page was written by Ruben Molina <rmolina@udea.edu.co>, for the
+Debian project (but may be used by others).
+
+

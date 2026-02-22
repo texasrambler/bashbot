@@ -1,0 +1,32 @@
+gst-inspect-1.0 - print info about a GStreamer plugin or element
+gst-inspect-1.0 is a tool that prints out information on available GStreamer
+plugins, information about a particular plugin, or information about a
+particular element.  When executed with no PLUGIN or ELEMENT argument,
+gst-inspect-1.0 will print a list of all plugins and elements together with a
+summary.  When executed with a PLUGIN or ELEMENT argument, gst-inspect-1.0
+will print information about that plug-in or element.  gst-inspect-1.0 accepts
+the following arguments and options: Name of a plugin Name of an element Print
+help synopsis and available FLAGS GStreamer info flags to set (list with
+--help) Print all plugins and elements Print list of blacklisted files List
+the plugin contents Allow inspecting only elements that match all the element
+types filtered in this slash (´/´) separated list of element types. Those
+types correspond to what is also called ´klass´ which is a string describing
+the type of element, like ´Decoder´, ´Audio´, ´Encoder´ etc... This options
+implies that only elements will be printed (not typefind functions or
+tracers).  Check if the specified element or plugin exists When checking if an
+element or plugin exists, also check that its version is at least the version
+specified Print supported URI schemes, with the elements that implement them
+Disable colors in output. You can also achieve the same by setting
+´GST_INSPECT_NO_COLORS´ environment variable to any value.  Color output, even
+when not connected to a tty.  Print a machine-parsable list of features the
+specified plugin provides.  Useful in connection with external automatic
+plugin installation mechanisms.	 GStreamer debugging flags to set (list with
+--help) GStreamer info and debugging flags to set (list with --help) Add
+directories separated with ':' to the plugin search path gst-inspect-1.0 reads
+the following environment variables, in addition to the generic GStreamer
+environment variables also described in Override the options passed to less
+(by default "RXF").
+See less(1) for more information.  The GStreamer team at
+http://gstreamer.freedesktop.org/
+
+

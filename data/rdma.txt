@@ -1,0 +1,66 @@
+rdma - RDMA tool
+
+
+
+
+
+
+
+-V[ersion] | -d[etails] | -j[son] | -o[neline] | -p[retty] }
+
+
+Print the version of the tool and exit.
+
+Read commands from provided file or standard input and invoke them.  First
+failure will cause termination of rdma.
+
+Don't terminate rdma on errors in batch mode.  If there were any errors during
+execution of the commands, the application return code will be non zero.
+
+Output detailed information.  Adding a second -d includes driver-specific
+details.
+
+Output includes driver-specific details in raw format.
+
+When combined with -j generate a pretty JSON output.
+
+Generate JSON output.
+
+output each record on a single line, replacing line feeds with the character.
+
+
+- RDMA device.
+
+- RDMA port related.
+
+- RDMA resource configuration.
+
+- RDMA subsystem related.
+
+- RDMA counter statistic related.
+
+- RDMA events monitor
+
+The names of all objects may be written in full or abbreviated form, for
+example can be abbreviated as or just
+
+
+Specifies the action to perform on the object.	The set of possible actions
+depends on the object type.  As a rule, it is possible to (or ) objects, but
+some objects do not allow all of these operations or have some additional
+commands. The command is available for all objects. It prints out a list of
+available commands and argument syntax conventions.
+
+If no command is given, some default command is assumed.  Usually it is or, if
+the objects of this class cannot be listed,
+
+Exit status is 0 if command was successful or a positive integer upon failure.
+
+
+Report any bugs to the Linux RDMA mailing list where the development and
+maintenance is primarily done.	You do not have to be subscribed to the list
+to send a message there.
+
+Leon Romanovsky <leonro@mellanox.com>
+
+

@@ -1,0 +1,42 @@
+sestatus - SELinux status tool
+
+This tool is used to get the status of a system running SELinux.
+
+This manual page describes the program.
+
+This tool is used to get the status of a system running SELinux. It displays
+data about whether SELinux is enabled or disabled, location of key
+directories, and the loaded policy with its status as shown in the example: >
+sestatus
+SELinux status:		     enabled
+SELinuxfs mount:	     /selinux
+SELinux root directory:	     /etc/selinux
+Loaded policy name:	     targeted
+Current mode:		     permissive
+Mode from config file:	     enforcing
+Policy MLS status:	     enabled
+Policy deny_unknown status:  allow
+Memory protection checking:  actual (secure)
+Max kernel policy version:   26
+
+sestatus can also be used to display: The security context of files and
+processes listed in the /etc/sestatus.conf file. The format of this file is
+described in sestatus.conf(5).	The status of booleans.
+
+Displays the contexts of files and processes listed in the /etc/sestatus.conf
+file. It also checks whether the file is a symbolic link, if so then the
+context of the target file is also shown.
+
+The following contexts will always be displayed: The current process context
+The init process context
+The controlling terminal file context
+
+Display the current state of booleans.
+
+
+This man page was written by Daniel Walsh <dwalsh@redhat.com>.
+The program was written by Chris PeBenito <pebenito@gentoo.org>
+
+
+
+

@@ -1,0 +1,14 @@
+
+gtstemplate - generates of a template used to create new object classes.
+
+
+This manual page documents briefly the command.
+
+These programs follow the usual GNU command line syntax, with long options
+starting with two dashes (`-').	 A summary of options is included below.
+
+gtstemplate was written by Stephane Popinet <popinet@users.sourceforge.net>.
+This manual page was written by Ruben Molina <rmolina@udea.edu.co>, for the
+Debian project (but may be used by others).
+
+

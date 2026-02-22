@@ -1,0 +1,17 @@
+gc - count graph components [ ] [ ] is a graph analogue to in that it prints
+to standard output the number of nodes, edges, connected components or
+clusters contained in the input files.	It also prints a total count for all
+graphs if more than one graph is given.	 The following options are supported:
+Count nodes.  Count edges.  Count connected components.	 Count clusters. By
+definition, a cluster is a graph or subgraph whose name begins with "cluster".
+Count all. Equivalent to Recursively analyze subgraphs.	 Print no output. Only
+exit value is important.  Only analyze directed graphs.	 Only analyze
+undirected graphs.  Verbose output.  Print usage information.  By default,
+returns the number of nodes and edges.	The following operand is supported:
+Names of files containing 1 or more graphs in dot format.  If no operand is
+specified, the standard input will be used.  The following exit values are
+returned: Successful completion.  The or option was used, and a graph of the
+wrong type was encountered.  Emden R. Gansner <erg@research.att.com> wc(1),
+acyclic(1), gvpr(1), gvcolor(1), ccomps(1), sccmap(1), tred(1), libgraph(3)
+
+

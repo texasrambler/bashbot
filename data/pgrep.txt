@@ -1,0 +1,81 @@
+pgrep, pkill, pidwait - look up, signal, or wait for processes based on name
+and other attributes [options] pattern
+[options] pattern
+[options] pattern looks through the currently running processes and lists the
+process IDs which match the selection criteria to stdout.  All the criteria
+have to match.	For example, $ pgrep -u root sshd will only list the processes
+called AND owned by On the other hand, $ pgrep -u root,daemon will list the
+processes owned by OR will send the specified signal (by default to each
+process instead of listing them on stdout.  will wait for each process instead
+of listing them on stdout.  -signal --signal signal Defines the signal to send
+to each matched process.  Either the numeric or the symbolic signal name can
+be used. In or mode only the long option can be used and has no effect unless
+used in conjunction with --require-handler to filter to processes with a
+userspace signal handler present for a particular signal.
+
+-c, --count Suppress normal output; instead print a count of matching
+processes.  When count does not match anything, e.g. returns zero, the command
+will return non-zero value. Note that for pkill and pidwait, the count is the
+number of matching processes, not the processes that were successfully
+signaled or waited for.	 -d, --delimiter delimiter Sets the string used to
+delimit each process ID in the output (by default a newline).  only.)  -e,
+--echo Display name and PID of the process being killed.  only.)  -f, --full
+The is normally only matched against the process name.	When is set, the full
+command line is used.  -g, --pgroup pgrp,...  Only match processes in the
+process group IDs listed.  Process group 0 is translated into or own process
+group.	-G, --group gid,...  Only match processes whose real group ID is
+listed.	 Either the numerical or symbolical value may be used.	-i,
+--ignore-case Match processes case-insensitively.  -l, --list-name List the
+process name as well as the process ID.	 only.)	 -a, --list-full List the full
+command line as well as the process ID.	 only.)	 -n, --newest Select only the
+newest (most recently started) of the matching processes.  -o, --oldest Select
+only the oldest (least recently started) of the matching processes.  -O,
+--older secs Select processes older than secs.	-P, --parent ppid,...  Only
+match processes whose parent process ID is listed.  -s, --session sid,...
+Only match processes whose process session ID is listed.  Session ID 0 is
+translated into or own session ID.  -t, --terminal term,...  Only match
+processes whose controlling terminal is listed.	 The terminal name should be
+specified without the "/dev/" prefix.  -u, --euid euid,...  Only match
+processes whose effective user ID is listed.  Either the numerical or
+symbolical value may be used.  -U, --uid uid,...  Only match processes whose
+real user ID is listed.	 Either the numerical or symbolical value may be used.
+-v, --inverse Negates the matching.  This option is usually used in or
+context.  In context the short option is disabled to avoid accidental usage of
+the option.  -w, --lightweight Shows all thread ids instead of pids in or
+context.  In context this option is disabled.  -x, --exact Only match
+processes whose names (or command lines if -f is specified) match the -F,
+--pidfile file Read PIDs from file.  This option is more useful for or than
+-L, --logpidfile Fail if pidfile (see -F) not locked.  -r, --runstates
+D,R,S,Z,...  Match only processes which match the process state.  -A,
+--ignore-ancestors Ignore all ancestors of or For example, this can be useful
+when elevating with or similar tools.  -H, --require-handler Only match
+processes with a userspace signal handler present for the signal to be sent.
+--cgroup name,...  Match on provided control group (cgroup) v2 name. See --ns
+pid Match processes that belong to the same namespaces. Required to run as
+root to match processes from other users. See --nslist for how to limit which
+namespaces to match.  --nslist name,...	 Match only the provided namespaces.
+Available namespaces: ipc, mnt, net, pid, user, uts.  -q, --queue value Use
+rather than and the value argument is used to specify an integer to be sent
+with the signal. If the receiving process has installed a handler for this
+signal using the SA_SIGINFO flag to then it can obtain this data via the
+si_value field of the siginfo_t structure.  -V, --version Display version
+information and exit.  -h, --help Display help and exit.  Specifies an
+Extended Regular Expression for matching against the process names or command
+lines.	Example 1: Find the process ID of the daemon: $ pgrep -u root named
+Example 2: Make reread its configuration file: $ pkill -HUP syslogd Example 3:
+Give detailed information on all processes: $ ps -fp $(pgrep -d, -x xterm)
+Example 4: Make all processes run nicer: $ renice +4 $(pgrep chrome) 0 One or
+more processes matched the criteria. For and one or more processes must also
+have been successfully signalled or waited for.	 1 No processes matched or
+none of them could be signalled.  2 Syntax error in the command line.  3 Fatal
+error: out of memory etc.  The process name used for matching is limited to
+the 15 characters present in the output of /proc/pid/stat.  Use the -f option
+to match against the complete command line, /proc/pid/cmdline. Threads may not
+have the same process name as the parent process but will have the same
+command line.  The running or process will never report itself as a match.
+The option will silently fail if /proc is mounted with the subset=pid option.
+The options and and can not be combined.  Let me know if you need to do this.
+Defunct processes are reported.	 requires the system call which first appeared
+in Linux 5.3.  Kjetil Torgrim Homme Please send bug reports to
+
+

@@ -1,0 +1,43 @@
+libtool - Provide generalized library-building support services [OPTION]...
+[MODE-ARG]...  Provide generalized library-building support services.
+--config show all configuration variables --debug enable verbose shell tracing
+-n, --dry-run display commands without modifying any files --features display
+basic configuration information --finish use operation '--mode=finish'
+--mode=MODE use operation mode MODE --no-finish don't update shared library
+cache --no-quiet, --no-silent print default informational messages
+--no-warnings equivalent to '-Wnone' --preserve-dup-deps don't remove
+duplicate dependency libraries --quiet, --silent don't print informational
+messages --reorder-cache=DIRS reorder shared library cache for preferred DIRS
+--tag=TAG use configuration variables from tag TAG -v, --verbose print more
+informational messages than default --version print version information -W,
+--warnings=CATEGORY report the warnings falling in CATEGORY [all] -h, --help,
+--help-all print short, long, or detailed help message 'all' show all warnings
+'none' turn off all the warnings 'error' warnings are treated as fatal errors
+MODE must be one of the following: clean remove files from the build directory
+compile compile a source file into a libtool object execute automatically set
+library path, then run a program finish complete the installation of libtool
+libraries install install libraries or executables link create a library or an
+executable uninstall remove libraries from an installed directory MODE-ARGS
+vary depending on the MODE.  When passed as first option, '--mode=MODE' may be
+abbreviated as 'MODE' or a unique abbreviation of that.	 GNU libtool home
+page: <https://www.gnu.org/software/libtool/>.	When reporting a bug, please
+describe a test case to reproduce it and include the following information:
+host-triplet: x86_64-redhat-linux-gnu shell: /bin/sh compiler: gcc compiler
+flags: -O2 -flto=auto -ffat-lto-objects -fexceptions -g -grecord-gcc-switches
+-pipe -Wall -Werror=format-security -Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=3
+-Wp,-D_GLIBCXX_ASSERTIONS -specs=/usr/lib/rpm/redhat/redhat-annobin-cc1	 -m64
+-march=x86-64 -mtune=generic -fasynchronous-unwind-tables
+-fstack-clash-protection -fcf-protection -mtls-dialect=gnu2
+-fno-omit-frame-pointer -mno-omit-leaf-frame-pointer linker: /usr/bin/ld -m
+elf_x86_64 (gnu? yes) version: libtool (GNU libtool) 2.5.4 automake: automake
+(GNU automake) 1.18.1 autoconf: autoconf (GNU Autoconf) 2.72 Report bugs to
+<bug-libtool@gnu.org>.	Copyright © 2025 Free Software Foundation, Inc.
+License GPLv2+: GNU GPL version 2 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.  There is
+NO WARRANTY, to the extent permitted by law.  Originally written by Gordon
+Matzigkeit, 1996 (See AUTHORS for complete contributor listing) The full
+documentation for is maintained as a Texinfo manual.  If the and programs are
+properly installed at your site, the command should give you access to the
+complete manual.
+
+

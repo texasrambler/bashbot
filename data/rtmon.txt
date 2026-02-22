@@ -1,0 +1,31 @@
+rtmon - listens to and monitors RTnetlink
+
+
+
+
+This manual page documents briefly the command.	 listens on socket and
+monitors routing table changes.
+
+can be started before the first network configuration command is issued.  For
+example if you insert:
+
+
+in a startup script, you will be able to view the full history later.
+Certainly, it is possible to start rtmon at any time. It prepends the history
+with the state snapshot dumped at the moment of starting.
+
+Print version and exit.	 Show summary of options.  Log output to FILE. OBJECTS
+is the list of object types that we want to monitor. It may contain 'link',
+'address', 'route' and 'all'. 'link' specifies the network device, 'address'
+the protocol (IP or IPv6) address on a device, 'route' the routing table entry
+and 'all' does what the name says.  Specify protocol family. 'inet' is IPv4,
+'inet6' is IPv6, 'link' means that no networking protocol is involved and
+'help' prints usage information.  Use IPv4. Shortcut for -family inet.	Use
+IPv6. Shortcut for -family inet6.  Use a special family identifier meaning
+that no networking protocol is involved. Shortcut for -family link.  Log to
+file /var/log/rtmon.log, then run: to display logged output from file.	was
+written by Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>.  This manual page was
+written by Michael Prokop <mika@grml.org>, for the Debian project (but may be
+used by others).
+
+

@@ -1,0 +1,24 @@
+pidof - find the process ID of a running program finds the process id's (pids)
+of the named programs. It prints those id's on the standard output.  Single
+shot - this instructs the program to only return one pid.  Only return process
+ids that are running with the same root directory.  This option is ignored for
+non-root users, as they will be unable to check the current root directory of
+processes they do not own.  Quiet mode, suppress any output and only sets the
+exit status accordingly.  Show also processes that do not have visible command
+line (e.g. kernel worker threads).  Scripts too - this causes the program to
+also return process id's of shells running the named scripts.  Tells pidof to
+omit processes with that process id. The special pid %PPID can be used to name
+the parent process of the pidof program, in other words the calling shell or
+shell script.  Shows all thread ids instead of pids.  Use separator as a
+separator put between pids. Used only when more than one pids are printed for
+the program.  The -d option is an alias for this option for sysvinit
+compatibility.	At least one program was found with the requested name.	 No
+program was found with the requested name.
+
+When using the -x option, only has a simple method for detecting scripts and
+will miss scripts that, for example, use env. This limitation is due to how
+the scripts look in the proc filesystem.
+
+Jaromir Capik
+
+

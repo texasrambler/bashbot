@@ -1,0 +1,17 @@
+unsetfiles - Remove SELinux file security contexts.
+
+This program removes the SELinux file security contexts of files.  It can help
+cleaning extended file attributes after disabling SELinux.  will only work on
+SELinux disabled systems, since removing file security contexts is not
+supported by SELinux.
+
+Show usage information and exit.  Do not actually remove any SELinux file
+security contexts.  Remove SELinux file security contexts recursive.  Be
+verbose about performed actions.  Do not cross filesystem boundaries.
+
+One or more path names to operate on.
+
+
+Christian Göttsche (cgzones@googlemail.com)
+
+

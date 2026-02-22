@@ -1,0 +1,13 @@
+recountdiff - recompute patch counts and offsets recountdiff [file...]
+recountdiff {[--help] | [--version]} recountdiff recomputes the counts and
+offsets in unified context diffs. It does this in two passes: first the counts
+are corrected by inspection of the actual patch lines, and then the offsets
+are adjusted according to the computed counts.	The corrected diff is sent to
+standard output.  --help Display a short usage message.	 --version Display the
+version number of recountdiff.	There are some things that cannot be dealt
+with. If you have removed the first context line in a hunk, for example, there
+is no way for recountdiff to know that. For more precise fixing up, use
+rediff(1), which uses the original and modified diffs.	rediff(1) Tim Waugh
+<twaugh@redhat.com> Package maintainer
+
+

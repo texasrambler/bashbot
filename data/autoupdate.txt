@@ -1,0 +1,20 @@
+autoupdate - Update a configure.ac to a newer Autoconf [OPTION]... [TEMPLATE-
+FILE]...  Update each TEMPLATE-FILE if given, or 'configure.ac' if present, or
+else 'configure.in', to the syntax of the current version of Autoconf.	The
+original files are backed up.  -h, --help print this help, then exit -V,
+--version print version number, then exit -v, --verbose verbosely report
+processing -d, --debug don't remove temporary files -f, --force consider all
+files obsolete -B, --prepend-include=DIR prepend directory DIR to search path
+-I, --include=DIR append directory DIR to search path Written by David J.
+MacKenzie and Akim Demaille.  Report bugs to or via Savannah: Copyright © 2023
+Free Software Foundation, Inc.	License GPLv3+/Autoconf: GNU GPL version 3 or
+later <https://gnu.org/licenses/gpl.html>,
+<https://gnu.org/licenses/exceptions.html>
+This is free software: you are free to change and redistribute it.  There is
+NO WARRANTY, to the extent permitted by law.
+
+The full documentation for Autoconf is maintained as a Texinfo manual.	To
+read the manual locally, use the command You can also consult the Web version
+of the manual at
+
+

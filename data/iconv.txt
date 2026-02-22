@@ -1,0 +1,48 @@
+iconv - convert text from one character encoding to another The program reads
+in text in one encoding and outputs the text in another encoding.  If no input
+files are given, or if it is given as a dash (-), reads from standard input.
+If no output file is given, writes to standard output.	If no is given, the
+default is derived from the current locale's character encoding.  If no is
+given, the default is derived from the current locale's character encoding.
+Use for input characters.  Use for output characters.  If the string is
+appended to characters that cannot be converted are discarded and an error is
+printed after conversion.  If the string is appended to characters being
+converted are transliterated when needed and possible.	This means that when a
+character cannot be represented in the target character set, it can be
+approximated through one or several similar looking characters.	 Characters
+that are outside of the target character set and cannot be transliterated are
+replaced with a question mark (?) in the output.  List all known character set
+encodings.  Silently discard characters that cannot be converted instead of
+terminating when encountering such characters.	Use for output.	 This option
+is ignored; it is provided only for compatibility.  Print progress information
+on standard error when processing multiple files.  Print a usage summary and
+exit.  Print a short usage summary and exit.  Print the version number,
+license, and disclaimer of warranty for Zero on success, nonzero on errors.
+Internally, the program uses the function which in turn uses modules
+(dynamically loaded shared libraries) to convert to and from a character set.
+Before calling the program must first allocate a conversion descriptor using
+The operation of the latter function is influenced by the setting of the
+environment variable: If is not set, loads the system gconv module
+configuration cache file created by and then, based on the configuration,
+loads the gconv modules needed to perform the conversion.  If the system gconv
+module configuration cache file is not available then the system gconv module
+configuration file is used.  If is defined (as a colon-separated list of
+pathnames), the system gconv module configuration cache is not used.  Instead,
+first tries to load the configuration files by searching the directories in in
+order, followed by the system default gconv module configuration file.	If a
+directory does not contain a gconv module configuration file, any gconv
+modules that it may contain are ignored.  If a directory contains a gconv
+module configuration file and it is determined that a module needed for this
+conversion is available in the directory, then the needed module is loaded
+from that directory, the order being such that the first suitable module found
+in is used.  This allows users to use custom modules and even replace system-
+provided modules by providing such modules in directories.  Usual default
+gconv module path.  Usual system default gconv module configuration file.
+Usual system gconv module configuration cache.	Depending on the architecture,
+the above files may instead be located at directories with the path prefix
+POSIX.1-2008.  POSIX.1-2001.  Convert text from the ISO/IEC 8859-15 character
+encoding to UTF-8: $ iconv -f ISO-8859-15 -t UTF-8 < input.txt > output.txt
+The next example converts from UTF-8 to ASCII, transliterating when possible:
+$ echo abc ß α € àḃç | iconv -f UTF-8 -t ASCII//TRANSLIT abc ss ? EUR abc
+
+

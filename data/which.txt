@@ -1,0 +1,60 @@
+which - shows the full path of (shell) commands.  [options] [--] programname
+[...] Which takes one or more arguments. For each of its arguments it prints
+to stdout the full path of the executables that would have been executed when
+this argument had been entered at the shell prompt. It does this by searching
+for an executable or script in the directories listed in the environment
+variable PATH using the same algorithm as bash(1).
+
+This man page is generated from the file which.texinfo.
+
+Print all matching executables in PATH, not just the first.  Read aliases from
+stdin, reporting matching ones on stdout. This is useful in combination with
+using an alias for which itself. For example
+alias which=’alias | which -i’.	 Ignore option ‘--read-alias’, if any. This is
+useful to explicity search for normal binaries, while using the ‘--read-alias’
+option in an alias or function for which.  Read shell function definitions
+from stdin, reporting matching ones on stdout. This is useful in combination
+with using a shell function for which itself.  For example:
+which() { declare -f | which --read-functions $@ }
+export -f which Ignore option ‘--read-functions’, if any. This is useful to
+explicity search for normal binaries, while using the ‘--read-functions’
+option in an alias or function for which.  Skip directories in PATH that start
+with a dot.  Skip directories in PATH that start with a tilde and executables
+which reside in the HOME directory.  If a directory in PATH starts with a dot
+and a matching executable was found for that path, then print "./programname"
+rather than the full path.  Output a tilde when a directory matches the HOME
+directory. This option is ignored when which is invoked as root.  Stop
+processing options on the right if not on tty.	Print version information on
+standard output then exit successfully.	 Print usage information on standard
+output then exit successfully.	Which returns the number of failed arguments,
+or -1 when no ‘programname’ was given.	The recommended way to use this
+utility is by adding an alias (C shell) or shell function (Bourne shell) for
+which like the following:
+
+[ba]sh:
+
+which ()
+{
+  (alias; declare -f) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@
+}
+export -f which
+
+[t]csh:
+
+alias which ’alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde’
+
+This will print the readable ~/ and ./ when starting which from your prompt,
+while still printing the full path when used from a script:
+
+> which q2
+~/bin/q2
+> echo $(which q2)
+/home/carlo/bin/q2
+
+The HOME directory is determined by looking for the HOME environment variable,
+which aborts when this variable doesn’t exist.	Which will consider two
+equivalent directories to be different when one of them contains a path with a
+symbolic link.
+Carlo Wood <carlo@gnu.org> bash(1)
+
+

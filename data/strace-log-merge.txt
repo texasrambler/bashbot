@@ -1,0 +1,48 @@
+strace-log-merge - merge strace -ff -tt output
+
+merges log files produced by the command.  It prepends the Process ID (PID) to
+each line and sorts the combined output chronologically by timestamp.  Show
+program usage and exit.	 Specifies the file name prefix for the log files
+produced by a command.	The utility will read all files matching the
+STRACE_LOG.* pattern.  Success An error occurred.  This can be due to a
+missing argument (in which case usage information is printed) or a failure
+during the processing of the files.
+
+$ strace -o sleepy -ff -tt -e trace=execve,nanosleep \
+	sh -c 'sleep 0.1 & sleep 0.2 & sleep 0.3'
+$ strace-log-merge sleepy | fold -w 72 -s
+13475 21:13:52.040837 execve("/bin/sh", ["sh", "-c", "sleep 0.1 & sleep
+0.2 & sleep 0."...], 0x7ffde54b2450 /* 33 vars */) = 0
+13478 21:13:52.044050 execve("/bin/sleep", ["sleep", "0.3"],
+0x5631be4f87a8 /* 33 vars */) = 0
+13476 21:13:52.044269 execve("/bin/sleep", ["sleep", "0.1"],
+0x5631be4f87a8 /* 33 vars */) = 0
+13477 21:13:52.044389 execve("/bin/sleep", ["sleep", "0.2"],
+0x5631be4f87a8 /* 33 vars */) = 0
+13478 21:13:52.046207 nanosleep({tv_sec=0, tv_nsec=300000000}, NULL) = 0
+13476 21:13:52.046303 nanosleep({tv_sec=0, tv_nsec=100000000}, NULL) = 0
+13477 21:13:52.046318 nanosleep({tv_sec=0, tv_nsec=200000000}, NULL) = 0
+13476 21:13:52.146852 +++ exited with 0 +++
+13475 21:13:52.146942 --- SIGCHLD {si_signo=SIGCHLD,
+si_code=CLD_EXITED, si_pid=13476, si_uid=1000, si_status=0, si_utime=0,
+si_stime=0} ---
+13477 21:13:52.247782 +++ exited with 0 +++
+13475 21:13:52.247885 --- SIGCHLD {si_signo=SIGCHLD,
+si_code=CLD_EXITED, si_pid=13477, si_uid=1000, si_status=0, si_utime=0,
+si_stime=0} ---
+13478 21:13:52.347680 +++ exited with 0 +++
+13475 21:13:52.347786 --- SIGCHLD {si_signo=SIGCHLD,
+si_code=CLD_EXITED, si_pid=13478, si_uid=1000, si_status=0, si_utime=0,
+si_stime=0} ---
+13475 21:13:52.348069 +++ exited with 0 +++
+
+may fail to correctly sort logs that were generated with and span across
+midnight.  This is because the standard timestamp lacks date information,
+which is required for proper sorting.  Using the option with solves this
+problem, as its timestamp format includes the date.  does not validate the
+format of the input files.  It assumes that all files matching the glob
+pattern are correctly formatted log files from a single session.  The initial
+version of was written by Denys Vlasenko in 2012.  Problems with should be
+reported to the mailing list at <strace-devel@lists.strace.io>.
+
+

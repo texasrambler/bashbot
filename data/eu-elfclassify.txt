@@ -1,0 +1,59 @@
+eu-elfclassify - Determine the type of an ELF file.  eu-elfclassify [--core]
+	[--debug-only]
+	[--elf]
+	[--elf-archive]
+	[--elf-file]
+	[--executable]
+	[--library]
+	[--linux-kernel-module]
+	[--loadable]
+	[--program]
+	[--shared]
+	[--unstripped]
+	[-f| --file]
+	[--no-stdin]
+	[--stdin]
+	[--stdin0]
+	[-z| --compressed]
+	[--matching]
+	[--no-print]
+	[--not-matching]
+	[--print]
+	[--print0]
+	[-q| --quiet]
+	[-v| --verbose]
+	[-?| --help]
+	[--usage]
+	[-V| --version]	 elffile...  eu-elfclassify identifies the primary
+purpose of a particular kind of
+ ELF file or files The long and short forms of options, shown here as
+alternatives, are equivalent. All of the classification options must apply at
+the same time to a particular file.  Classification options can be negated
+using a --not-	prefix.	 File is an ELF core dump file.	 File is a debug only
+ELF file (separate .debug, .dwo or dwz multi-file).  File looks like an ELF
+object or archive/static library (default).  File is an ELF archive or static
+library.  File is an regular ELF object (not an archive/static library).  File
+is (primarily) an ELF program executable (not primarily a DS.O) File is an ELF
+shared object (DSO) (might also be an executable).  File is a linux kernel
+module.	 File is a loadable ELF object (program or shared object).  File is an
+ELF program executable (might also be a DSO).  File is (primarily) an ELF
+shared object (DSO) (not primarily an executable).  File is an ELF file with
+symbol table or .debug_* sections and can be stripped further.	Only classify
+regular (not symlink nor special device) files.	 Do not read files from
+standard input (default).  Also read file names to process from standard
+input, separated by newlines.  Also read file names to process from standard
+input, separated by ASCII NUL bytes.  Try to open compressed files or embedded
+(kernel) ELF images.  If printing file names, print matching files (default).
+Do not output file names.  If printing file names, print files that do not
+match.	Output names of files, separated by newline.  Output names of files,
+separated by ASCII NUL.	 Suppress some error output (counterpart to
+--verbose).  Output additional information (can be specified multiple times).
+Give this help list.  Give a short usage message.  Print program version.
+
+Written by Florian Wiemer.  Please reports bugs at
+https://sourceware.org/bugzilla/ Copyright © 2019 Red Hat Inc.	License
+GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.	 This
+is free software: you are free to change and redistribute it.  There is NO
+WARRANTY, to the extent permitted by law.
+
+

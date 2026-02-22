@@ -1,0 +1,8 @@
+doxyindexer - creates a search index from raw search data [-o output_dir]
+searchdata.xml [searchdata2.xml...]  Generates a search index called
+doxysearch.db from one or more search data files produced by Doxygen. Use
+doxysearch.cgi as a CGI program to search the data indexed by doxyindexer.  -o
+<output_dir> The directory where to write the doxysearch.db to.	 If omitted
+the current directory is used.	doxygen(1), doxysearch(1), doxywizard(1).
+
+

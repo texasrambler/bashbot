@@ -1,0 +1,19 @@
+
+gtscheck - checks that a surface defines a closed, orientable non self-
+intersecting manifold.
+
+This manual page documents briefly the command.
+
+These programs follow the usual GNU command line syntax, with long options
+starting with two dashes (`-').	 A summary of options is included below.
+Print statistics about the surface.  Display the help and exit.
+
+The return status reflects the error encountered: none the input file is not a
+valid GTS file the surface is not an orientable manifold the surface is an
+orientable manifold but is self-intersecting
+
+gtscheck was written by Stephane Popinet <popinet@users.sourceforge.net>.
+This manual page was written by Ruben Molina <rmolina@udea.edu.co>, for the
+Debian project (but may be used by others).
+
+

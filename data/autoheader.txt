@@ -1,0 +1,30 @@
+autoheader - Create a template header for configure [OPTION]... [TEMPLATE-
+FILE] Create a template file of C '#define' statements for 'configure' to use.
+To this end, scan TEMPLATE-FILE, or 'configure.ac' if present, or else
+'configure.in'.	 -h, --help print this help, then exit -V, --version print
+version number, then exit -v, --verbose verbosely report processing -d,
+--debug don't remove temporary files -f, --force consider all files obsolete
+-W, --warnings=CATEGORY report the warnings falling in CATEGORY
+(comma-separated list accepted) cross cross compilation issues gnu GNU coding
+standards (default in gnu and gnits modes) obsolete obsolete features or
+constructions (default) override user redefinitions of Automake rules or
+variables portability portability issues (default in gnu and gnits modes)
+portability-recursive nested Make variables (default with -Wportability)
+extra-portability extra portability issues related to obscure tools syntax
+dubious syntactic constructs (default) unsupported unsupported or incomplete
+features (default) all turn on all the warnings none turn off all the warnings
+no-CATEGORY turn off warnings in CATEGORY error treat all enabled warnings as
+errors -B, --prepend-include=DIR prepend directory DIR to search path -I,
+--include=DIR append directory DIR to search path Written by Roland McGrath
+and Akim Demaille.  Report bugs to or via Savannah: Copyright © 2023 Free
+Software Foundation, Inc.  License GPLv3+/Autoconf: GNU GPL version 3 or later
+<https://gnu.org/licenses/gpl.html>,
+<https://gnu.org/licenses/exceptions.html>
+This is free software: you are free to change and redistribute it.  There is
+NO WARRANTY, to the extent permitted by law.
+
+The full documentation for Autoconf is maintained as a Texinfo manual.	To
+read the manual locally, use the command You can also consult the Web version
+of the manual at
+
+

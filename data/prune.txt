@@ -1,0 +1,54 @@
+
+prune - Prune directed graphs [ ] [ ] [ ] [ ] [ ] reads directed graphs in the
+same format used by and removes subgraphs rooted at nodes specified on the
+command line via options. These nodes themselves will not be removed, but can
+be given attributes so that they can be easily located by a graph stream
+editor such as correctly handles cycles, loops and multi‐edges.
+
+Both options can appear multiple times on the command line. All subgraphs
+rooted at the respective nodes given will then be processed. If a node does
+not exist, will skip it and print a warning message to stderr.	If multiple
+attributes are given, they will be applied to all nodes that have been
+processed.  writes the result to the stdout.  Specifies name of node to prune.
+Specifies attribute that will be set (or changed if it exists) for any pruned
+node.  is a string of the form Verbose output.	Prints the usage and exits.
+An input graph of the form    digraph DG {
+       A -> B;
+       A -> C;
+
+       B -> D;
+       B -> E;
+     }
+
+, processed by the command    prune -n B test.gv would produce the following
+output (the actual code might be formatted in a slightly different way).
+     digraph DG {
+       A -> B;
+       A -> C;
+     }
+
+Another input graph of the form	   digraph DG {
+       A -> B;
+       A -> C;
+
+       B -> D;
+       B -> E;
+
+       C -> E;
+     }
+
+(note the additional edge from to ), processed by the command	 prune -n B -N
+color=red test.gv results in  digraph DG {
+       B [color=red];
+       A -> B;
+       A -> C;
+       C -> E;
+     }
+
+Node has not been removed since its second parent is not being pruned.
+
+returns 0 on successful completion.  It returns 1 if an error occurs.
+
+Marcus Harnisch <marcus.harnisch@gmx.net>
+
+

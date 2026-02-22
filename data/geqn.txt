@@ -1,0 +1,305 @@
+eqn - format mathematics (equations) for or MathML The GNU implementation of
+is part of the document formatting system.  is a preprocessor that translates
+expressions in its own language, embedded in input files, into mathematical
+notation typeset by It copies each contents to the standard output stream,
+translating each between lines starting with and or within a pair of user-
+specified delimiters.  Normally, is not executed directly by the user, but
+invoked by specifying the option to While GNU input syntax is highly
+compatible with AT&T the output produces cannot be processed by AT&T GNU (or a
+implementing relevant GNU extensions) must be used.  If no operands are given
+on the command line, or if is reads the standard input stream.	Unless the
+option is used, searches for the file in the directories given with the option
+first, then in and finally in the standard macro directory If it exists and is
+readable, processes it before any input files.	This man page primarily
+discusses the differences between GNU and AT&T Most of the new features of the
+GNU input language are based on TeX.  There are some references to the
+differences between TeX and GNU below; these may safely be ignored if you do
+not know TeX.  Three points are worth special note.  GNU emits Presentation
+MathML output when invoked with the option.  GNU does not support terminal
+devices well, though it may suffice for simple inputs.	GNU sets the input
+token as an ellipsis on the text baseline, not the three centered dots of AT&T
+Set an ellipsis on the math axis with the GNU extension macro input consists
+of tokens.  Consider a form of Newton's second law of motion.  The input .EQ F
+= m a .EN becomes F = m a. Each of and is a token.  Spaces and newlines are
+interchangeable; they separate tokens but do not break lines or produce space
+in the output.	The following input characters not only separate tokens, but
+manage their grouping and spacing as well.  Braces perform grouping.  Whereas
+expresses means When immediately preceded by a or primitive, a brace loses its
+special meaning.  are the and respectively.  Use them to tune the appearance
+of the output.	Tab and leader characters separate tokens as well as advancing
+the drawing position to the next tab stop, but are seldom used in input.  When
+they occur, they must appear at the outermost lexical scope.  This roughly
+means that they can't appear within braces that are necessary to disambiguate
+the input; will diagnose an error in this event.  (See subsection “Macros”
+below for additional token separation rules.)  Other tokens are primitives,
+macros, an argument to either of the foregoing, or components of an equation.
+are fundamental keywords of the language.  They can configure an aspect of the
+preprocessor's state, as when setting a “global” font selection or type size
+and or declaring or deleting macros and these are termed Other primitives
+perform formatting operations on the tokens after them (as with or Equation
+include mathematical variables, constants, numeric literals, and operators.
+remaps some input character sequences to special character escape sequences
+for economy in equation entry and to ensure that glyphs from an unstyled font
+are used; see
++   \[pl]		 '    \[fm]
+-   \[mi]		 <=   \[<=]
+=   \[eq]		 >=   \[>=]
+permit primitives, components, and other macros to be collected and referred
+to by a single token.  Predefined macros make convenient the preparation of
+input in a form resembling its spoken expression; for example, consider and
+GNU imputes types to the components of an equation, adjusting the spacing
+between them accordingly.  Recognized types are as follows; most affect
+spacing only, whereas the subtype of also assigns a style.
+ordinary      character such as “1”, “a”, or “!”
+ letter	      character to be italicized by default
+ digit	      n/a
+operator      large operator such as “Σ”
+binary	      binary operator such as “+”
+relation      relational operator such as “=”
+opening	      opening bracket such as “(”
+closing	      closing bracket such as “)”
+punctuation   punctuation character such as “,”
+inner	      sub-formula contained within brackets
+suppress      component to which automatic spacing is not applied
+Two primitives apply types to equation components.  Apply to Assign each
+character in (unquoted) persistently.  sets up spacings and styles as if by
+the following commands.
+chartype "letter"      abcdefghiklmnopqrstuvwxyz
+chartype "letter"      ABCDEFGHIKLMNOPQRSTUVWXYZ
+chartype "letter"      \[*a]\[*b]\[*g]\[*d]\[*e]\[*z]
+chartype "letter"      \[*y]\[*h]\[*i]\[*k]\[*l]\[*m]
+chartype "letter"      \[*n]\[*c]\[*o]\[*p]\[*r]\[*s]
+chartype "letter"      \[*t]\[*u]\[*f]\[*x]\[*q]\[*w]
+chartype "binary"      *\[pl]\[mi]
+chartype "relation"    <>\[eq]\[<=]\[>=]
+chartype "opening"     {([
+chartype "closing"     })]
+chartype "punctuation" ,;:.
+chartype "suppress"    ^~
+assigns all other ordinary and special characters, including numerals 0–9, the
+type.  (The type is not used, but is available for customization.)  In keeping
+with common practice in mathematical typesetting, lowercase, but not
+uppercase, Greek letters are assigned the type to style them in italics.  The
+macros for producing ellipses, and use the type.  supports without alteration
+the AT&T primitives and The GNU extension primitives and are discussed in
+subsection “Spacing and typeface” above; in subsection “Customization” below;
+and and in subsection “Fonts” below.  In the following synopses, can be any
+character not appearing in the parameter thus bracketed.  Set as an accent
+over is assumed to be at the appropriate height for a lowercase letter without
+an ascender; vertically shifts it depending on height.	For example, is
+defined as follows.  accent { "^" } and are also defined using the primitive.
+Enlarge the expression semantics like those of CSS “large” are intended.  In
+output, the type size is increased by 5 scaled points.	MathML output emits
+the following.	<mstyle mathsize='big'> Interpolate the contents of omitting
+lines beginning with or If a relative path name, is sought relative to the
+current working directory.  If is defined as a primitive or macro, interpret
+As but since is not quoted it is subject to macro expansion; it is not split
+up and the spacing between characters not adjusted per subsection “Spacing and
+typeface” above.  As but set the prime symbol as an operator In the input
+the “1” is tucked under the prime as a subscript to the “A” (as is
+conventional in mathematical typesetting), whereas when is used, the “1” is a
+subscript to the prime character.  The precedence of is the same as that of
+and and higher than that of other primitives except and In unquoted text, a
+neutral apostrophe that is not the first character on the input line is
+treated like As but is not recognized as a macro if called with arguments.  As
+but reduces the type size of and and puts less vertical space between and and
+the fraction bar.  The primitive corresponds to the TeX primitive in displayed
+equation styles; corresponds to in non-display (“inline”) styles.
+Set extra vertical spacing around the equation, replacing the default values,
+where an integer in hundredths of an em.  If positive, vertical spacing before
+the equation; if negative, it does so after the equation.  This primitive
+provides an interface to escape sequence, but with the opposite sign
+convention.  It has no effect if the equation is part of a picture.  Construct
+an object by calling The string contains the output and the registers and the
+width, height, depth, subscript kern, and skew respectively.  (The of an
+object indicates how much a subscript on that object should be “tucked in”, or
+placed to the left relative to a non-subscripted glyph of the same size.  The
+of an object is how far to the right of the center of the object an accent
+over it should be placed.)  The macro must modify so that it outputs the
+desired result, returns the drawing position to the text baseline at the
+beginning of and updates the foregoing registers to correspond to the new
+dimensions of the result.  Suppose you want a construct that “cancels” an
+expression by drawing a diagonal line through it.
+.de Ca .  ds 0s \ \Z'\\*(0s'\ \v'\\n(0du'\ \D'l \\n(0wu -\\n(0hu-\\n(0du'\
+\v'\\n(0hu' ..	.EQ special Ca "x \[mi] 3 \[pl] x" ~ 3 .EN We use the and
+special characters instead of + and - because they are part of the argument to
+a macro, so does not transform them to mathematical glyphs for us.  Here's a
+more complicated construct that draws a box around an expression; the bottom
+of the box rests on the text baseline.	We define the macro to wrap the call
+of the macro
+.de Bx .ds 0s \ \Z'\\h'1n'\\*[0s]'\ \v'\\n(0du+1n'\ \D'l \\n(0wu+2n 0'\ \D'l 0
+-\\n(0hu-\\n(0du-2n'\ \D'l -\\n(0wu-2n 0'\ \D'l 0 \\n(0hu+\\n(0du+2n'\
+\h'\\n(0wu+2n' .nr 0w +2n .nr 0d +1n .nr 0h +1n ..  .EQ define box ' special
+Bx $1 ' box(foo) ~ "bar" .EN As but since is quoted, it is not subject to
+macro expansion; it is split up and the spacing between characters adjusted
+per subsection “Spacing and typeface” above.  Set as an accent under is
+assumed to be at the appropriate height for a letter without a descender;
+vertically shifts it depending on whether has a descender.  is predefined
+using as a tilde accent below the baseline.  Remove definition of macro or
+primitive making it undefined.	Vertically center about the a horizontal line
+upon which fraction bars and characters such as “+” and “−” are aligned.
+MathML already behaves this way, so ignores this primitive when producing that
+output format.	The built-in macro is defined as if by the following.  define
+sum ! { type "operator" vcenter size +5 \(*S } !
+GNU extends the syntax of some AT&T primitives, introducing one deliberate
+incompatibility.  recognizes an argument to the primitive specially, restoring
+any delimiters previously disabled with If delimiters haven't been specified,
+neither command has effect.  Few documents are expected to use “o” and “n” as
+left and right delimiters, respectively.  If yours does, consider swapping
+them, or select others.	 The integer (in hundredths of an em) increases the
+vertical spacing between rows, using escape sequence (the value has no effect
+in MathML mode).  Negative values are accepted but have no effect.  If more
+than one occurs in a matrix or pile, the largest is used.  When generates
+input, the appearance of equations is controlled by a large number of
+parameters.  They have no effect when generating MathML, which delegates
+typesetting to a MathML rendering engine.  Configure these parameters with the
+primitive.  assigns the integer interpreted in units of hundredths of an em
+unless otherwise stated.  For example, set x_height 45 says that should assume
+that the font's x-height is 0.45 ems.  Available parameters are as follows;
+defaults are shown in parentheses.  We intend these descriptions to be
+expository rather than rigorous.  sets a floor for the type size (in scaled
+points) at which equations are set The primitive emboldens an equation by
+overprinting two copies of the equation horizontally offset by this amount In
+MathML mode, components to which applies instead use the following.  <mstyle
+mathvariant='double-struck'> A fraction bar is longer by twice this amount
+than the maximum of the widths of the numerator and denominator; in other
+words, it overhangs the numerator and denominator by at least this amount When
+or is applied to a single character, the line is this long Normally, or
+produces a line whose length is the width of the object to which it applies;
+in the case of a single character, this tends to produce a line that looks too
+long.  Extensible delimiters produced with the and primitives have a combined
+height and depth of at least this many thousandths of twice the maximum amount
+by which the sub-equation that the delimiters enclose extends away from the
+axis Extensible delimiters produced with the and primitives have a combined
+height and depth not less than the difference of twice the maximum amount by
+which the sub-equation that the delimiters enclose extends away from the axis
+and this amount This much horizontal space is inserted on each side of a
+fraction The width of subscripts and superscripts is increased by this amount
+This amount of space is automatically inserted after punctuation characters.
+It also configures the width of the space produced by the token This amount of
+space is automatically inserted on either side of binary operators This amount
+of space is automatically inserted on either side of relations.	 It also
+configures the width of the space produced by the token The height of
+lowercase letters without ascenders such as “x” The height above the baseline
+of the center of characters such as “+” and “−” It is important that this
+value is correct for the font you are using.  This should be set to the
+thickness of the character, or the thickness of horizontal lines produced with
+the escape sequence The primitive shifts up the numerator by at least this
+amount The primitive shifts up the numerator by at least this amount The
+primitive shifts down the denominator by at least this amount The primitive
+shifts down the denominator by at least this amount Normally superscripts are
+shifted up by at least this amount Superscripts within superscripts or upper
+limits or numerators of fractions are shifted up by at least this amount
+Conventionally, this is less than Superscripts within denominators or square
+roots or subscripts or lower limits are shifted up by at least this amount
+Conventionally, this is less than Subscripts are normally shifted down by at
+least this amount When there is both a subscript and a superscript, the
+subscript is shifted down by at least this amount The baseline of a
+superscript is no more than this much below the top of the object on which the
+superscript is set The baseline of a subscript is at least this much below the
+bottom of the object on which the subscript is set The baseline of an upper
+limit is at least this much above the top of the object on which the limit is
+set The baseline of a lower limit is at least this much below the bottom of
+the object on which the limit is set The bottom of an upper limit is at least
+this much above the top of the object on which the limit is set The top of a
+lower limit is at least this much below the bottom of the object on which the
+limit is set This much vertical space is added above and below limits The
+baselines of the rows in a pile or matrix are normally this far apart Usually
+equal to the sum of and The midpoint between the top baseline and the bottom
+baseline in a matrix or pile is shifted down by this much from the axis
+Usually equal to This much space is added between columns in a matrix This
+much space is added at each side of a matrix
+If non-zero, draws lines using the escape sequence, rather than the escape
+sequence and the special character.  The file sets the default: and the X11
+devices, is the presumed height of an equation above the text baseline; adds
+any excess as extra pre-vertical line spacing with escape sequence is the
+presumed depth of an equation below the text baseline; adds any excess as
+extra post-vertical line spacing with escape sequence If non-zero, then
+behaves like and is ignored, otherwise behaves like and is ignored.  The file
+sets the default: and devices, In GNU macros can take arguments.  A word
+defined by any of the or primitives followed immediately by a left parenthesis
+is treated as a subsequent tokens up to a matching right parenthesis are
+treated as comma-separated arguments.  In this context only, commas and
+parentheses also serve as token separators.  A macro argument is not
+terminated by a comma inside parentheses nested within it.  In a macro
+definition, , where is between 1 and 9 inclusive, is replaced by the argument;
+if there are fewer than it is replaced by nothing.  GNU supports the
+predefined macros offered by AT&T and The lowercase classical Greek letters
+are available as and Spell them with an initial capital letter or in full
+capitals to obtain uppercase forms.  GNU further defines the macros and (all
+discussed above), which sets a dollar sign, and which sets an ellipsis on the
+text baseline.	uses up to three typefaces to set an equation: italic
+(oblique), roman (upright), and bold.  Assign each a typeface with the
+primitives and The defaults are the styles and (applied to the current font
+family).  The primitive (see above) sets a character's type, which determines
+the face used to set it.  The type is set in italics; others are set in roman.
+Use the primitive to select an (upright) bold style.  as the bold font.	 This
+is a GNU extension.  as the italic font.  as the roman font.  This is a GNU
+extension.
+displays a usage message, while and show version information; all exit
+afterward.  Recognize and even when followed by a character other than space
+or newline.  Specify delimiters for left for right ends of equations not
+bracketed by and need not be distinct.	Any statements in the source file
+override this option.  is equivalent to is equivalent to Search for before
+those listed in section “Description” above.  Prohibit newlines within
+delimiters.  This option allows to recover better from missing closing
+delimiters.  Set sub- and superscripts smaller than the surrounding text.
+This option is deprecated.  normally sets sub- and superscripts at 70% of the
+type size of the surrounding text.  Reduce the type size of subscripts at most
+once relative to the base type size for the equation.  Don't load is
+equivalent to This option is deprecated.  Prepare output for the device In
+most cases, the effect of this is to define a macro with a value uses this to
+provide definitions appropriate for the device.	 However, if the specified
+driver is “MathML”, the output is MathML markup rather than input, and is not
+loaded at all.	The default output device is Initialization file.  MathML is
+designed on the assumption that it cannot know the exact physical
+characteristics of the media and devices on which it will be rendered.	It
+does not support control of motions and sizes to the same degree does.
+customization parameters have no effect on generated MathML.  The and
+primitives cannot be implemented, and yield a MathML “<merror>” message
+instead.  The primitive is silently ignored, as centering on the math axis is
+the MathML default.  Characters that sets extra large in mode—notably the
+integral sign—may appear too small and need to have their “<mstyle>” wrappers
+adjusted by hand.  As in its mode, in MathML mode leaves the and tokens in
+place, but emits nothing corresponding to delimiters.  They can, however, be
+recognized as character sequences that begin with “<math>”, end with
+“</math>”, and do not cross line boundaries.  Tokens must be double-quoted in
+input if they are not to be recognized as names of macros or primitives, or if
+they are to be interpreted by In particular, short ones, like and can collide
+with identifiers.  For instance, the command does not select Palatino italic
+font for the global italic face; you must use instead.	Delimited equations
+are set at the type size current at the beginning of the input line, not
+necessarily that immediately preceding the opening delimiter.  Unlike TeX,
+does not inherently distinguish displayed and inline equation styles; see the
+primitive above.  However, macro packages frequently define and macros such
+that the equation within is displayed.	These macros may accept arguments
+permitting the equation to be labeled or captioned; see the package's
+documentation.	abuses terminology—its “equations” can be inequalities, bare
+expressions, or unintelligible gibberish.  But there's no changing it now.  In
+mode, lowercase Greek letters are rendered in roman instead of italic style.
+In MathML mode, the and features don't work.  These could, in theory, be
+implemented with “<maligngroup>” elements.  In MathML mode, each digit of a
+numeric literal gets a separate “<mn></mn>” pair, and decimal points are
+tagged with “<mo></mo>”.  This is allowed by the specification, but
+inefficient.  We first illustrate usage with a trigonometric identity.	.EQ
+sin ( alpha + beta ) = sin alpha cos beta + cos alpha sin beta .EN It can be
+convenient to set up delimiters if mathematical content will appear frequently
+in running text.  .EQ delim $$ .EN Having cached a table of logarithms, the
+property $ln ( x y ) = ln x + ln y$ sped calculations.	The quadratic formula
+illustrates use of fractions and radicals, and affords an opportunity to use
+the full space token .EQ x = { - b ~ \[+-] ~ sqrt { b sup 2 - 4 a c } } over {
+2 a } .EN Alternatively, we could define the plus-minus sign as a binary
+operator.  Automatic spacing puts 0.06 em less space on either side of the
+plus-minus than ~ does, this being the difference between the widths of the
+parameter used by binary operators and that of the full space.	Independently,
+we can define a macro “frac” for setting fractions.  .EQ chartype "binary"
+\[+-] define frac ! { $1 } over { $2 } !  x = frac(- b \[+-] sqrt { b sup 2 -
+4 a c }, 2 a) .EN “Typesetting Mathematics—User's Guide” (2nd edition), by
+Brian W. Kernighan and Lorinda L. Cherry, 1978, AT&T Bell Laboratories
+Computing Science Technical Report No. 17.  by Donald E. Knuth, 1984, Addison-
+Wesley Professional.  Appendix G discusses many of the parameters from section
+“Customization” above in greater detail.  particularly subsections “Logical
+symbols”, “Mathematical symbols”, and “Greek glyphs”, documents a variety of
+special character escape sequences useful in mathematical typesetting.
+
+

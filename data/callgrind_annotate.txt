@@ -1,0 +1,35 @@
+callgrind_annotate - post-processing tool for the Callgrind callgrind_annotate
+[options] [callgrind-out-file [source-files...]]  callgrind_annotate takes an
+output file produced by the Valgrind tool Callgrind and prints the information
+in an easy-to-read form.  -h --help Show summary of options.  --version Show
+version of callgrind_annotate.	--show=A,B,C [default: all] Only show figures
+for events A,B,C.  --threshold=<0--100> [default: 99%]	Percentage of counts
+(of primary sort event) we are interested in.
+
+callgrind_annotate stops printing functions when the sum of the cost
+percentage of the printed functions is bigger or equal to the given threshold
+percentage.  --sort=A,B,C Sort columns by events A,B,C [event column order].
+
+Optionally, each event is followed by a : and a threshold, to specify
+different thresholds depending on the event.
+
+callgrind_annotate stops printing functions when the sum of the cost
+percentage of the printed functions for all the events is bigger or equal to
+the given event threshold percentages.
+
+When one or more thresholds are given via this option, the value of
+--threshold is ignored.	 --show-percs=<no|yes> [default: no]  When enabled, a
+percentage is printed next to all event counts. This helps gauge the relative
+importance of each function and line.  --auto=<yes|no> [default: yes]
+Annotate all source files containing functions that helped reach the event
+count threshold.  --context=N [default: 8]  Print N lines of context before
+and after annotated lines.  --inclusive=<yes|no> [default: no]	Add subroutine
+costs to functions calls.  --tree=<none|caller|calling|both> [default: none]
+Print for each function their callers, the called functions or both.  -I,
+--include=<dir>	 Add dir to the list of directories to search for source
+files.	valgrind(1), $INSTALL/share/doc/valgrind/html/index.html or
+http://www.valgrind.org/docs/manual/index.html.	 Josef Weidendorfer
+<Josef.Weidendorfer@gmx.de>.  This manual page was written by Philipp
+Frauenfelder <pfrauenf@debian.org>.
+
+

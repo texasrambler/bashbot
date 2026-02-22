@@ -1,0 +1,58 @@
+- command line utility for ibus
+
+COMMAND [OPTION]...
+
+
+IBus is an Intelligent Input Bus. It is a new input framework for Linux OS. It
+provides full featured and user friendly input method user interface.  It also
+may help developers to develop input method easily.
+
+is a command line utility which can restart or exit ibus-daemon, get or set
+the current ibus engine or list the ibus engines.
+
+Homepage: https://github.com/ibus/ibus/wiki
+
+help Show the commands list.  engine [ENGINE_NAME] Show the curent ibus engine
+when is not given. Set to the current ibus engine.  exit Exit ibus-daemon.
+list-engine Show ibus engines list.  restart [--type=TYPE|--verbose|--help]
+Restart ibus-daemon. This command tries to restart ibus-daemon via systemd
+firstly and directly secondary by default. If is given, It tries to restart
+via systemd only. If is given, It tries to restart with an IBus API only.
+GNOME desktop runs ibus-daemon via systemd and other desktops run ibus-daemon
+directly.  start [--type=TYPE|--verbose|--help] Start ibus-daemon. This
+command tries to start ibus-daemon via systemd firstly and directly secondary
+by default. If is given, It tries to start as a background process via systemd
+only. If is given, It tries to start directly only as a foreground process and
+other option arguments of ibus command are sent to ibus-daemon. E.g.  ibus
+start & GNOME desktop runs ibus-daemon via systemd and other desktops run
+ibus-daemon directly.  version Show the ibus version.  read-cache
+[--system|--file=FILE|--help] Show the content of the user registry cache if
+is not given.  Show the content of the system registry cache if is given.
+Show the content of the custom registry cache if is given.  write-cache
+[--system|--file=FILE|--help] Save the user registry cache if is not given.
+Save the system registry cache if is given.  Save the custom registry cache if
+is given.
+
+By default, it reads the component XML files from the standard component
+directory (/usr/share/ibus/component), you can set IBUS_COMPONENT_PATH
+environment variable for custom component directories, separated by ':'.
+address Show the D-Bus address of ibus-daemon.	read-config Print the setting
+values in a gsettings configuration file.  reset-config Reset the user setting
+values to the default ones in a gsettings configuration file.  watch Under
+construction.  emoji [--font=FONT|--lang=LANG|--help|--partial-match] Launch
+IBus Emojier ( ) and save the selected emoji to your clipboard. Can choose an
+emoji font with option. Can choose a language of emoji annotations with
+option. If LANG="en", IBus Emojier loads /usr/share/ibus/dicts/emoji-en.dict .
+option enables to match annotations with a partial string. These settings are
+available with utility.	 im-module [--type=TYPE|--help] Show an internal im-
+module value in a virtual GTK application. If IBus is installed and configured
+properly, the output is "ibus". This sub-command is useful for some users who
+build IBus from the source codes and check the configurations. Currently the
+sub-command supports GTK applications only and the default is GTK3. If you
+wish to check a GTK4 application, you can specify option and you can choose
+one of "gtk2", "gtk3" and "gtk4".
+
+If you find a bug, please report it at https://github.com/ibus/ibus/issues
+
+
+

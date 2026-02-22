@@ -1,0 +1,73 @@
+lsclocks - display system clocks
+
+lsclocks [option]
+
+lsclocks is a simple command to display system clocks.
+
+It allows to display information like current time and resolution of clocks
+like CLOCK_MONOTONIC, CLOCK_REALTIME and CLOCK_BOOTTIME.
+
+-J, --json Use JSON output format.
+
+-n, --noheadings Don’t print headings.
+
+-o, --output list Specify which output columns to print. See the OUTPUT
+COLUMNS section for details of available columns.
+
+--output-all Output all columns.
+
+-r, --raw Use raw output format.
+
+-r, --time clock Show current time of one specific clock.
+
+--no-discover-dynamic Do not try to discover dynamic clocks.
+
+-d, --dynamic-clock path Also display specified dynamic clock.	Can be
+specified multiple times.
+
+--no-discover-rtc Do not try to discover RTCs.
+
+-x, --rtc path Also display specified RTC.  Can be specified multiple times.
+
+-c, --cpu-clock pid Also display CPU clock of specified process.  Can be
+specified multiple times.
+
+-h, --help Display help text and exit.
+
+-V, --version Display version and exit.
+
+Each column has a type. Types are surround by < and >.
+
+TYPE <string> Clock type.
+
+ID <number> Numeric clock ID.
+
+CLOCK <string> Name in the form CLOCK_
+
+NAME <string> Shorter, easier to read name.
+
+TIME <number> Current clock timestamp as returned by clock_gettime().
+
+ISO_TIME <string> ISO8601 formatted version of TIME.
+
+RESOL_RAW <number> Clock resolution as returned by clock_getres(2).
+
+RESOL <number> Human readable version of RESOL_RAW.
+
+REL_TIME <string> TIME time formatted as time range.
+
+NS_OFFSET <number> Offset of the current namespace to the parent namespace as
+read from /proc/self/timens_offsets.
+
+Thomas Weißschuh <thomas@t-8ch.de>
+
+clock_getres(2) clock_gettime(2)
+
+For bug reports, use the issue tracker
+<https://github.com/util-linux/util-linux/issues>.
+
+The lsclocks command is part of the util-linux package which can be downloaded
+from Linux Kernel Archive
+<https://www.kernel.org/pub/linux/utils/util-linux/>.
+
+

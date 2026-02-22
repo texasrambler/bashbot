@@ -1,0 +1,27 @@
+
+gts2oogl - converts a GTS file to OOGL file format (Geomview).
+
+
+This manual page documents briefly the command.
+
+This program follow the usual GNU command line syntax, with long options
+starting with two dashes (`-').	 A summary of options is included below.
+Writes isolines in gnuplot format.  Color faces according to the component
+they belong too.  Color faces according to their quality.  Color faces
+according to their area.  Color incompatible faces.  Color faces which make an
+angle smaller than degrees with any of their neighbors.	 Output individual
+faces.	Color vertices according to number of edges per vertex.	 Color
+vertices according to their coordinate.	 Color vertices according to Gaussian
+curvature.  Color vertices according to mean curvature.	 Output boundary
+edges.	Output `feature' edges defined by angle A.  Output non-manifold edges.
+Output duplicate edges.	 Draw isolines (levels of constant altitude).  Draw
+isoline at level L.  Load as colormap.	Use as minimum scaling value.  Use as
+maximum scaling value.	Reverse colormap.  Do not output surface.  Set
+coordinate to average value.  Display surface statistics.  Display the help
+and exit.
+
+gts2oogl was written by Stephane Pipinet <popinet@users.sourceforge.net>.
+This manual page was written by Ruben Molina <rmolina@udea.edu.co>, for the
+Debian project (but may be used by others).
+
+

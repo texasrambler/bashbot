@@ -1,0 +1,15 @@
+
+gts2stl - converts a GTS file to STL format
+
+
+This manual page documents briefly the command.
+
+This program follow the usual GNU command line syntax, with long options
+starting with two dashes (`-').	 A summary of options is included below.
+Revert face normals.  Display surface statistics.  Display the help and exit.
+
+gts2stl was written by Stephane Popinet <popinet@users.sourceforge.net>.  This
+manual page was written by Ruben Molina <rmolina@udea.edu.co>, for the Debian
+project (but may be used by others).
+
+

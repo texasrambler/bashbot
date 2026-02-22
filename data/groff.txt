@@ -1,0 +1,326 @@
+groff - front end to the GNU document formatting system is the primary front
+end to the GNU document formatting system.  GNU is a typesetting system that
+reads plain text input files that include formatting commands to produce
+output in PostScript, PDF, HTML, DVI, or other formats, or for display to a
+terminal.  Formatting commands can be low-level typesetting primitives, macros
+from a supplied package, or user-defined macros.  All three approaches can be
+combined.  If no operands are specified, or if is reads the standard input
+stream.	 A reimplementation and extension of the typesetter from AT&T Unix, is
+present on most POSIX systems owing to its long association with Unix manuals
+(including man pages).	It and its predecessor are notable for their
+production of several best-selling software engineering texts.	is capable of
+producing typographically sophisticated documents while consuming minimal
+system resources.  The command orchestrates the execution of preprocessors,
+the transformation of input documents into a device-independent page
+description language, and the production of output from that language.	and
+display a usage message and exit.  Because is intended to subsume most users'
+direct invocations of the formatter, the two programs share a set of options.
+However, has some options that does not share, and others which interprets
+differently.  At the same time, not all valid options can be given to The
+following options either do not exist in GNU or are interpreted differently by
+Set fallback input encoding used by to implies Run preprocessor.  Run
+preprocessor.  Run preprocessor; implies Works as option (see below), but also
+implies and It is passed to and the output driver, and is passed an option
+with as its argument.  Run preprocessor; implies Run preprocessor.  Refer to
+its man page for its behavior if neither of or options is also specified.  Set
+input encoding used by to implies Send the output to a spooler program for
+printing.  The directive in the device description file specifies the default
+command to be used; see If no such directive is present for the output device,
+this option is ignored.	 See options and Pass to the print spooler program.
+If multiple are required, pass each with a separate option.  does not prefix
+an option dash to before passing it to the spooler program.  Works as option
+(see below), but is also passed to and Prohibit newlines between delimiters:
+pass to Run preprocessor.  Pass to the postprocessor.  If multiple are
+required, pass each with a separate option.  does not prefix an option dash to
+before passing it to the postprocessor.	 Run preprocessor.  No mechanism is
+provided for passing arguments to because most options have equivalent
+language elements that can be specified within the document.  Run
+preprocessor.  Operate in “safer” mode; see below for its opposite.  For
+security reasons, safer mode is enabled by default.  Run preprocessor.	Direct
+to format the input for the output device then calls an output driver to
+convert output to a form appropriate for see subsection “Output devices”
+below.	Operate in unsafe mode: pass the option to and Write version
+information for and all programs run by it to the standard output stream; that
+is, the given command line is processed in the usual way, passing to the
+formatter and any pre- or postprocessors invoked.  Output the pipeline that
+would run to the standard output stream, but do not execute it.	 If given more
+than once, both writes and runs the pipeline.  Use instead of the usual
+postprocessor to (pre)view a document on an X11 display.  Combining this
+option with uses the font metrics of the PostScript device, whereas the and
+options use the metrics of X11 fonts.  Disable postprocessing.	output will
+appear on the standard output stream (unless suppressed with see for a
+description of this format.  The following options are passed as-is to the
+formatter program and described in more detail in its man page.	 Generate a
+plain text approximation of the typeset output.	 Write a backtrace to the
+standard error stream on each error or warning.	 Start with color output
+disabled.  Enable AT&T compatibility mode; implies Define string.  Inhibit
+error messages; implies Set default font family.  Search in directory for the
+selected output device's directory of device and font description files.
+Process standard input after the specified input files.	 Search for input
+files.	Process before input files.  Search directory for macro files.	Number
+the first page Output only pages in Define register.  Enable or inhibit
+emission of warnings in category Suppress formatted device-independent output
+of The architecture of the GNU system follows that of other device-independent
+implementations, comprising preprocessors, macro packages, output drivers (or
+“postprocessors”), a suite of utilities, and the formatter at its heart.  See
+for a survey of how a system works.  The front end programs available in the
+GNU system make it easier to use than traditional that required the
+construction of pipelines or use of temporary files to carry a source document
+from maintainable form to device-ready output.	The discussion below
+summarizes the constituent parts of the GNU system.  It complements with
+information.  Those who prefer to learn by experimenting or are desirous of
+rapid feedback from the system may wish to start with a “Hello, world!”
+document.  $ Hello, world!  We used a command only to eliminate the 65 blank
+lines that would otherwise flood the terminal screen.  systems were developed
+in the days of paper-based terminals with 66 lines to a page.)	Today's users
+may prefer output to a UTF-8-capable terminal.	$ Producing PDF, HTML, or
+TeX's DVI is also straightforward.  The hard part may be selecting a viewer
+program for the output.	 $ $ $ $ $ $ Those with a programmer's bent may be
+pleased to know that they can use in a read-evaluate-print loop (REPL).	 Doing
+so can be handy to verify one's understanding of the formatter's behavior
+and/or the syntax it accepts.  Turning on all warnings with can aid this goal.
+$ 3
+			   Hi, Leslie.
+		    Your secret number is 4.  It is even.  In GNU the page
+dimensions for the formatter and for output devices are handled separately.
+In the formatter, requests are used to set the page length page offset (or
+left margin, and line length The right margin is not explicitly configured;
+the combination of page offset and line length provides the information
+necessary to derive it.	 The macro package, automatically loaded by provides
+an interface for configuring page dimensions by convenient names, like
+“letter” or “A4”; see The formatter's default in this installation is It is up
+to each macro package to respect the page dimensions configured in this way.
+Some offer alternative mechanisms.  For each output device, the size of the
+output medium can be set in its file.  Most output drivers also recognize a
+command-line option to override the default dimensions and an option to use
+landscape orientation.	See for a description of the directive, which takes an
+argument of the same form as The output driver's man page, such as may also be
+helpful.  uses the command-line option to pass options to output devices; for
+example, use the following for PostScript output on A4 paper in landscape
+orientation.  groff -Tps -dpaper=a4l -P-pa4 -P-l -ms foo.ms > foo.ps The
+program is a wrapper around the program.  It allows one to specify
+preprocessors via command-line options and automatically runs the appropriate
+postprocessor for the selected output device.  Doing so, the manual
+construction of pipelines or management of temporary files required of users
+of traditional systems can be avoided.	Use the program to infer an
+appropriate command line to format a document.	Input to a system is in plain
+text interleaved with control lines and escape sequences.  The combination
+constitutes a document in one of a family of languages we also call see for
+background.  An overview of GNU language syntax and features, including lists
+of all supported escape sequences, requests, and predefined registers, can be
+found in GNU extensions to the AT&T language, a common subset of dialects
+extant today, are detailed in A preprocessor interprets a domain-specific
+language that produces language output.	 Frequently, such input is confined to
+sections or regions of a input file (bracketed with macro calls specific to
+each preprocessor), which it replaces.	Preprocessors therefore often
+interpret a subset of syntax along with their own language.  GNU provides
+reimplementations of most preprocessors familiar to users of AT&T these
+routinely have extended features and/or require GNU to format their output.
+tbl	    lays out tables;
+eqn	    typesets mathematics;
+pic	    draws diagrams;
+refer	    processes bibliographic references;
+soelim	    preprocesses “sourced” input files;
+grn	    renders diagrams;
+chem	    draws chemical structural formulæ using
+gperl	    populates registers and strings using
+glilypond   embeds sheet music; and
+gpinyin	    eases Mandarin Chinese input using Hanyu Pinyin.
+A preprocessor unique to GNU is which converts various input encodings to
+something GNU can understand.  When used, it is run before any other
+preprocessors.	Most preprocessors enclose content between a pair of
+characteristic tokens.	Such a token must occur at the beginning of an input
+line and use the dot control character.	 Spaces and tabs must not follow the
+control character or precede the end of the input line.	 Deviating from these
+rules defeats a token's recognition by the preprocessor.  Tokens are generally
+preserved in preprocessor output and interpreted as macro calls subsequently
+by The preprocessor is not yet available in
+	      ┌─────────────┬─────────────────┬────────────────┐
+	      │preprocessor │ starting token  │	 ending token  │
+	      ┝━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━━┿━━━━━━━━━━━━━━━━┥
+	      │	   chem	    │	  .cstart     │	    .cend      │
+	      │	   eqn	    │	    .EQ	      │	     .EN       │
+	      │	   grap	    │	    .G1	      │	     .G2       │
+	      │	   grn	    │	    .GS	      │	     .GE       │
+	      │	  ideal	    │	    .IS	      │	     .IE       │
+	      │		    │		      │	     .IF       │
+	      │	   pic	    │	    .PS	      │	     .PE       │
+	      │		    │		      │	     .PF       │
+	      │		    │		      │	     .PY       │
+	      │	  refer	    │	    .R1	      │	     .R2       │
+	      │	   tbl	    │	    .TS	      │	     .TE       │
+	      ├─────────────┼─────────────────┼────────────────┤
+	      │ glilypond   │ .lilypond start │ .lilypond stop │
+	      │	  gperl	    │	.Perl start   │	  .Perl stop   │
+	      │	 gpinyin    │  .pinyin start  │	 .pinyin stop  │
+	      └─────────────┴─────────────────┴────────────────┘
+Macro files are input files designed to produce no output themselves but
+instead ease the preparation of other documents.  When a macro file is
+installed at a standard location and suitable for use by a general audience,
+it is termed a Macro packages can be loaded prior to any input documents with
+the The GNU system implements most well-known macro packages for AT&T in a
+compatible way and extends them.  These have one- or two-letter names arising
+from intense practices of naming economy in early Unix culture, a laconic
+approach that led to many of the packages being identified in general usage
+with the and option letter used to invoke them, sometimes to punning effect,
+as with “man” (short for “manual”), and even with the option dash, as in the
+case of the package, much better known as or even Macro packages serve a
+variety of purposes.  Some are “full-service” packages, adopting
+responsibility for page layout among other fundamental tasks, and defining
+their own lexicon of macros for document composition; each such package stands
+alone and a given document can use at most one.	 is used to compose man pages
+in the format originating in Version 7 Unix (1979); see It can be specified on
+the command line as is used to compose man pages in the format originating in
+4.3BSD-Reno (1990); see It can be specified on the command line as is the
+Berkeley general-purpose macro suite, developed as an alternative to AT&T's
+see It can be specified on the command line as implements the format used by
+the second-generation AT&T macro suite for general documents, a successor to
+see It can be specified on the command line as (invariably called “mom”) is a
+modern package written by Peter Schaffter specifically for GNU Consult the
+HTML manual for extensive documentation.  She—for takes the female pronoun—can
+be specified on the command line as is the original AT&T general-purpose
+document format; see It can be specified on the command line as Others are
+supplemental.  For instance, is a wrapper package specific to GNU that
+recognizes whether a document uses or format and loads the corresponding macro
+package.  It can be specified on the command line as A librarian program may
+use this macro file to delegate loading of the correct macro package; it is
+thus unnecessary for itself to scan the contents of a document to decide the
+issue.	Many macro files augment the function of the full-service packages, or
+of documents that do not employ such a package—the latter are sometimes
+characterized as “raw”.	 These auxiliary packages are described, along with
+details of macro file naming and placement, in The formatter, the program that
+interprets language input, is It provides the features of the AT&T and
+programs as well as many extensions.  The command-line option switches into
+which tries to emulate AT&T as closely as is practical to enable the
+formatting of documents written for the older system.  A shell script,
+emulates the behavior of AT&T It attempts to correctly encode the output based
+on the locale, relieving the user of the need to specify an output device with
+the option and is therefore convenient for use with terminal output devices,
+described in the next subsection.  GNU generates output in a device-
+independent, but not device-agnostic, page description language detailed in
+output is formatted for a particular typically specified by the option to the
+formatter or a front end.  If neither this option nor the environment variable
+is used, the default output device is An output device may be any of the
+following.  for terminals using the ISO 646 1991:IRV character set and
+encoding, also known as US-ASCII.  for terminals using the IBM code page 1047
+character set and encoding.  for TeX DVI format.  for HTML and XHTML output,
+respectively.  for terminals using the ISO Latin-1 (ISO 8859-1) character set
+and encoding.  for Canon CaPSL printers (LBP-4 and LBP-8 series laser
+printers).  for HP LaserJet4-compatible (or other PCL5-compatible) printers.
+for PDF output.	 for PostScript output.	 for terminals using the ISO 10646
+(“Unicode”) character set in UTF-8 encoding.  for previewing with using 75 dpi
+resolution and a 10-point base type size.  for previewing with using 75 dpi
+resolution and a 12-point base type size.  for previewing with using 100 dpi
+resolution and a 10-point base type size.  for previewing with using 100 dpi
+resolution and a 12-point base type size.  Any program that interprets the
+output of GNU is a postprocessor.  The postprocessors provided by GNU are
+which prepare a document for viewing or printing.  Postprocessors for other
+purposes, such as page resequencing or statistical measurement of a document,
+are conceivable.  An output driver supports one or more output devices, each
+with its own device description file.  A device determines its postprocessor
+with the directive in its device description file; see The option overrides
+this selection, causing to serve as the output driver.	provides provides and
+provides provides provides provides provides and provides and and additionally
+can preview GNU includes a suite of utilities.	marks differences between a
+pair of input files.  infers the command a document requires.  Several
+utilities prepare descriptions of fonts, enabling the formatter to use them
+when producing output for a given device.  adds information to AT&T font
+description files to enable their use with GNU creates font description files
+for PostScript Type 1 fonts.  translates a PostScript Type 1 font in PFB
+(Printer Font Binary) format to PFA (Printer Font ASCII), which can then be
+interpreted by creates font description files for the HP LaserJet 4 family of
+printers.  creates font description files for the TeX DVI device.  creates
+font description files for X Window System core fonts.	A trio of tools
+transform material constructed using preprocessor languages into graphical
+image files.  converts an equation into a cropped image.  converts a diagram
+into a cropped image.  converts a diagram into a cropped image.	 Another set
+of programs works with the bibliographic data files used by the preprocessor.
+makes inverted indices for bibliographic databases, speeding lookup operations
+on them.  searches the databases.  interactively searches the databases.
+exits with a failure status if there was a problem parsing its arguments and a
+successful status if either of the options or was specified.  Otherwise, runs
+a pipeline to process its input; if all commands within the pipeline exit
+successfully, does likewise.  If not, exit status encodes a summary of
+problems encountered, setting bit 0 if a command exited with a failure status,
+bit 1 if a command was terminated with a signal, and bit 2 if a command could
+not be executed.  (Thus, if all three misfortunes befell one's pipeline, would
+exit with status 2^0 + 2^1 + 2^2 = 1+2+4 = 7.)	To troubleshoot pipeline
+problems, you may wish to re-run the command with the option and break the
+reported pipeline down into separate stages, inspecting the exit status of and
+diagnostic messages emitted by each command.  Normally, the path separator in
+environment variables ending with is the colon; this may vary depending on the
+operating system.  For example, Windows uses a semicolon instead.  This search
+path, followed by is used to locate commands executed by If it is not set, the
+installation directory of the GNU executables, is searched before GNU can be
+configured at compile time to apply a prefix to the names of the programs it
+provides that had a counterpart in AT&T so that name collisions are avoided at
+run time.  The default prefix is empty.	 When used, this prefix is
+conventionally the letter “g”.	For example, GNU would be installed as Besides
+the prefix applies to the formatter the preprocessors and and the utilities
+and The value of this variable is passed to the preprocessor's option to
+select the character encoding of input files.  This variable's existence
+implies the option If set but empty, calls without an option.  option
+overrides Seek the selected output device's directory of device and font
+description files in this list of directories.	See and Seek macro files in
+this list of directories.  See and Create temporary files in this directory.
+If not set, but the environment variable is set, temporary files are created
+there instead.	On Windows systems, if neither of the foregoing are set, the
+environment variables and (in that order) are checked also.  Otherwise,
+temporary files are created in The and commands use temporary files.  Set the
+default output device.	If empty or not set, is used.  The option overrides A
+time stamp (expressed as seconds since the Unix epoch) to use as the output
+creation time stamp in place of the current time.  The time is converted to
+human-readable form using when the formatter starts up and stored in registers
+usable by documents and macro packages.	 The time zone to use when converting
+the current time (or value of to human-readable form; see systems are best
+known for formatting man pages.	 Once a librarian program has located a man
+page, it may execute a command much like the following.	 groff -t -man -Tutf8
+/usr/share/man/man1/groff.1 The librarian will also pipe the output through a
+pager, which might not interpret the SGR terminal escape sequences emits for
+boldface, underlining, or italics; see section “Limitations” below.  To
+process a input file using the preprocessors and and the macro package in the
+way to which AT&T users were accustomed, one would type (or script) a
+pipeline.  pic foo.me | tbl | troff -me -Tutf8 | grotty Using this pipe can be
+shortened to an equivalent command.  groff -p -t -me -T utf8 foo.me An even
+easier way to do this is to use to guess the preprocessor and macro options
+and execute the result by using the command substitution feature of the shell.
+$(grog -Tutf8 foo.me) Each command-line option to a postprocessor must be
+specified with any required leading dashes because passes the arguments as-is
+to the postprocessor; this permits arbitrary arguments to be transmitted.  For
+example, to pass a title to the postprocessor, the shell commands groff -X -P
+-title -P 'trial run' mydoc.t and groff -X -Z mydoc.t | gxditview -title
+'trial run' - are equivalent.  When paging output for the and devices,
+programs like and may require command-line options to correctly handle some
+terminal escape sequences; see On EBCDIC hosts such as OS/390 Unix, the output
+devices and aren't available.  Conversely, the output device is not available
+on systems based on the ISO 646 or ISO 8859 character encoding standards.  GNU
+installs files in varying locations depending on its compile-time
+configuration.	On this installation, the following locations are used.
+Application defaults directory for Directory containing executable commands.
+List of common words for Directory for data files.  Default index for and
+Documentation directory.  Example directory.  Font directory.  HTML
+documentation directory.  Legacy font directory.  Local font directory.	 Local
+macro package file) directory.	Macro package file) directory.	Font directory
+for compatibility with old versions of see PDF documentation directory.	 Most
+macro files supplied with GNU are stored in for the installation corresponding
+to this document.  As a rule, multiple directories are searched for macro
+files; see For a catalog of macro files GNU provides, see Device and font
+description files supplied with GNU are stored in for the installation
+corresponding to this document.	 As a rule, multiple directories are searched
+for device and font description files; see For the formats of these files, see
+Obtain links to releases for download, its source repository, discussion
+mailing lists, a support ticket tracker, and further information from the page
+of the GNU website A free implementation of the preprocessor, written by Ted
+Faber can be found at the website supports only this (both the front-end
+command and the overall system) was primarily written by James Clark
+Contributors to this document include Clark, Trent A. Fisher, Werner Lemberg
+Bernd Warken and G. Branden Robinson by Trent A. Fisher and Werner Lemberg, is
+the primary manual.  You can browse it interactively with “info groff”.
+Introduction, history, and further reading: Preprocessors: Macro packages and
+package-specific utilities: Bibliographic database management tools: Language,
+conventions, and GNU extensions: Intermediate output language: Formatter
+program: Formatter wrappers: Postprocessors for output devices: Font support
+utilities: Graphics conversion utilities: Difference-marking utility: “groff
+guess” utility:
+
+

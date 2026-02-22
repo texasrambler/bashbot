@@ -1,0 +1,6 @@
+selinuxenabled - tool to be used within shell scripts to determine if selinux
+is enabled Indicates whether SELinux is enabled or disabled.  It exits with
+status 0 if SELinux is enabled and 1 if it is not enabled.  Dan Walsh,
+<dwalsh@redhat.com>
+
+

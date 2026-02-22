@@ -1,0 +1,46 @@
+ul - do underlining
+
+ul [options] [file...]
+
+ul reads the named files (or standard input if none are given) and translates
+occurrences of underscores to the sequence which indicates underlining for the
+terminal in use, as specified by the environment variable TERM. The terminfo
+database is read to determine the appropriate sequences for underlining. If
+the terminal is incapable of underlining but is capable of a standout mode,
+then that is used instead. If the terminal can overstrike, or handles
+underlining automatically, ul degenerates to cat(1). If the terminal cannot
+underline, underlining is ignored.
+
+-i, --indicated Underlining is indicated by a separate line containing
+appropriate dashes `-'; this is useful when you want to look at the
+underlining which is present in an nroff output stream on a crt-terminal.
+
+-t, -T, --terminal terminal Override the environment variable TERM with the
+specified terminal type.
+
+-h, --help Display help text and exit.
+
+-V, --version Display version and exit.
+
+The following environment variable is used:
+
+TERM The TERM variable is used to relate a tty device with its device
+capability description (see terminfo(5)). TERM is set at login time, either by
+the default terminal type specified in /etc/ttys or as set during the login
+process by the user in their login file (see setenv(3)).
+
+The ul command appeared in 3.0BSD.
+
+nroff usually outputs a series of backspaces and underlines intermixed with
+the text to indicate underlining. No attempt is made to optimize the backward
+motion.
+
+colcrt(1), login(1), man(1), nroff(1), setenv(3), terminfo(5)
+
+For bug reports, use the issue tracker
+<https://github.com/util-linux/util-linux/issues>.
+
+The ul command is part of the util-linux package which can be downloaded from
+Linux Kernel Archive <https://www.kernel.org/pub/linux/utils/util-linux/>.
+
+

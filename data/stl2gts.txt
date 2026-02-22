@@ -1,0 +1,16 @@
+
+stl2gts - convert an STL file to GTS format.
+
+
+This manual page documents briefly the command.
+
+These programs follow the usual GNU command line syntax, with long options
+starting with two dashes (`-').	 A summary of options is included below.
+Revert face normals.  Do not merge vertices.  Display surface statistics.
+Display the help and exit.
+
+stl2gts was written by Stephane Popinet <popinet@users.sourceforge.net>.  This
+manual page was written by Ruben Molina <rmolina@udea.edu.co>, for the Debian
+project (but may be used by others).
+
+

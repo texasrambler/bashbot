@@ -1,0 +1,17 @@
+osinfo-detect - Detect the operating system on installable media or trees
+osinfo-detect [OPTIONS...] PATH|URI Examine the "PATH" or "URI" to determine
+what (if any) operating system it is for, and whether it is installable or is
+a Live image.  By default "PATH" or "URI" will be interpreted as pointing to
+ISO media. To request examination of an install tree instead, the option
+--type=tree should be given.  The output information is formatted for humans;
+Switch between looking for CD/DVD ISO media (media, the default) or install
+trees (tree) Report all operating systems with matching media, instead of only
+the first match.  The exit status will be 0 if an operating system was
+detected, or 1 if none was found.  Zeeshan Ali (Khattak)
+<zeeshanak@gnome.org>, Daniel P. Berrange <berrange@redhat.com> Copyright (C)
+2011-2012 Red Hat, Inc.	 "osinfo-detect" is distributed under the termsof the
+GNU LGPL v2 license. This is free software; see the source for copying
+conditions.  There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE
+
+

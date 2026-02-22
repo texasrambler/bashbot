@@ -1,0 +1,12 @@
+cg_diff - (deprecated) diffs two Cachegrind output files cg_diff [options]
+cachegrind-out-file1 cachegrind-out-file2 cg_diff diffs two Cachegrind output
+files into a single Cachegrind output file. It is deprecated because
+cg_annotate can now do much the same thing, but better.	 -h --help  Show the
+help message.  --version  Show the version number.  --mod-filename=<expr>
+[default: none] Specifies an s/old/new/ search-and-replace expression that is
+applied to all filenames.  --mod-funcname=<expr> [default: none] Like
+--mod-filename, but for filenames.  cg_annotate(1), valgrind(1),
+$INSTALL/share/doc/valgrind/html/index.html or
+http://www.valgrind.org/docs/manual/index.html.	 Nicholas Nethercote.
+
+

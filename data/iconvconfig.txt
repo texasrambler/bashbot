@@ -1,0 +1,22 @@
+iconvconfig - create iconv module configuration cache The function internally
+uses modules to convert to and from a character set.  A configuration file is
+used to determine the needed modules for a conversion.	Loading and parsing
+such a configuration file would slow down programs that use so a caching
+mechanism is employed.	The program reads iconv module configuration files and
+writes a fast-loading gconv module configuration cache file.  In addition to
+the system provided gconv modules, the user can specify custom gconv module
+directories with the environment variable However, iconv module configuration
+caching is used only when the environment variable is not set.	Do not search
+the system default gconv directory, only the directories provided on the
+command line.  Use for output instead of the system default cache location.
+Set the prefix to be prepended to the system pathnames.	 See FILES, below.  By
+default, the prefix is empty.  Setting the prefix to the gconv module
+configuration would be read from and the cache would be written to Print a
+usage summary and exit.	 Print a short usage summary and exit.	Print the
+version number, license, and disclaimer of warranty for Zero on success,
+nonzero on errors.  Usual default gconv module path.  Usual system default
+gconv module configuration file.  Usual system gconv module configuration
+cache.	Depending on the architecture, the above files may instead be located
+at directories with the path prefix
+
+

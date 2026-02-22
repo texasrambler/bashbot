@@ -1,0 +1,188 @@
+xargs - build and execute command lines from standard input [options] [command
+[initial-arguments]] This manual page documents the GNU version of reads items
+from the standard input, delimited by blanks (which can be protected with
+double or single quotes or a backslash) or newlines, and executes the (default
+is one or more times with any followed by items read from standard input.
+Blank lines on the standard input are ignored.	The command line for is built
+up until it reaches a system-defined limit (unless the and options are used).
+The specified will be invoked as many times as necessary to use up the list of
+input items.  In general, there will be many fewer invocations of than there
+were items in the input.  This will normally have significant performance
+benefits.  Some commands can usefully be executed in parallel too; see the
+option.	 Because Unix filenames can contain blanks and newlines, this default
+behaviour is often problematic; filenames containing blanks and/or newlines
+are incorrectly processed by In these situations it is better to use the
+option, which prevents such problems.  When using this option you will need to
+ensure that the program which produces the input for also uses a null
+character as a separator.  If that program is GNU for example, the option does
+this for you.  If any invocation of the command exits with a status of 255,
+will stop immediately without reading any further input.  An error message is
+issued on stderr when this happens.  Input items are terminated by a null
+character instead of by whitespace, and the quotes and backslash are not
+special (every character is taken literally).  Disables the end-of-file
+string, which is treated like any other argument.  Useful when input items
+might contain white space, quote marks, or backslashes.	 The GNU find -print0
+option produces input suitable for this mode.
+
+Read items from instead of standard input.  If you use this option, stdin
+remains unchanged when commands are run.  Otherwise, stdin is redirected from
+
+Input items are terminated by the specified character.	The specified
+delimiter may be a single character, a C-style character escape such as or an
+octal or hexadecimal escape code.  Octal and hexadecimal escape codes are
+understood as for the command.	Multibyte characters are not supported.	 When
+processing the input, quotes and backslash are not special; every character in
+the input is taken literally.  The option disables any end-of-file string,
+which is treated like any other argument.  You can use this option when the
+input consists of simply newline-separated items, although it is almost always
+better to design your program to use where this is possible.
+
+Set the end-of-file string to eof-str.	If the end-of-file string occurs as a
+line of input, the rest of the input is ignored.  If neither nor is used, no
+end-of-file string is used.  This option is a synonym for the option.  Use
+instead, because it is POSIX compliant while this option is not.  If eof-str
+is omitted, there is no end-of-file string.  If neither nor is used, no end-
+of-file string is used.	 Replace occurrences of replace-str in the initial-
+arguments with names read from standard input.	Also, unquoted blanks do not
+terminate input items; instead the separator is the newline character.
+Implies and 1.	This option is a synonym for if is specified.  If the argument
+is missing, the effect is the same as The option is deprecated; use instead.
+Use at most max-lines nonblank input lines per command line.  Trailing blanks
+cause an input line to be logically continued on the next input line.  Implies
+Synonym for the option.	 Unlike the argument is optional.  If is not
+specified, it defaults to one.	The option is deprecated since the POSIX
+standard specifies instead.  Use at most max-args arguments per command line.
+Fewer than arguments will be used if the size (see the option) is exceeded,
+unless the option is given, in which case will exit.  Run up to processes at a
+time; the default is 1.	 If is 0, will run as many processes as possible at a
+time.  Use the option or the option with otherwise chances are that only one
+exec will be done.  While is running, you can send its process a SIGUSR1
+signal to increase the number of commands to run simultaneously, or a SIGUSR2
+to decrease the number.	 You cannot increase it above an implementation-
+defined limit (which is shown with --show-limits).  You cannot decrease it
+below 1.  never terminates its commands; when asked to decrease, it merely
+waits for more than one existing command to terminate before starting another.
+always waits for all child processes to exit before exiting itself (but see
+BUGS).
+
+If you do not use the option, will not handle the SIGUSR1 and SIGUSR2 signals,
+meaning that they will terminate the program (unless they were blocked in the
+parent process before was started).
+
+that it is up to the called processes to properly manage parallel access to
+shared resources.  For example, if more than one of them tries to print to
+stdout, the output will be produced in an indeterminate order (and very likely
+mixed up) unless the processes collaborate in some way to prevent this.	 Using
+some kind of locking scheme is one way to prevent such problems.  In general,
+using a locking scheme will help ensure correct output but reduce performance.
+If you don't want to tolerate the performance difference, simply arrange for
+each process to produce a separate output file (or otherwise use separate
+resources).  Reopen stdin as in the child process before executing the
+command.  This is useful if you want to run an interactive application.
+Prompt the user about whether to run each command line and read a line from
+the terminal.  Only run the command line if the response starts with `y' or
+`Y'.  Implies Set the environment variable to a unique value in each running
+child process.	Values are reused once child processes exit.  This can be used
+in a rudimentary load distribution scheme, for example.	 If the standard input
+does not contain any nonblanks, do not run the command.	 Normally, the command
+is run once even if there is no input.	This option is a GNU extension.	 Use
+at most max-chars characters per command line, including the command and
+initial-arguments and the terminating nulls at the ends of the argument
+strings.  The largest allowed value is system-dependent, and is calculated as
+the argument length limit for exec, less the size of your environment, less
+2048 bytes of headroom.	 If this value is more than 128 KiB, 128 KiB is used
+as the default value; otherwise, the default value is the maximum.  1 KiB is
+1024 bytes.  automatically adapts to tighter constraints.  Display the limits
+on the command-line length which are imposed by the operating system, choice
+of buffer size and the option.	Pipe the input from (and perhaps specify if
+you don't want to do anything.	Print the command line on the standard error
+output before executing it.  Exit if the size (see the option) is exceeded.
+Delimit the option list.  Later arguments, if any, are treated as operands
+even if they begin with For example, runs the command (found in instead of
+printing the usage text, and runs the command instead of rejecting this as
+unrecognized option.  Print a summary of the options to and exit.  Print the
+version number of and exit.  The options (-L, -l), (-I, -i) and (-n) are
+mutually exclusive.  If some of them are specified at the same time, then will
+generally use the option specified last on the command line, i.e., it will
+reset the value of the offending option (given before) to its default value.
+Additionally, will issue a warning diagnostic on The exception to this rule is
+that the special value ('-n1') is ignored after the option and its aliases and
+because it would not actually conflict.
+
+
+Find files named in or below the directory and delete them.  Note that this
+will work incorrectly if there are any filenames containing newlines or
+spaces.
+
+Find files named in or below the directory and delete them, processing
+filenames in such a way that file or directory names containing spaces or
+newlines are correctly handled.
+
+
+Find files named in or below the directory and delete them, but more
+efficiently than in the previous example (because we avoid the need to use and
+to launch and we don't need the extra process).
+
+
+Generates a compact listing of all the users on the system.  exits with the
+following status: if it succeeds if any invocation of the command exited with
+status 1–125 if the command exited with status 255 if the command is killed by
+a signal if the command cannot be run if the command is not found if some
+other error occurred.
+
+Exit codes greater than 128 are used by the shell to indicate that a program
+died due to a fatal signal.  As of GNU xargs version 4.2.9, the default
+behaviour of is not to have a logical end-of-file marker.  POSIX (IEEE Std
+1003.1, 2004 Edition) allows this.  The -l and -i options appear in the 1997
+version of the POSIX standard, but do not appear in the 2004 version of the
+standard.  Therefore you should use -L and -I instead, respectively.  The -o
+option is an extension to the POSIX standard for better compatibility with
+BSD.  The POSIX standard allows implementations to have a limit on the size of
+arguments to the functions.  This limit could be as low as 4096 bytes
+including the size of the environment.	For scripts to be portable, they must
+not rely on a larger value.  However, I know of no implementation whose actual
+limit is that small.  The option can be used to discover the actual limits in
+force on the current system.
+
+In versions of up to and including version 4.9.0, SIGUSR1 and SIGUSR2 would
+not cause to terminate even if the option was not used.
+
+The program was invented by Herb Gellis at Bell Labs.  See the Texinfo manual
+for findutils, for more information.  It is not possible for to be used
+securely, since there will always be a time gap between the production of the
+list of input files and their use in the commands that issues.	If other users
+have access to the system, they can manipulate the filesystem during this time
+window to force the action of the commands runs to apply to files that you
+didn't intend.	For a more detailed discussion of this and related problems,
+please refer to the ``Security Considerations'' chapter in the findutils
+Texinfo documentation.	The option of can often be used as a more secure
+alternative.
+
+When you use the option, each line read from the input is buffered internally.
+This means that there is an upper limit on the length of input line that will
+accept when used with the option.  To work around this limitation, you can use
+the option to increase the amount of buffer space that uses, and you can also
+use an extra invocation of to ensure that very long lines do not occur.	 For
+example: Here, the first invocation of has no input line length limit because
+it doesn't use the option.  The second invocation of does have such a limit,
+but we have ensured that it never encounters a line which is longer than it
+can handle.  This is not an ideal solution.  Instead, the option should not
+impose a line length limit, which is why this discussion appears in the BUGS
+section.  The problem doesn't occur with the output of because it emits just
+one filename per line.	In versions of up to and including version 4.9.0,
+would exit while some of its children were still running, if one of them
+exited with status 255.	 GNU findutils online help:
+<https://www.gnu.org/software/findutils/#get-help>
+Report any translation bugs to <https://translationproject.org/team/> Report
+any other issue via the form at the GNU Savannah bug tracker:
+<https://savannah.gnu.org/bugs/?group=findutils> General topics about the GNU
+findutils package are discussed at the mailing list:
+<https://lists.gnu.org/mailman/listinfo/bug-findutils> Copyright © 1990–2024
+Free Software Foundation, Inc.	License GPLv3+: GNU GPL version 3 or later
+<https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.  There is
+NO WARRANTY, to the extent permitted by law.  Full documentation
+<https://www.gnu.org/software/findutils/xargs>
+or available locally via:
+
+

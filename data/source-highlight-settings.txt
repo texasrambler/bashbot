@@ -1,0 +1,20 @@
+Source-highlight-settings - utility that can be used to write a configuration
+file for GNU Source-highlight (and its library) Since version 3.0, GNU
+Source-highlight includes also the utility source-highlight-settings, which
+can be used to check whether source-highlight will be able to find its
+language definition files, and other configuration files, and in case, to
+store the correct settings in a configuration file, in the user home
+directory.  In particular, the stored configuration file will be called
+source-highlight.conf and will be stored in $HOME/.source-highlight/.  For the
+moment, this file only stores the default value for the --data-dir option.
+This utility is part of GNU Source-highlight, maintained by:
+Lorenzo Bettini <http://www.lorenzobettini.it> Report bugs to
+<bug-source-highlight at gnu.org> Copyright © 1999-2009 Lorenzo Bettini
+<http://www.lorenzobettini.it> This program comes with ABSOLUTELY NO WARRANTY.
+This is free software; you may redistribute copies of the program under the
+terms of the GNU General Public License.  For more information about these
+matters, see the file named COPYING.  The full documentation for is maintained
+as a Texinfo manual.  If the and programs are properly installed at your site,
+the command should give you access to the complete manual.
+
+

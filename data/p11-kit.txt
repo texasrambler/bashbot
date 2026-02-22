@@ -1,0 +1,193 @@
+p11-kit - Tool for operating on configured PKCS#11 modules p11-kit
+list-modules p11-kit list-tokens ... p11-kit list-objects ... p11-kit
+import-object ... p11-kit export-object ... p11-kit delete-object ... p11-kit
+generate-keypair ... p11-kit list-profiles ... p11-kit add-profile ... p11-kit
+delete-profile ... p11-kit list-mechanisms ... p11-kit print-config p11-kit
+extract ... p11-kit server ... p11-kit is a command line tool that can be used
+to perform operations on PKCS#11 modules configured on the system.  See the
+various sub commands below. The following global options can be used: -v,
+--verbose Run in verbose mode with debug output.  -q, --quiet Run in quiet
+mode without warning or failure messages.  List system configured PKCS#11
+modules.
+
+$ p11-kit list-modules
+The modules, information about them and the tokens present in the PKCS#11
+modules will be displayed.  List all tokens available in system configured
+PKCS#11 modules.
+
+$ p11-kit list-tokens pkcs11:token
+This retrieves all tokens and displays some of their common attributes.	 This
+subcommand takes the following options: --only-uris Print only the matching
+token URIs.  --provider=<module_path> Load only the given PKCS#11 module
+instead of enumerating modules installed on the system. If module_path is a
+relative path, the module is loaded from the default module path. This path
+can be determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+List objects matching given PKCS#11 URI.
+
+$ p11-kit list-objects pkcs11:object_on_token
+This retrieves all objects that match given PKCS#11 URI and displays some of
+their common attributes. Storage objects also have their PKCS#11 URI
+displayed.  This subcommand takes the following options: --login Authenticate
+to the token before enumerating objects. The PIN value is read from either the
+pin-value attribute in the URI or from the terminal.  --provider=<module_path>
+Load only the given PKCS#11 module instead of enumerating modules installed on
+the system. If module_path is a relative path, the module is loaded from the
+default module path. This path can be determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+Import object into PKCS#11 token.
+
+$ p11-kit import-object --file=file.pem [--label=label] [--id=object_id] pkcs11:token
+Takes either an X.509 certificate or a public key in the form of a PEM file
+and imports it into the first token matched by given PKCS#11 URI.  The
+following options are required: --file=<file.pem> File containing either an
+X.509 certificate or a public key in PEM format.  This subcommand also accepts
+the following options: --label=<label> Assigns label to the imported object.
+--id=<object_id> Assigns ID to the imported object. The ID should be specified
+in hexadecimal format without '0x' prefix.  --login Authenticate to the token
+before enumerating objects. The PIN value is read from either the pin-value
+attribute in the URI or from the terminal.  --provider=<module_path> Load only
+the given PKCS#11 module instead of enumerating modules installed on the
+system. If module_path is a relative path, the module is loaded from the
+default module path. This path can be determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+Export object matching PKCS#11 URI.
+
+$ p11-kit export-object pkcs11:object_on_token
+Displays PEM formatted contents of the first object matched by given PKCS#11
+URI. The matched object has to either be an X.509 certificate or a public key.
+This subcommand takes the following options: --login Authenticate to the token
+before enumerating objects. The PIN value is read from either the pin-value
+attribute in the URI or from the terminal.  --provider=<module_path> Load only
+the given PKCS#11 module instead of enumerating modules installed on the
+system. If module_path is a relative path, the module is loaded from the
+default module path. This path can be determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+Delete object matching PKCS#11 URI.
+
+$ p11-kit delete-object pkcs11:object_on_token
+Destroys the first object matched by given PKCS#11 URI.	 This subcommand takes
+the following options: --login Authenticate to the token before enumerating
+objects. The PIN value is read from either the pin-value attribute in the URI
+or from the terminal.  --provider=<module_path> Load only the given PKCS#11
+module instead of enumerating modules installed on the system. If module_path
+is a relative path, the module is loaded from the default module path. This
+path can be determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+Generate key-pair on a PKCS#11 token.
+
+$ p11-kit generate-keypair --type=algorithm {--bits=n|--curve=name} [--label=label] [--id=object_id] pkcs11:token
+Generate private-public key-pair of given type on the first token matched by
+given PKCS#11 URI. This command should be used together with --type option and
+one of --bits or --curve options.  The following options are required:
+--type=<algorithm> Specify the type of keys to generate. Supported values are
+rsa, ecdsa and eddsa.  --bits=<n> Specify the number of bits for the key-pair
+generation. Cannot be used together with --curve option.  --curve=<name>
+Specify an elliptic curve for the key-pair generation. Supported values are
+secp256r1, secp384r1, secp521r1, ed25519 and ed448. Cannot be used together
+with --bits option.  This subcommand also accepts the following options:
+--label=<label> Assigns label to the generated key-pair objects.
+--id=<object_id> Assigns ID to the generated key-pair objects. The ID should
+be specified in hexadecimal format without '0x' prefix.	 --login Authenticate
+to the token before enumerating objects. The PIN value is read from either the
+pin-value attribute in the URI or from the terminal.  --provider=<module_path>
+Load only the given PKCS#11 module instead of enumerating modules installed on
+the system. If module_path is a relative path, the module is loaded from the
+default module path. This path can be determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+List PKCS#11 profiles supported by the token.
+
+$ p11-kit list-profiles pkcs11:token
+Displays profile IDs of the first token matched by given PKCS#11 URI in
+human-readable form.  This subcommand takes the following options: --login
+Authenticate to the token before enumerating objects. The PIN value is read
+from either the pin-value attribute in the URI or from the terminal.
+--provider=<module_path> Load only the given PKCS#11 module instead of
+enumerating modules installed on the system. If module_path is a relative
+path, the module is loaded from the default module path. This path can be
+determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+Add PKCS#11 profile to a token.
+
+$ p11-kit add-profile --profile=profile pkcs11:token
+Creates new profile object with given profile ID on the first token matched by
+given PKCS#11 URI. This command fails if the profile ID already exists on the
+token.	The following options are required: --profile=<profile> Profile ID to
+add. Value can either be numerical or textual.	This subcommand also accepts
+the following options: --login Authenticate to the token before enumerating
+objects. The PIN value is read from either the pin-value attribute in the URI
+or from the terminal.  --provider=<module_path> Load only the given PKCS#11
+module instead of enumerating modules installed on the system. If module_path
+is a relative path, the module is loaded from the default module path. This
+path can be determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+Delete PKCS#11 profile from a token.
+
+$ p11-kit delete-profile --profile=profile pkcs11:token
+Destroys all profile objects with given profile ID from the first token
+matched by given PKCS#11 URI.  The following options are required:
+--profile=<profile> Profile ID to delete. Value can either be numerical or
+textual.  This subcommand also accepts the following options: --login
+Authenticate to the token before enumerating objects. The PIN value is read
+from either the pin-value attribute in the URI or from the terminal.
+--provider=<module_path> Load only the given PKCS#11 module instead of
+enumerating modules installed on the system. If module_path is a relative
+path, the module is loaded from the default module path. This path can be
+determined by running:
+
+$ pkg-config p11-kit-1 --variable p11_module_path
+/usr/lib64/pkcs11
+List PKCS#11 mechanisms supported by the token.
+
+$ p11-kit list-mechanisms pkcs11:token
+This lists all available mechanimsms for a PKCS#11 token Print merged
+configuration.
+
+$ p11-kit print-config
+P11-kit provides 3 levels of configuration: system wide, per-module, and
+per-user. At run-time all 3 levels are merged into a single configuration.
+This command displays the merged configuration.	 Extract certificates from
+configured PKCS#11 modules.  This operation has been moved to a separate
+command trust extract. See trust(1) for more information Run a server process
+that exposes PKCS#11 module remotely.
+
+$ p11-kit server pkcs11:token1 pkcs11:token2 ...
+$ p11-kit server --provider /path/to/pkcs11-module.so pkcs11:token1 pkcs11:token2 ...
+This launches a server that exposes the given PKCS#11 tokens on a local
+socket. The tokens must belong to the same module. To access the socket, use
+p11-kit-client.so module. The server address and PID are printed as a
+shell-script snippet which sets the appropriate environment variable:
+P11_KIT_SERVER_ADDRESS and P11_KIT_SERVER_PID.	Extract standard trust
+information files.  This operation has been moved to a separate command trust
+extract-compat. See trust(1) for more information Run a PKCS#11 module
+remotely.
+
+$ p11-kit remote /path/to/pkcs11-module.so
+$ p11-kit remote pkcs11:token1 pkcs11:token2 ...
+This is not meant to be run directly from a terminal. But rather in a remote
+option in a pkcs11.conf(5) file.  This exposes the given PKCS#11 module or
+tokens over standard input and output. Those two forms, whether to expose a
+module or tokens, are mutually exclusive and if the second form is used, the
+tokens must belong to the same module.	Please send bug reports to either the
+distribution bug tracker or the upstream bug tracker at
+https://github.com/p11-glue/p11-kit/issues/.  pkcs11.conf(5) Further details
+available in the p11-kit online documentation at
+https://p11-glue.github.io/p11-glue/p11-kit/manual/.
+
+

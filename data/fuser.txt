@@ -1,0 +1,77 @@
+fuser - identify processes using files or sockets ]
+displays the PIDs of processes using the specified files or file systems.  In
+the default display mode, each file name is followed by a letter denoting the
+type of access: current directory.  executable being run.  open file.  is
+omitted in default display mode.  open file for writing.  is omitted in
+default display mode.  root directory.	mmap'ed file or shared library.
+Placeholder, omitted in default display mode.  returns a non-zero return code
+if none of the specified files is accessed or in case of a fatal error.	 If at
+least one access has been found, returns zero.	In order to look up processes
+using TCP and UDP sockets, the corresponding name space has to be selected
+with the option. By default will look in both IPv6 and IPv4 sockets.  To
+change the default behavior, use the and options.  The socket(s) can be
+specified by the local and remote port, and the remote address.	 All fields
+are optional, but commas in front of missing fields must be present: Either
+symbolic or numeric values can be used for IP addresses and port numbers.
+outputs only the PIDs to stdout, everything else is sent to stderr.  Show all
+files specified on the command line.  By default, only files that are accessed
+by at least one process are shown.  Same as -m option, used for POSIX
+compatibility.	Silently ignored, used for POSIX compatibility.	 Kill
+processes accessing the file.  Unless changed with , SIGKILL is sent.  An
+process never kills itself, but may kill other processes.  The effective user
+ID of the process executing is set to its real user ID before attempting to
+kill.  Ask the user for confirmation before killing a process.	This option is
+silently ignored if is not present too.	 For the name space let all
+comparisons be based on the inodes of the specified file(s) and never on the
+file names even on network based file systems.	List all known signal names.
+specifies a file on a mounted file system or a block device that is mounted.
+All processes accessing files on that file system are listed.  If a directory
+is specified, it is automatically changed to to use any file system that might
+be mounted on that directory.  Request will be fulfilled only if specifies a
+mountpoint.  This is an invaluable seat belt which prevents you from killing
+the machine if happens to not be a filesystem.	Kill only processes which have
+write access.  This option is silently ignored if is not present too.  Select
+a different name space.	 The name spaces (file names, the default), (local UDP
+ports), and (local TCP ports) are supported.  For ports, either the port
+number or the symbolic name can be specified.  If there is no ambiguity, the
+shortcut notation (e.g., can be used.  Silent operation.  and are ignored in
+this mode.  must not be used with Use the specified signal instead of SIGKILL
+when killing processes.	 Signals can be specified either by name (e.g., or by
+number (e.g., This option is silently ignored if the option is not used.
+Append the user name of the process owner to each PID.	Verbose mode.
+Processes are shown in a style.	 The fields PID, USER and COMMAND are similar
+to ACCESS shows how the process accesses the file.  Verbose mode will also
+show when a particular file is being accessed as a mount point, knfs export or
+swap file.  In this case is shown instead of the PID.  Display version
+information.  Search only for IPv4 sockets.  This option must not be used with
+the option and only has an effect with the tcp and udp namespaces.  Search
+only for IPv6 sockets.	This option must not be used with the option and only
+has an effect with the tcp and udp namespaces.	/proc location of the proc
+file system kills all processes accessing the file system /home in any way.
+invokes if no other process is using /dev/ttyS1.  shows all processes at the
+(local) TELNET port.  Processes accessing the same file or file system several
+times in the same way are only shown once.  If the same object is specified
+several times on the command line, some of those entries may be ignored.  may
+only be able to gather partial information unless run with privileges.	As a
+consequence, files opened by processes belonging to other users may not be
+listed and executables may be classified as mapped only.  cannot report on any
+processes that it doesn't have permission to look at the file descriptor table
+for.  The most common time this problem occurs is when looking for TCP or UDP
+sockets when running as a non-root user.  In this case will report no access.
+Installing SUID root will avoid problems associated with partial information,
+but may be undesirable for security and privacy reasons.  and name spaces, and
+UNIX domain sockets can't be searched with kernels older than 1.3.78.
+Accesses by the kernel are only shown with the option.	The option only works
+on processes.  If the user is the kernel, will print an advice, but take no
+action beyond that.  will not see block devices mounted by processes in a
+different mount namespace.  This is due to the device ID shown in the process'
+file descriptor table being from the process namespace, not fuser's; meaning
+it won't match.	 will show (or kill with the -k flag) all processes, even if
+you don't have that device configured.	There may be other devices it does
+this for too.  The mount -m option will match any file within the same device
+as the specified file, use the -M option as well if you mean to specify only
+the mount point.  will not match mapped files, such as a process' shared
+libraries if they are on a filesystem due to the device IDs being different
+for and /proc/<PID>/maps.
+
+

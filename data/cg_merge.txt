@@ -1,0 +1,9 @@
+cg_merge - (deprecated) merges multiple Cachegrind output files into one
+cg_merge [options] [cachegrind-out-files...]  cg_merge sums together multiple
+Cachegrind output files into a single Cachegrind output file. It is deprecated
+because cg_annotate can now do much the same thing, but better.	 -o outfile
+Write the output to to outfile instead of standard output.  cg_annotate(1),
+valgrind(1), $INSTALL/share/doc/valgrind/html/index.html or
+http://www.valgrind.org/docs/manual/index.html.	 Nicholas Nethercote.
+
+

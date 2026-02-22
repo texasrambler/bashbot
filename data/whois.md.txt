@@ -1,0 +1,76 @@
+whois - client for the whois directory service [ ] [ ] ] ]
+
+
+
+
+
+
+searches for an object in a database.  This version of the whois client tries
+to guess the right server to ask for the specified object.  If no guess can be
+made it will connect to for NIC handles or for IPv4 addresses and network
+names.	Connect to Do not display the legal disclaimers that some registries
+like to show you.  Connect to First query and then follow its referral to the
+whois server authoritative for that request.  This works for IP addresses, AS
+numbers and domains.  this implies that the IANA server will receive your
+complete query.	 Disable recursion from registry to registrar servers.	Be
+verbose.  Display online help.	Display the program version.  Other options
+are flags understood by and some other RIPE-like servers: Also search all the
+mirrored databases.  Return brief IP address ranges with abuse contact.
+Disable objects filtering.  (Show the e-mail addresses.)  Return the smallest
+IP address range with a reference to an irt object.  Return the reverse DNS
+delegation object too.	Search updates from database between and update serial
+number.	 It is useful to obtain Near Real Time Mirroring stream.  Disable
+grouping of associated objects.	 Inverse-search objects having associated
+attributes.  is the attribute name, while the positional argument is the
+attribute value.  Return primary key attributes only.  An exception is the
+attribute of objects, which is always returned.	 Another exception are all
+attributes of the objects and that are never returned.	Return the one level
+less specific object.  Return all levels of less specific objects.  Return all
+one level more specific objects.  Return all levels of more specific objects.
+Return information about the server.  can be for the server version, for the
+list of database sources or for the list of supported object types.  Disable
+recursive lookups for contact information.  Disable following referrals and
+force showing the object from the local copy in the server.  Request the
+server to search for objects mirrored from Sources are delimited by comma, and
+the order is significant.  Use the parameter to obtain a list of valid
+sources.  Return the template for a object of Restrict the search to objects
+of Multiple types are separated by a comma.  Return the verbose template for a
+object of Search for only exact match on network address prefix.  When
+querying the Verisign gTLDs (e.g. .com, .net...) thin registry servers for a
+domain, the program will automatically prepend the keyword to only show domain
+records.  The or keywords must be used to show other kinds of records.	When
+querying for IPv4 or IPv6 networks, the CIDR netmask length will be
+automatically removed from the query string.  When querying for AS numbers,
+the program will automatically convert the request in the appropriate format,
+inserting a space after the string When querying for domain names and no other
+flags have been specified, the program will automatically add the flag When
+querying for domain names and no other flags have been specified, the program
+will automatically add the flag RIPE-specific command line options are ignored
+when querying non-RIPE servers.	 This may or may not be the behaviour intended
+by the user.  When using non-standard query parameters then the command line
+options which are not to be interpreted by the client must follow the
+separator (which marks the beginning of the query string).  If the
+configuration file exists, it will be consulted to find a server before
+applying the normal rules.  Each line of the file should contain a regular
+expression to be matched against the query text and the whois server to use,
+separated by white space.  IDN domains must use the ACE format.	 The whois
+protocol does not specify an encoding for characters which cannot be
+represented by ASCII and implementations vary wildly.  If the program knows
+that a specific server uses a certain encoding, if needed it will transcode
+the server output to the encoding specified by the current system locale.
+Command line arguments will always be interpreted accordingly to the current
+system locale and converted to the IDN ASCII Compatible Encoding.
+/etc/whois.conf When querying and English text is requested unless the or
+environment variables specify a Japanese locale.  A list of options which will
+be evaluated before the ones specified on the command line.  This server will
+be queried if the program cannot guess where some kind of objects are located.
+If the variable does not exist then will be queried.  WHOIS Protocol
+Specification.	The program may have buffer overflows in the command line
+parser: be sure to not pass untrusted data to it.  It should be rewritten to
+use a dynamic strings library.	This program closely tracks the user interface
+of the whois client developed at RIPE by Ambrose Magee and others on the base
+of the original BSD client.  and this man page were written by Marco d'Itri
+and are licensed under the terms of the GNU General Public License, version 2
+or later.
+
+

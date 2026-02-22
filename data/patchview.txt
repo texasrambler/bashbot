@@ -1,0 +1,113 @@
+patchview - Without options, show numbered files modified by the patch. With
+options, behave as filterdiff.	patchview [[-n] | [--line-number]] [[-p n] |
+[--strip-match=n]] [--strip=n] [--addprefix=PREFIX] [[-s] | [--status]] [[-E]
+| [--empty-files-as-removed]] [[-i PATTERN] | [--include=PATTERN]]
+[[-x PATTERN] | [--exclude=PATTERN]] [[-z] | [--decompress]] [[-# RANGE] |
+[--hunks=RANGE]] [--lines=RANGE] [[-FRANGE] | [--files=RANGE]] [[-H] |
+[--with-filename]] [[-h] | [--no-filename]] [[-v] | [--verbose]...] [file...]
+patchview {[--help] | [--version] | [--filter ...] | [--grep ...]} So what is
+patchview? It is a wrapper of filterdiff for use with numbered files.
+
+patchview
+
+(without args) is equivalent to: lsdiff --number
+patchview -F2-
+
+(or with any other args) is equivalent to: filterdiff -F2- (or whatever
+arguments are supplied) There are two scripts for working with git (gitdiff
+and gitdiffview) and two for svn (svndiff and svndiffview).
+
+svndiff
+
+
+
+gitdiff
+
+(without args) will give the list of files modified
+svndiff -F1
+
+
+
+gitdiff -F1
+
+will show the patch of file #1
+svndiffview
+
+
+
+gitdiffview
+
+pipe all patches through filterdiff to vim - -R (in read-only mode, easy to
+quit), showing complete patch with color.
+svndiffview -F2
+
+
+
+gitdiffview -F2
+
+(or any other args) will pipe patch of file #2 to vim - -R -n, --line-number
+Display the line number that each patch begins at. If verbose output is
+requested (using -nv), each hunk of each patch is listed as well.
+
+For each file that is modified, a line is generated containing the line number
+of the beginning of the patch, followed by a Tab character, followed by the
+name of the file that is modified. If -v is given once, following each of
+these lines will be one line for each hunk, consisting of a Tab character, the
+line number that the hunk begins at, another Tab character, the string “Hunk
+#”, and the hunk number (starting at 1).
+
+If the -v is given twice in conjunction with -n (i.e.  -nvv), the format is
+slightly different: hunk-level descriptive text is shown after each hunk
+number, and the --number-files option is enabled.  -N, --number-files File
+numbers are listed, beginning at 1, before each filename.  -# RANGE,
+--hunks=RANGE Only list hunks within the specified RANGE. Hunks are numbered
+from 1, and the range is a comma-separated list of numbers or “first-last”
+spans, optionally preceded by a modifier 'x' which inverts the entire range;
+either the first or the last in the span may be omitted to indicate no limit
+in that direction.  --lines=RANGE Only list hunks that contain lines from the
+original file that lie within the specified RANGE. Lines are numbered from 1,
+and the range is a comma-separated list of numbers or “first-last” spans,
+optionally preceded by a modifier 'x' which inverts the entire range; either
+the first or the last in the span may be omitted to indicate no limit in that
+direction.  -F=RANGE, --files=RANGE Only list files indicated by the specified
+RANGE. Files are numbered from 1 in the order they appear in the patch input,
+and the range is a comma-separated list of numbers or “first-last” spans,
+optionally preceded by a modifier 'x' which inverts the entire range; either
+the first or the last in the span may be omitted to indicate no limit in that
+direction.  -p n, --strip-match=n When matching, ignore the first n components
+of the pathname.  --strip=n Remove the first n components of the pathname
+before displaying it.  --addprefix=PREFIX Prefix the pathname with PREFIX
+before displaying it.  -s, --status Show file additions, modifications and
+removals. A file addition is indicated by a “+”, a removal by a “-”, and a
+modification by a “!”.	-E, --empty-files-as-removed Treat empty files as
+absent for the purpose of displaying file additions, modifications and
+removals.  -i PATTERN, --include=PATTERN Include only files matching PATTERN.
+-x PATTERN, --exclude=PATTERN Exclude files matching PATTERN.  -z,
+--decompress Decompress files with extensions .gz and .bz2.  -H,
+--with-filename Print the name of the patch file containing each patch.	 -h,
+--no-filename Suppress the name of the patch file containing each patch.  -v,
+--verbose Verbose output.  --help Display a short usage message.  --version
+Display the version number of patchview.  --filter Behave like filterdiff(1)
+instead.  --grep Behave like grepdiff(1) instead.  lsdiff(1),filterdiff(1),
+grepdiff(1) We can make the following one-line script with the name
+difftotrunk.sh, to view the differences of two directories or svn repos (trunk
+and .)
+
+diff ../trunk . -ru -x .svn | patchview "$@"
+./difftotrunk.sh , will show all different files and his number.
+
+
+
+./difftotrunk.sh -F3,4 , will show the differences of files #3 and #4 only.
+
+
+
+./difftotrunk.sh -F3 -#1 , will show only hunk #1 of file #3.
+
+
+
+./difftotrunk.sh -F3 -#x1 , will show the differences of files #3 without hunk #1 (x means that exclude).
+
+Tim Waugh <twaugh@redhat.com> Package maintainer
+
+

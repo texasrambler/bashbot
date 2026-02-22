@@ -1,0 +1,6 @@
+pslog - report current logs path of a process
+The command reports the current working logs of a process.  Display version
+information.  Vito Mule’ wrote in 2015. Please send bug reports to
+
+
+

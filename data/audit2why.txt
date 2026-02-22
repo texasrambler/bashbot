@@ -1,0 +1,124 @@
+- generate SELinux policy allow/dontaudit rules from logs of denied operations
+
+- translates SELinux audit messages into a description of why the access was
+denied (audit2allow -w)
+
+Read input from audit and message log, conflicts with -i Read input from audit
+messages since last boot, conflicts with -i Read input from output of Note
+that all audit messages are not available via dmesg when auditd is running;
+use "ausearch -m avc | audit2allow"  or "-a" instead.  Generate dontaudit
+rules (Default: allow) Fully explain generated output Print a short usage
+message Read input from Read interface information from Read input only after
+last policy reload Generate module/require output <modulename> Generate
+loadable module package, conflicts with -o Generate CIL output, conflicts with
+-M Policy file to use for analysis Read permission map from Append output to
+Generate require output syntax for loadable modules.  Do not generate
+reference policy, traditional style allow rules.  This is the default
+behavior.  Generate reference policy using installed macros.  This attempts to
+match denials against interfaces and may be inaccurate.	 Only process messages
+with a type that matches this regex Generate extended permission access vector
+rules Translates SELinux audit messages into a description of why the access
+was denied
+
+Turn on verbose output
+
+This utility scans the logs for messages logged when the system denied
+permission for operations, and generates a snippet of policy rules which, if
+loaded into policy, might have allowed those operations to succeed. However,
+this utility only generates Type Enforcement (TE) allow rules.	Certain
+permission denials may require other kinds of policy changes, e.g. adding an
+attribute to a type declaration to satisfy an existing constraint, adding a
+role allow rule, or modifying a constraint.  The utility may be used to
+diagnose the reason when it is unclear.	 Care must be exercised while acting
+on the output of this utility to ensure that the operations being permitted do
+not pose a security threat. Often it is better to define new domains and/or
+types, or make other structural changes to narrowly allow an optimal set of
+operations to succeed, as opposed to blindly implementing the sometimes broad
+changes recommended by this utility.   Certain permission denials are not
+fatal to the application, in which case it may be preferable to simply
+suppress logging of the denial via a 'dontaudit' rule rather than an 'allow'
+rule.
+
+$ cat /var/log/audit/audit.log | audit2allow -m local > local.te
+$ cat local.te
+module local 1.0;
+
+require {
+	class file {  getattr open read };
+
+
+	type myapp_t;
+	type etc_t;
+ };
+
+
+allow myapp_t etc_t:file { getattr open read };
+<review local.te and customize as desired>
+
+
+$ cat /var/log/audit/audit.log | audit2allow -R -m local > local.te
+$ cat local.te
+policy_module(local, 1.0)
+
+gen_require(`
+	type myapp_t;
+	type etc_t;
+')
+
+files_read_etc_files(myapp_t)
+<review local.te and customize as desired>
+
+
+# SELinux provides a policy devel environment under
+# /usr/share/selinux/devel including all of the shipped
+# interface files.
+# You can create a te file and compile it by executing
+
+$ make -f /usr/share/selinux/devel/Makefile local.pp
+
+
+# This make command will compile a local.te file in the current
+# directory. If you did not specify a "pp" file, the make file
+# will compile all "te" files in the current directory.	 After
+# you compile your te file into a "pp" file, you need to install
+# it using the semodule command.
+
+$ semodule -i local.pp
+
+
+# Compile the module
+$ checkmodule -M -m -o local.mod local.te
+
+# Create the package
+$ semodule_package -o local.pp -m local.mod
+
+# Load the module into the kernel
+$ semodule -i local.pp
+
+
+$ cat /var/log/audit/audit.log | audit2allow -M local
+Generating type enforcement file: local.te
+
+Compiling policy: checkmodule -M -m -o local.mod local.te
+Building package: semodule_package -o local.pp -m local.mod
+
+******************** IMPORTANT ***********************
+
+In order to load this newly created policy package into the kernel,
+you are required to execute
+
+semodule -i local.pp
+
+
+$ cd /etc/selinux/$SELINUXTYPE/src/policy
+$ cat /var/log/audit/audit.log | audit2allow >> domains/misc/local.te
+$ cat domains/misc/local.te
+allow cupsd_config_t unconfined_t:fifo_file { getattr ioctl };
+<review domains/misc/local.te and customize as desired>
+$ make load
+
+This manual page was written by for the Debian GNU/Linux system. It was
+updated by Dan Walsh <dwalsh@redhat.com> The utility has contributions from
+several people, including and and
+
+

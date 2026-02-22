@@ -1,0 +1,72 @@
+apropos - search the manual page names and descriptions ] ...  Each manual
+page has a short description available within it.  searches the descriptions
+for instances of
+
+is usually a regular expression, as if was used, or may contain wildcards or
+match the exact keyword Using these options, it may be necessary to quote the
+or escape (\) the special characters to stop the shell from interpreting them.
+
+The standard matching rules allow matches to be made against the page name and
+word boundaries in the description.
+
+The database searched by is updated by the program.  Depending on your
+installation, this may be run by a periodic cron job, or may need to be run
+manually after new manual pages have been installed.  Print debugging
+information.  Print verbose warning messages.  Interpret each keyword as a
+regular expression.  This is the default behaviour.  Each keyword will be
+matched against the page names and the descriptions independently.  It can
+match any part of either.  The match is not limited to word boundaries.
+Interpret each keyword as a pattern containing shell style wildcards.  Each
+keyword will be matched against the page names and the descriptions
+independently.	If is also used, a match will only be found if an expanded
+keyword matches an entire description or page name.  Otherwise the keyword is
+also allowed to match on word boundaries in the description.  Each keyword
+will be exactly matched against the page names and the descriptions.  Only
+display items that match all the supplied keywords.  The default is to display
+items that match any keyword.  Do not trim output to the terminal width.
+Normally, output will be truncated to the terminal width to avoid ugly results
+from poorly-written sections.  -s list, --sections=list, --section=list Search
+only the given manual sections.	 is a colon- or comma-separated list of
+sections.  If an entry in is a simple section, for example "3", then the
+displayed list of descriptions will include pages in sections "3", "3perl",
+"3x", and so on; while if an entry in has an extension, for example "3perl",
+then the list will only include pages in that exact part of the manual
+section.  -m system[,...], --systems=system[,...] If this system has access to
+other operating systems' manual page descriptions, they can be searched using
+this option.  To search NewOS's manual page descriptions, use the option
+
+The specified can be a combination of comma-delimited operating system names.
+To include a search of the native operating system's descriptions, include the
+system name in the argument string.  This option will override the environment
+variable.  Specify an alternate set of colon-delimited manual page hierarchies
+to search.  By default, uses the environment variable, unless it is empty or
+unset, in which case it will determine an appropriate manpath based on your
+environment variable.  This option overrides the contents of will normally
+determine your current locale by a call to the C function which interrogates
+various environment variables, possibly including and To temporarily override
+the determined value, use this option to supply a string directly to Note that
+it will not take effect until the search for pages actually begins.  Output
+such as the help message will always be displayed in the initially determined
+locale.	 Use this user configuration file rather than the default of Print a
+help message and exit.	Print a short usage message and exit.  Display version
+information.  Successful program execution.  Usage, syntax or configuration
+file error.  Operational error.	 Nothing was found that matched the criteria
+specified.  If is set, it will have the same effect as if it had been
+specified as the argument to the option.  If is set, its value is interpreted
+as the colon-delimited manual page hierarchy search path to use.
+
+See the section of for the default behaviour and details of how this
+environment variable is handled.  If is set, its value is used as the terminal
+width (see the option).	 If it is not set, the terminal width will be
+calculated using the value of and if available, or falling back to 80
+characters if all else fails.  If is set, even to a null value, the default
+search will be as an extended regex Nowadays, this is the default behaviour
+anyway.	 A traditional global database cache.  An FHS compliant global
+database cache.	 A traditional text database.
+Wilf. (G.Wilford@ee.surrey.ac.uk).
+Fabrizio Polacco (fpolacco@debian.org).
+Colin Watson (cjwatson@debian.org).
+https://gitlab.com/man-db/man-db/-/issues
+https://savannah.nongnu.org/bugs/?group=man-db
+
+

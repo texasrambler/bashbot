@@ -1,0 +1,29 @@
+exch - atomically exchanges paths between two files
+
+exch oldpath newpath
+
+exch atomically exchanges oldpath and newpath.	exch is a simple command
+wrapping RENAME_EXCHANGE of renameat2 system call.
+
+-h, --help Display help text and exit.
+
+-V, --version Display version and exit.
+
+exch has the following exit status values:
+
+0 success
+
+1 unspecified failure
+
+Masatake YAMATO <yamato@redhat.com>
+
+renameat2(2)
+
+For bug reports, use the issue tracker
+<https://github.com/util-linux/util-linux/issues>.
+
+The exch command is part of the util-linux package which can be downloaded
+from Linux Kernel Archive
+<https://www.kernel.org/pub/linux/utils/util-linux/>.
+
+

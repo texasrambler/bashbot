@@ -1,0 +1,311 @@
+dnf5 - DNF5 Package Management Utility
+
+dnf5 <command> [options] [<args>...]
+
+DNF5 is the new version of DNF, a package manager for RPM-based Linux
+distributions. It has been completely rewritten in C++ aiming for better
+performance and reducing external dependencies.
+
+Here is the list of the available commands.  For more details see the separate
+man page for the specific command, f.e. man dnf5 install.
+Manage advisories.
+
+Remove unneeded packages.
+
+Check for problems in the package database.
+
+Check for available package upgrades.
+
+Remove or invalidate cached data.
+
+Upgrade or downgrade installed packages to the latest available version.
+
+Downgrade packages.
+
+Download packages.
+
+Manage comps environments.
+
+Manage comps groups.
+
+Manage transaction history.
+
+Provide detailed information about installed or available packages.
+
+Install packages.
+
+List groups of leaf packages.
+
+List installed or available packages.
+
+Generate the metadata cache.
+
+Change the reason of an installed package.
+
+Manage modules.
+
+Manage offline transactions.
+
+Find what package provides the given value.
+
+Reinstall packages.
+
+Remove packages.
+
+Replay stored transactions.
+
+Manage repositories.
+
+Search for packages in repositories.
+
+Search for packages using keywords.
+
+Remove software and install another in the single transaction.
+
+Upgrade the system to a new major release.
+
+Upgrade packages.
+
+Protect packages from updates to newer versions.
+
+
+Here is the list of the commands available as plugins.	These are available
+after installing the dnf5-plugins package.
+Alternative CLI to dnf upgrade suitable to be executed automatically and regularly from systemd timers, cron jobs and similar.
+
+Install missing dependencies for building an RPM package.
+
+Show package changelogs.
+
+Manages main configuration, repositories configuration, and variables.
+
+Manage Copr repositories (add-ons provided by users/community/third-party).
+
+Determine whether the system should be rebooted.
+
+Display a list of unresolved dependencies for repositories.
+
+Synchronize packages and metadata of a remote DNF repository to a local directory.
+
+
+Following options are applicable in the general context for any dnf5 command:
+Automatically answer no for all questions.
+
+Try the best available package versions in transactions.
+
+
+Specifically during dnf upgrade, which by default skips over updates that can
+not be installed for dependency reasons, the switch forces DNF5 to only
+consider the latest packages. When running into packages with broken
+dependencies, DNF5 will fail giving the reason why the latest version can not
+be installed.
+
+Note that the use of the newest available version is only guaranteed for the
+packages directly requested (e.g. as a command line arguments), and the solver
+may use older versions of dependencies to meet their requirements.
+Use only cached data for working with packages and repository metadata.
+Cache won't be updated, even if it is expired.
+
+Add a comment to the transaction history.
+
+Define configuration file location.
+
+Dump additional data from solver for debugging purposes.
+Data are saved in ./debugdata.
+
+Disable specified libdnf5 library plugins for the purpose of the current DNF5 command.
+This is a list option which can be specified multiple times.
+Accepted values are names, or a glob of names.
+
+Temporarily disable active repositories for the purpose of the current DNF5 command.
+This is a list option which can be specified multiple times.
+Accepted values are ids, or a glob of ids.
+
+Print main configuration values to stdout.
+
+Print repository configuration values to stdout.
+This is a list option which can be specified multiple times.
+Accepted values are ids, or a glob of ids.
+
+Print variable values to stdout.
+
+Enable specified libdnf5 library plugins for the purpose of the current DNF5 command.
+This is a list option which can be specified multiple times.
+Accepted values are names, or a glob of names.
+
+Temporarily enable additional repositories for the purpose of the current DNF5 command.
+This is a list option which can be specified multiple times.
+Accepted values are ids, or a glob of ids.
+
+Force the use of a specific architecture.
+See dnf5-forcearch(7) for more info.
+
+Show the help.
+
+Setup installroot path.
+Absolute path is required.
+See dnf5-installroot(7) for more info.
+
+Do not limit the transaction to the best candidates only.
+
+Do not install any files that are marked as a documentation (which includes man pages and texinfo documents).
+It sets the RPMTRANS_FLAG_NODOCS flag.
+
+Skip checking OpenPGP signatures on packages (if RPM policy allows that).
+
+Disable all libdnf5 plugins.
+
+In combination with a non-interactive command, shows just the relevant
+content.  Suppresses messages notifying about the current state or actions of
+DNF5.
+Force refreshing metadata before running the command.
+
+Control whether color is used in terminal output. Valid values are always, never and auto (default).
+
+Enable just specified repositories.
+This is a list option which can be specified multiple times.
+Accepted values are ids, or a glob of ids.
+
+Specify a repository to add to the repositories only for this run. Can be used
+multiple times.
+
+The new repository id is specified by REPO_ID and its baseurl by REPO_PATH.
+Variables in both values are substituted before creating the repo.
+
+The configuration of the new repository can be adjusted using options
+--setopt=REPO_ID.option=value.
+
+If you want only packages from this repository to be available, combine this
+option with --repo=REPO_ID switch.
+Override the value of the distribution release in configuration files.
+This can affect cache paths, values in configuration files and mirrorlist URLs.
+
+Override a configuration option from the configuration file.
+The REPO_ID parameter is used to override options for repositories.
+
+
+Values for the options like excludepkgs, includepkgs, installonlypkgs and
+tsflags are appended to the original value, they do not override it. However,
+specifying an empty value (e.g. --setopt=tsflags=) will clear the option.
+Override a DNF5 variable value, like arch, releasever, etc.
+
+Show newly installed leaf packages and packages that became leaves after a transaction.
+
+Use configuration files and variable definitions from the host system rather than the installroot.
+See dnf5-installroot(7) for more info.
+
+Display the version of the dnf5 application and libdnf5 library, along with successfully loaded plugins and their versions, and then exit.
+
+Automatically answer yes for all questions.
+
+Exclude packages specified in PACKAGE-SPEC-N arguments from the transaction.
+This is a list option.
+
+
+Correct operation of DNF5 depends on having an access to up-to-date data from
+the all enabled repositories, but contacting remote mirrors on every operation
+considerably slows it down and costs bandwidth for both the client and the
+repository provider. The metadata_expire repository configuration option is
+used by DNF5 to determine whether a particular local copy of repository data
+is due to be re-synced. It is crucial that the repository providers set the
+option well, namely to a value where it is guaranteed that if particular
+metadata was available in time T on the server, then all packages it
+references will still be available for download from the server in time T +
+metadata_expire.
+
+To further reduce the bandwidth load, some of the commands where having
+up-to-date metadata is not critical (e.g. the group list command) do not look
+at whether a repository is expired and whenever any version of it is locally
+available to the user's account, it will be used.
+
+Refer to the dnf5-caching(7) for more info regarding metadata and packages
+caching.
+
+The updated packages could replace the old modified configuration files with
+the new ones or keep the older files. Neither of the files are actually
+replaced. To the conflicting ones RPM gives additional suffix to the origin
+name. Which file should maintain the true name after transaction is not
+controlled by package manager, but is specified by each package itself,
+following packaging guideline.
+
+The dnf5 command in general exits with the following return values:
+Operation was successful.
+
+An error occurred during processing of the command.
+
+An error occurred during parsing the arguments.
+
+
+Other exit codes could be returned by the specific command itself, see its
+documentation for more info.  /var/cache/libdnf5/ /etc/dnf/dnf.conf
+/etc/yum.repos.d/ /var/lib/dnf/ /usr/lib/sysimage/libdnf5/ Override
+interactivity of the connected standard input/ouput. Set to 0 to pretend that
+the input/output is not connected to an interactive terminal and DNF5 should
+not ask any questions. Set to 1 to force DNF5 to ask questions even if the
+terminal is non-interractive. See --assumeno and --assumeyes options.
+Override a directory with DNF5 application plugins. Set it to an empty string
+to disable loading the application plugins.  Override a directory with libdnf5
+plugin's configuration files.
+
+TEMP, TEMPDIR, TMP, TMPDIR Override a path to a directory for temporary files.
+The directory must exist. Default value is /tmp.
+dnf5-advisory(8), Advisory command
+dnf5-autoremove(8), Autoremove command
+dnf5-check(8), Check command
+dnf5-check-upgrade(8), Check-Upgrade command
+dnf5-clean(8), Clean command
+dnf5-distro-sync(8), Distro-Sync command
+dnf5-downgrade(8), Downgrade command
+dnf5-download(8), Download command
+dnf5-environment(8), Environment command
+dnf5-group(8), Group command
+dnf5-history(8), History command,
+dnf5-info(8), Info command
+dnf5-install(8), Install command
+dnf5-leaves(8), Leaves command
+dnf5-list(8), List command
+dnf5-makecache(8), Makecache command
+dnf5-mark(8), Mark command
+dnf5-module(8), Module command
+dnf5-offline(8), Offline command
+dnf5-provides(8), Provides command
+dnf5-reinstall(8), Reinstall command
+dnf5-remove(8), Remove command
+dnf5-repo(8), Repo command
+dnf5-repoquery(8), Repoquery command
+dnf5-search(8), Search command
+dnf5-swap(8), Swap command
+dnf5-system-upgrade(8), System-Upgrade command
+dnf5-upgrade(8), Upgrade command
+dnf5-versionlock(8), Versionlock command
+
+dnf5-automatic(8), Automatic command
+dnf5-builddep(8), Builddep command
+dnf5-changelog(8), Changelog command
+dnf5-config-manager(8), Config-manager command
+dnf5-copr(8), Copr command
+dnf5-needs-restarting(8), Needs-Restarting command
+dnf5-repoclosure(8), Repoclosure command
+dnf5-repomanage(8), Repomanage command
+dnf5-reposync(8), Reposync command
+
+libdnf5-actions(8), Actions plugin
+libdnf5-expired-pgp-keys(8), Expired PGP keys plugin
+
+dnf5.conf(5), DNF5 Configuration Reference
+
+dnf5-aliases(7), Aliases for command line arguments
+dnf5-caching(7), Caching
+dnf5-comps(7), Comps groups and environments
+dnf5-filtering(7), Packages filtering,
+dnf5-forcearch(7), Forcearch parameter
+dnf5-installroot(7), Installroot parameter
+dnf5-modularity(7), Modularity overview,
+dnf5-specs(7), Patterns specification
+dnf5-system-state(7), System state
+
+https://github.com/rpm-software-management/dnf5
+
+See AUTHORS.md in dnf5 source distribution.  Contributors to the dnf5 project.
+
+
