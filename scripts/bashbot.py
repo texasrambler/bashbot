@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 def main():
-    print("Hello from project!")
+    print("Hello from bashbot!")
 
 
 if __name__ == "__main__":
