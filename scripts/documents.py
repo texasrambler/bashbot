@@ -23,6 +23,10 @@
 # ### Imports
 
 # %%
+#pip install langchain-community
+# #!pip install chromadb
+
+# %%
 import os
 import sys
 from pathlib import Path
@@ -250,7 +254,7 @@ class VectorStore:
         """Initialize the ChromaDB client and collection"""
         try:
             # Create the persistent ChromaDB client
-            os.makedirs(self.persist_directory, exist_ok=True)
+            os.makedirs(self.persist_directory, exist_ok=False)
             self.client = chromadb.PersistentClient(path=self.persist_directory)
 
             # Get or create the collection
@@ -340,5 +344,30 @@ vector_store.add_documents(chunks, embeddings)
 
 # %% [markdown]
 # ## Prompt and RAG Retrieval Pipeline
+
+# %%
+
+# %%
+
+# %% [markdown]
+# ### Citations
+#
+# IBM Technology
+# LangChain vs LangGraph: A Tale of Two Frameworks
+# https://youtu.be/qAF1NjEVHhY?si=CKShLFYuOz0xbi1N
+#
+# Krish Naik
+# Complete RAG Crash Course With Langchain In 2 Hours
+# https://youtu.be/o126p1QN_RI?si=7xC5H47A3iuu52RK
+#
+# pixegami
+# Python RAG Tutorial (with Local LLMs): AI For Your PDFs
+# https://youtu.be/2TJxpyO3ei4?si=zPNEsAFWWy5Cenzq
+#
+#
+# Technologies, Cuantum. Natural Language Processing with Python Updated Edition: From Basics to Advanced Projects: Mastering Text Analysis, Machine Learning Models, and Chatbot ... (Mastering the AI Revolution Book 4) (p. 1). (Function). Kindle Edition. 
+#
+#
+# Tunstall, Lewis; Werra, Leandro von; Wolf, Thomas. Natural Language Processing with Transformers, Revised Edition (p. 4). (Function). Kindle Edition. 
 
 # %%
