@@ -1,1 +1,3 @@
 data/vector_store
+/notebooks/.ipynb_checkpoints
+/uv.lock
