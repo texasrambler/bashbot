@@ -118,12 +118,12 @@ def gen_data_db():
 
 # %%
 # Obligatory entry point
-#def main():
-#    gen_data_db()
+def main():
+   gen_data_db()
 
 # %%
-#if __name__ == "__main__":
-#    main()
+if __name__ == "__main__":
+   main()
 
 # %% [markdown]
 # ## Notebook Exploration
