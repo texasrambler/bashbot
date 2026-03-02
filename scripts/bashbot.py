@@ -178,7 +178,7 @@ def main():
     """
     
     # Check for 3.13 minimum python version
-    if sys.version_info.major != 3 or sys.version_info.minor < 13:
+    if sys.version_info.major != 3 or sys.version_info.minor < 10:
         print("python version 3.10 or greater is required.")
         return
     
