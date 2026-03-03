@@ -1,0 +1,28 @@
+# Generate man pages for all known commands (from bash)
+compgen -c | sort | uniq -d | xargs -I {} sh -c "man '{}' > '{}.man'" 2>>noman.txt
+
+# delete empty files (no man page)
+find . -type f -empty -delete
+
+# zip the results for macos into mac.zip
+zip macos.zip *
+
+# Possibly combine them all into one, for TF-IDF rankings also keep seperate for analysis.
+
+
+# Use tealdeer for additional data
+tldr --update
+
+# mkdir tldr in macos and linux subdirs
+# generate tldr files
+compgen -c | sort | uniq -d | xargs -I {} sh -c "tldr '{}' > '{}.tldr'" 2>>notldr.txt
+
+# delete empty files (no tldr entry)
+find . -type f -empty -delete
+
+# remplace {COMMAND} with <CMD> to avoid LLM errors with reserved word structure.
+find ./ -type f -name "*.txt" -exec sed -i -e 's/{COMMAND}/<CMD>/g' {} \;
+
+# Switched to shellscript man2txt.sh to get the man pages into utf-8 and remove the control
+# characters with mandocc (troff or groff under the hood)
+

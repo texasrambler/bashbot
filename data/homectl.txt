@@ -1,5 +1,5 @@
 homectl, systemd-homed-firstboot.service - Create, remove, change or inspect
-home directories homectl [OPTIONS...] {COMMAND} [NAME...]  homectl may be used
+home directories homectl [OPTIONS...] <CMD> [NAME...]  homectl may be used
 to create, remove, change or inspect a user's home directory. It's primarily a
 command interfacing with systemd-homed.service(8) which manages home
 directories of users.  Home directories managed by systemd-homed.service are

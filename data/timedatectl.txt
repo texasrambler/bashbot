@@ -1,5 +1,5 @@
 timedatectl - Control the system time and date timedatectl [OPTIONS...]
-{COMMAND} timedatectl may be used to query and change the system clock and its
+<CMD> timedatectl may be used to query and change the system clock and its
 settings, and enable or disable time synchronization services.	Use systemd-
 firstboot(1) to initialize the system time zone for mounted (but not booted)
 system images.	timedatectl may be used to show the current status of time

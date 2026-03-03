@@ -1,4 +1,4 @@
-updatectl - Control the system update service updatectl [OPTIONS...] {COMMAND}
+updatectl - Control the system update service updatectl [OPTIONS...] <CMD>
 [TARGET...]  updatectl may be used to check for and install system updates
 managed by systemd-sysupdated.service(8).  The following commands are
 understood: list [TARGET[@VERSION]] Show information about targets and their

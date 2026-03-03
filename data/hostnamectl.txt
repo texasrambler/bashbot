@@ -1,4 +1,4 @@
-hostnamectl - Control the system hostname hostnamectl [OPTIONS...] {COMMAND}
+hostnamectl - Control the system hostname hostnamectl [OPTIONS...] <CMD>
 hostnamectl may be used to query and change the system hostname and related
 settings.  systemd-hostnamed.service(8) and this tool distinguish three
 different hostnames: the high-level "pretty" hostname which might include all

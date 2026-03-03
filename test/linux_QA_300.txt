@@ -1,0 +1,659 @@
+300 Linux Command Questions with Answers
+Basic Commands and Navigation
+1. What command displays your current working directory?
+o pwd (Print Working Directory)
+2. How do you list files in a directory?
+o ls (List)
+3. What does the -l option do when used with ls?
+o Shows files in long format with details like permissions, ownership, size, and
+date
+4. How do you list hidden files in Linux?
+o ls -a (lists all files including hidden ones that start with a dot)
+5. What command changes directories?
+o cd (Change Directory)
+6. How do you navigate to your home directory quickly?
+o cd or cd ~
+7. What command creates a new directory?
+o mkdir (Make Directory)
+8. How do you remove an empty directory?
+o rmdir (Remove Directory)
+9. What command removes a non-empty directory?
+o rm -r (Remove recursively)
+10. How do you create an empty file?
+o touch filename
+11. What is the difference between rm and rmdir?
+o rm removes files by default, and with -r flag can remove directories and their
+contents
+o rmdir only removes empty directories
+12. How do you copy a file?
+o cp source destination
+13. How do you move a file?
+o mv source destination
+14. What does the cp -r command do?
+o Copies directories recursively (including all files and subdirectories)
+15. How do you display the contents of a file?
+o cat filename (concatenate and display)
+16. What command shows just the first few lines of a file?
+o head filename
+17. What command shows just the last few lines of a file?
+o tail filename
+18. How do you concatenate and display file contents?
+o cat file1 file2 file3
+19. What command shows file or directory information?
+o stat filename
+20. How do you find recently modified files?
+o find /path -type f -mtime -n (where n is the number of days)
+File Permissions and Ownership
+21. What command changes file permissions?
+o chmod (Change Mode)
+22. How do you read file permissions in Linux?
+o In the format -rwxrwxrwx where first character is file type, and the next 9
+characters represent owner, group, and others permissions (read, write,
+execute)
+23. What do the numbers 754 represent in chmod?
+o 7 (rwx=4+2+1) for owner, 5 (r-x=4+0+1) for group, 4 (r--=4+0+0) for others
+24. How do you make a file executable?
+o chmod +x filename
+25. What command changes file ownership?
+o chown user filename
+26. How do you change both user and group ownership at once?
+o chown user:group filename
+27. What command sets default permissions for new files?
+o umask
+28. What is the difference between symbolic and numeric permission notation?
+o Symbolic uses letters (r,w,x) and operators (+,-,=)
+o Numeric uses octal numbers (0-7)
+29. How do you view the permissions in octal format?
+o stat -c '%a %n' filename
+30. What is the sticky bit and how do you set it?
+o It restricts file deletion; set with chmod +t directory or chmod 1xxx directory
+31. What does the setuid bit do?
+o Allows users to run an executable with the permissions of the file owner; set
+with chmod u+s filename
+32. What does the setgid bit do?
+o When applied to directories, new files inherit the directory's group; set with
+chmod g+s directory
+33. How do you find all files with specific permissions?
+o find /path -perm mode
+34. What permissions are required to delete a file?
+o Write permission on the directory containing the file
+35. What command displays your current user ID and group IDs?
+o id
+36. How do you change only specific permission bits?
+o chmod u+x,g-w,o=r filename
+37. How do you copy file permissions between files?
+o chmod --reference=reference_file target_file
+38. What is ACL in Linux and how do you use it?
+o Access Control Lists provide more granular permissions; use setfacl to set and
+getfacl to view
+39. How do you check if a file has extended attributes?
+o lsattr filename
+40. What command shows the security context of a file?
+o ls -Z filename (on SELinux-enabled systems)
+Users and Groups
+41. What command creates a new user?
+o useradd username or adduser username
+42. How do you delete a user account?
+o userdel username
+43. What command creates a new group?
+o groupadd groupname
+44. How do you add a user to a group?
+o usermod -aG groupname username
+45. What command changes your password?
+o passwd
+46. How do you switch to another user?
+o su username
+47. What command shows all currently logged-in users?
+o who or w
+48. How do you list all users on the system?
+o cat /etc/passwd or getent passwd
+49. What file contains user information?
+o /etc/passwd
+50. What file contains group information?
+o /etc/group
+51. How do you lock a user account?
+o passwd -l username or usermod -L username
+52. What command modifies user account details?
+o usermod
+53. How do you change a user's default shell?
+o chsh -s /path/to/shell username or usermod -s /path/to/shell username
+54. What command shows your current username?
+o whoami
+55. How do you temporarily become the superuser?
+o sudo -i or sudo su
+56. What is the difference between su and sudo?
+o su switches user (often to root) and requires the target user's password
+o sudo executes a single command with elevated privileges and requires your
+own password
+57. How do you edit the sudoers file safely?
+o visudo
+58. What command sets user resource limits?
+o ulimit for shell limits or prlimit for process limits
+59. How do you check the groups a user belongs to?
+o groups username
+60. How do you remove a user from a group?
+o gpasswd -d username groupname or deluser username groupname
+Process Management
+61. What command lists running processes?
+o ps
+62. How do you view processes in a hierarchical tree?
+o pstree
+63. What command shows dynamic real-time processes?
+o top or htop
+64. How do you kill a process?
+o kill PID or killall process_name
+65. What signal does kill -9 send?
+o SIGKILL (forcefully terminates the process)
+66. How do you find the process ID of a specific program?
+o pidof program_name or pgrep program_name
+67. What command runs a process in the background?
+o Add & at the end of command or press Ctrl+Z followed by bg
+68. How do you bring a background process to the foreground?
+o fg [job_number]
+69. What command displays the status of jobs in the current session?
+o jobs
+70. How do you set process priority when launching a program?
+o nice -n value command
+71. What command changes the priority of a running process?
+o renice -n value -p PID
+72. How do you list processes by resource usage?
+o ps aux --sort=-%cpu or ps aux --sort=-%mem
+73. What command shows process information for a specific user?
+o ps -u username
+74. How do you check which processes are using a file?
+o lsof filename
+75. What command displays information about process limits?
+o ulimit -a
+76. How do you pause and resume a process?
+o Pause with kill -STOP PID, resume with kill -CONT PID
+77. What command shows processes sorted by memory usage?
+o ps aux --sort=-%mem
+78. How do you start a process that continues after you log out?
+o nohup command & or using screen/tmux
+79. What command shows process ancestry?
+o ps f or pstree
+80. How do you kill all processes of a specific user?
+o pkill -u username
+Text Processing
+81. What command searches for text patterns in files?
+o grep pattern files
+82. How do you use regular expressions with grep?
+o grep -E "regex_pattern" file or egrep "regex_pattern" file
+83. What command counts lines, words, and characters?
+o wc filename
+84. How do you replace text in a file without opening it?
+o sed 's/old_text/new_text/g' filename
+85. What command sorts the content of a file?
+o sort filename
+86. How do you remove duplicate lines from a file?
+o sort filename | uniq or awk '!seen[$0]++' filename
+87. What command extracts specific columns from text?
+o cut -d delimiter -f fields filename
+88. How do you combine multiple files side by side?
+o paste file1 file2
+89. What command compares two files?
+o diff file1 file2
+90. How do you display differences between files in a unified format?
+o diff -u file1 file2
+91. What command checks a file for spelling errors?
+o aspell check filename
+92. How do you convert tabs to spaces in a file?
+o expand filename
+93. What command shows non-printable characters in a file?
+o cat -A filename or cat -v filename
+94. How do you extract specific lines from a file?
+o sed -n 'start,endp' filename or head -n end | tail -n count
+95. What command joins lines from multiple files based on a common field?
+o join file1 file2
+96. How do you convert text to uppercase or lowercase?
+o To uppercase: tr 'a-z' 'A-Z' < file
+o To lowercase: tr 'A-Z' 'a-z' < file
+97. What command formats text into columns?
+o column -t filename
+98. How do you print specific fields from each line?
+o awk '{print $1, $3}' filename
+99. What command applies a command to each line of a file?
+o xargs command < input_file
+100. How do you find lines matching multiple patterns?
+o grep -E 'pattern1|pattern2' file or grep pattern1 file | grep pattern2
+Shell Scripting Basics
+101. How do you create a shell script?
+o Create a text file with commands and make it executable with chmod +x
+script.sh
+102. What permissions should a shell script have?
+o At minimum, executable (chmod +x script.sh or chmod 755 script.sh)
+103. How do you pass arguments to a shell script?
+o Add arguments after the script name: ./script.sh arg1 arg2
+o Access inside script with $1, $2, etc. or $@ for all arguments
+104. What does #!/bin/bash mean at the start of a script?
+o It's a shebang that specifies which interpreter should execute the script (in
+this case, bash)
+105. How do you define variables in shell scripts?
+o variable_name=value (no spaces around =)
+106. What command returns the exit status of the last command?
+o echo $?
+107. How do you implement if-else statements in bash?
+108. if [ condition ]; then
+109. commands
+110. elif [ condition ]; then
+111. commands
+112. else
+113. commands
+114. fi
+115. What is the syntax for loops in bash?
+o For loop:
+116. for var in list; do
+117. commands
+118. done
+o While loop:
+119. while [ condition ]; do
+120. commands
+121. done
+122. How do you read user input in a script?
+o read variable_name
+123. What are shell script functions and how do you define them?
+124. function_name() {
+125. commands
+126. return value
+127. }
+128. How do you perform arithmetic operations in bash?
+o $((expression)) or expr expression
+129. What command executes another command and captures its output?
+o Command substitution: $(command) or backticks `command`
+130. How do you check if a file exists in a script?
+o if [ -f filename ]; then
+131. What is command substitution and how is it used?
+o Captures output of a command: variable=$(command) or
+variable=`command`
+132. How do you create arrays in bash?
+o array=(value1 value2 value3)
+133. What special variables are available in shell scripts?
+o $0 (script name), $1-$9 (arguments), $# (argument count), $@ (all
+arguments), $$ (PID), $? (exit status)
+134. How do you debug a shell script?
+o Run with -x flag: bash -x script.sh or add set -x in script
+135. What is the difference between single and double quotes in scripts?
+o Single quotes preserve literal value
+o Double quotes allow variable substitution and command expansion
+136. How do you handle errors in shell scripts?
+o Check exit status, use set -e to exit on error, use trap to catch signals
+137. What command returns the length of a string variable?
+o ${#variable}
+System Information
+121. What command shows system hardware information?
+o lshw or dmidecode
+122. How do you display kernel version?
+o uname -r or cat /proc/version
+123. What command shows system uptime?
+o uptime
+124. How do you check CPU information?
+o lscpu or cat /proc/cpuinfo
+125. What command displays memory usage information?
+o free -h
+126. How do you check disk usage?
+o df -h
+127. What command shows free and used disk space?
+o df -h
+128. How do you check disk I/O statistics?
+o iostat
+129. What command displays network interface information?
+o ifconfig or ip addr show
+130. How do you show the system hostname?
+o Hostname
+System Information (continued)
+131. 132. 133. 134. 135. 136. 137. 138. 139. 140. What command displays system load average?
+o uptime or cat /proc/loadavg
+How do you view the current date and time?
+o date
+What command lists attached USB devices?
+o lsusb
+How do you view information about PCI devices?
+o lspci
+What command shows installed hardware components?
+o lshw
+How do you display the system's boot messages?
+o dmesg
+What command checks the battery status on a laptop?
+o acpi -b or upower -i /org/freedesktop/UPower/devices/battery_BAT0
+How do you find out your Linux distribution?
+o lsb_release -a or cat /etc/*-release
+What command shows running time of processes?
+o ps -eo pid,cmd,etime
+How do you display the file system type?
+o df -T or findmnt
+Disk and File System
+141. What command creates a file system on a partition?
+o mkfs -t filesystem /dev/partition
+142. 143. 144. 145. 146. 147. 148. 149. 150. 151. 152. 153. 154. 155. How do you check and repair a file system?
+o fsck /dev/partition
+What command shows mounted file systems?
+o mount or df -h
+How do you mount a file system?
+o mount /dev/partition /mount_point
+What command unmounts a file system?
+o umount /mount_point or umount /dev/partition
+How do you create a swap space?
+o mkswap /dev/partition followed by swapon /dev/partition
+What command shows disk partition information?
+o fdisk -l or parted -l
+How do you create disk partitions?
+o Using fdisk, parted, or gparted
+What is the command to create a CD/DVD ISO image?
+o dd if=/dev/cdrom of=image.iso or readom dev=/dev/cdrom f=image.iso
+How do you burn an ISO to a CD/DVD?
+o wodim dev=/dev/cdrom image.iso or cdrecord -v dev=/dev/cdrom image.iso
+What command checks disk space usage by directory?
+o du -sh /path/to/directory
+How do you find large files on your system?
+o find /path -type f -size +100M or du -h /path | sort -hr | head
+What command creates a soft link?
+o ln -s target_file link_name
+How do you create a hard link?
+o ln target_file link_name
+What is the difference between soft and hard links?
+o Soft links point to a file path; can cross file systems; break if target is deleted
+o Hard links point to inode; must be on same file system; persist even if original
+is deleted
+156. How do you check inode usage on a file system?
+o df -i
+157. What command shows file system block size?
+o tune2fs -l /dev/partition | grep "Block size" or blockdev --getbsz
+/dev/partition
+158. How do you set disk quotas for users?
+o Use quotacheck, edquota, and quotaon commands
+159. What command displays read/write statistics for devices?
+o iostat or vmstat
+160. How do you clone a disk or partition?
+o dd if=/dev/source of=/dev/destination or using clonezilla
+Package Management
+161. How do you install a package using apt?
+o apt install package_name
+162. What command removes a package in Debian/Ubuntu?
+o apt remove package_name or apt purge package_name
+163. How do you update the package list?
+o apt update
+164. What command upgrades all installed packages?
+o apt upgrade or apt full-upgrade
+165. How do you search for packages?
+o apt search keyword
+166. What command shows information about a package?
+o apt show package_name or dpkg -s package_name
+167. How do you list all installed packages?
+o dpkg -l or apt list --installed
+168. What command installs a local DEB file?
+o dpkg -i package.deb or apt install ./package.deb
+169. How do you add a new repository?
+o add-apt-repository ppa:repository/name or edit /etc/apt/sources.list
+170. 171. 172. 173. 174. 175. 176. 177. 178. 179. 180. What command cleans the local package cache?
+o apt clean or apt autoclean
+How do you hold a package at its current version?
+o apt-mark hold package_name
+What is the difference between upgrade and dist-upgrade?
+o upgrade only upgrades installed packages
+o dist-upgrade (or full-upgrade) may add or remove packages to satisfy
+dependencies
+How do you install a package using yum/dnf?
+o yum install package_name or dnf install package_name
+What command removes a package in Red Hat/Fedora?
+o yum remove package_name or dnf remove package_name
+How do you download a package without installing it?
+o apt download package_name or yumdownloader package_name
+What command shows package dependencies?
+o apt-cache depends package_name or rpm -qR package_name
+How do you list files installed by a package?
+o dpkg -L package_name or rpm -ql package_name
+What command finds which package a file belongs to?
+o dpkg -S /path/to/file or rpm -qf /path/to/file
+How do you check for broken dependencies?
+o apt check or yum check dependencies
+What command manages package repositories?
+o apt-add-repository in Debian/Ubuntu or editing repo files in
+/etc/yum.repos.d/
+Networking
+181. 182. What command shows your IP address?
+o ip addr or ifconfig
+How do you ping a remote host?
+o ping hostname
+183. 184. 185. 186. 187. 188. 189. 190. 191. 192. 193. 194. 195. 196. 197. What command shows active network connections?
+o netstat -tuln or ss -tuln
+How do you check open ports on your system?
+o netstat -tuln or ss -tuln or lsof -i
+What command traces the route to a host?
+o traceroute hostname or tracepath hostname
+How do you download files from the web?
+o wget URL or curl -O URL
+What command transfers files over SSH?
+o scp source user@host:destination
+How do you configure a network interface?
+o ifconfig interface options or ip addr add IP/mask dev interface
+What command shows network routing tables?
+o route -n or ip route show
+How do you check DNS resolution?
+o nslookup hostname or dig hostname
+What command captures and analyzes network packets?
+o tcpdump or wireshark
+How do you scan ports on a remote host?
+o nmap host
+What command checks if a port is reachable?
+o telnet host port or nc -zv host port
+How do you display socket statistics?
+o ss or netstat
+What command shows network interface statistics?
+o ip -s link or ifconfig
+How do you set up a basic firewall?
+o Using iptables, ufw, or firewalld
+What command checks bandwidth usage?
+o iftop or nethogs
+198. How do you share files over HTTP temporarily?
+o python -m http.server 8000 or python3 -m http.server 8000
+199. What command shows hostname resolution?
+o host hostname or getent hosts hostname
+200. How do you manage SSH keys?
+o ssh-keygen to create keys, ssh-copy-id to copy to remote host
+System Administration
+201. 202. 203. 204. 205. 206. 207. 208. 209. 210. 211. How do you view system logs?
+o less /var/log/syslog or using journalctl
+What command schedules a job to run once?
+o at time or systemd-run --on-active=time command
+How do you schedule recurring jobs?
+o Using crontab -e or by adding scripts to /etc/cron.d/
+What command shows resource limits for users?
+o ulimit -a
+How do you change the system hostname?
+o hostnamectl set-hostname new_name or edit /etc/hostname
+What command synchronizes system time?
+o ntpdate pool.ntp.org or timedatectl set-ntp true
+How do you shut down the system?
+o shutdown -h now or systemctl poweroff
+What command reboots the system?
+o reboot or systemctl reboot
+How do you check if a service is running?
+o systemctl status service_name or service service_name status
+What command starts a service?
+o systemctl start service_name or service service_name start
+How do you enable a service to start at boot?
+o systemctl enable service_name
+212. What command shows memory consumption of each process?
+o ps aux --sort=-%mem
+213. How do you clear the terminal screen?
+o clear or Ctrl+L
+214. What command shows currently logged-in users with their activity?
+o w
+215. How do you view system boot logs?
+o journalctl -b
+216. What command manages background services?
+o systemctl or the older service
+217. How do you manage runlevels or targets?
+o systemctl get-default and systemctl set-default target
+218. What command displays the last login times?
+o last
+219. How do you send a message to all logged-in users?
+o wall "message"
+220. What command shows system initialization messages?
+o dmesg
+Advanced Commands
+221. What command executes a program at specified intervals?
+o watch command
+222. How do you find file duplicates?
+o fdupes path or using find with checksums
+223. What command displays process wait I/O statistics?
+o pidstat -d or iotop
+224. How do you convert file encoding?
+o iconv -f source_encoding -t target_encoding file
+225. What command shows file access attempts?
+o auditctl with ausearch or aureport
+226. How do you stress test your system?
+o stress or stress-ng
+227. What command splits a file into smaller parts?
+o split -b size file or split -l lines file
+228. How do you merge multiple files into one?
+o cat file1 file2 file3 > merged_file
+229. What command connects to a remote server?
+o ssh user@hostname
+230. How do you sync files between directories or systems?
+o rsync source destination
+231. What command searches for files by content or attributes?
+o find with -exec grep or just grep -r
+232. How do you batch rename files?
+o rename 's/old/new/' files or using a for loop with mv
+233. What command runs programs with modified environment variables?
+o env VAR=value command
+234. How do you limit process resource usage?
+o ulimit for shell limits or systemd-run with resource controls
+235. What command extracts archives?
+o tar -xf archive.tar or unzip archive.zip
+236. How do you create encrypted files?
+o Using gpg -c filename
+237. What command generates random data?
+o dd if=/dev/urandom or openssl rand
+238. How do you secure delete files?
+o shred filename or wipe filename
+239. What command benchmarks disk performance?
+o hdparm -t /dev/device or dd if=/dev/zero of=test bs=1M count=1000
+240. How do you run commands at low or high priority?
+o nice -n value command for low, nice -n -value command for high
+Security
+241. 242. 243. 244. 245. 246. 247. 248. 249. 250. 251. 252. 253. What command changes file security contexts?
+o chcon or restorecon
+How do you check for listening services?
+o netstat -tulnp or ss -tulnp
+What command displays and controls SELinux?
+o sestatus shows status, setenforce changes modes
+How do you check for root kits?
+o rkhunter or chkrootkit
+What command shows failed login attempts?
+o lastb or journalctl _COMM=sshd
+How do you generate cryptographic hashes?
+o md5sum, sha1sum, sha256sum, etc.
+What command verifies file integrity?
+o md5sum -c checksum_file or other hash verification tools
+How do you encrypt a partition?
+o Using cryptsetup for LUKS encryption
+What command scans for vulnerabilities?
+o lynis or openvas
+How do you check password aging information?
+o chage -l username
+What command changes password expiry information?
+o chage options username
+How do you set up two-factor authentication?
+o Using google-authenticator or libpam-yubico
+What command lists system capabilities?
+o getcap or setcap
+254. How do you audit system events?
+o Using auditd with ausearch and aureport
+255. What command checks file permissions for security issues?
+o ls -la or specialized tools like lynis
+256. How do you manage firewall rules?
+o Using iptables, ufw, or firewall-cmd
+257. What command shows active authorization sessions?
+o loginctl list-sessions
+258. How do you create and manage SSL certificates?
+o Using openssl or certbot
+259. What command shows failed authentication attempts?
+o journalctl _COMM=sshd | grep Failed
+260. How do you set file access control lists?
+o setfacl and getfacl
+Archive and Compression
+261. What command creates a tar archive?
+o tar -cf archive.tar files
+262. How do you extract a tar archive?
+o tar -xf archive.tar
+263. What command compresses files using gzip?
+o gzip filename or tar -czf archive.tar.gz files for multiple files
+264. How do you decompress gzip files?
+o gunzip filename.gz or gzip -d filename.gz
+265. What command creates zip archives?
+o zip archive.zip files
+266. How do you extract zip archives?
+o unzip archive.zip
+267. What command shows the contents of an archive without extracting?
+268. 269. 270. 271. 272. 273. 274. 275. 276. 277. 278. 279. 280. o tar -tf archive.tar or unzip -l archive.zip
+How do you create encrypted archives?
+o zip -e archive.zip files or tar -czf - files | gpg -c > archive.tar.gz.gpg
+What command compresses files with better compression than gzip?
+o bzip2 filename or xz filename
+How do you check the integrity of a compressed file?
+o gzip -t file.gz, bzip2 -t file.bz2, or unzip -t file.zip
+What command combines archiving and compression in one step?
+o tar -czf archive.tar.gz files (gzip) or tar -cjf archive.tar.bz2 files (bzip2)
+How do you compare archives without extracting?
+o diff <(tar -tf archive1.tar) <(tar -tf archive2.tar)
+What command splits a large archive into parts?
+o split -b size archive.tar archive.part. or using zip/tar with volume options
+How do you join split archives?
+o cat archive.part.* > archive.tar or using specific tools like zip
+What command shows compression ratio statistics?
+o gzip -l file.gz or 7z l archive.7z
+How do you convert between archive formats?
+o Extract and recreate using the desired format's tools
+What command creates differential backups?
+o tar --listed-incremental=snapshot-file -czf backup.tar.gz directory
+How do you create incremental backups?
+o tar --listed-incremental=snapshot-file -czf backup.tar.gz directory
+What command performs better compression for text files?
+o xz typically offers better compression for text files than gzip or bzip2
+How do you password-protect archives?
+o zip -e archive.zip files or gpg -c archive.tar
+Miscellaneous
+281. What command sets terminal options?
+282. 283. 284. 285. 286. 287. 288. 289. 290. 291. 292. 293. 294. 295. o stty
+How do you create a desktop shortcut from the command line?
+o Create a .desktop file in ~/.local/share/applications
+What command manages system services?
+o systemctl or the older service
+How do you add a scheduled shutdown?
+o shutdown -h time where time can be +minutes or hh:mm
+What command cancels a scheduled shutdown?
+o shutdown -c
+How do you run a command immune to hangups?
+o nohup command &
+What command manages environment variables?
+o export VAR=value to set or unset VAR to remove
+How do you execute commands from standard input?
+o bash -s or using a pipe with sh
+What command sets file timestamps?
+o touch -t YYYYMMDDHHMM.SS filename
+How do you run a previous command?
+o !! for the last command or !n for command number n in history
+What command displays the manual for a command?
+o man command
+How do you check command syntax without executing it?
+o Shell-specific: bash -n script.sh or using a "dry run" mode with some
+commands
+What command displays a calendar?
+o cal or ncal
+How do you add a user to the sudoers file?
+o visudo and add username ALL=(ALL) ALL or add to the sudo group
+What command kills processes by name?
+o pkill process_name or killall process_name
+296. 297. 298. 299. 300. How do you substitute characters in text?
+o tr 'old_chars' 'new_chars' < input_file or using sed
+What command shows file type information?
+o file filename
+How do you set the system time and date?
+o date -s "YYYY-MM-DD HH:MM:SS" or timedatectl set-time "YYYY-MM-DD
+HH:MM:SS"
+What command displays directory sizes?
+o du -sh directory or du -h --max-depth=1
+How do you disown a running process?
+o disown %job_number or start with nohup command &

@@ -1,5 +1,5 @@
 coredumpctl - Retrieve and process saved core dumps and metadata coredumpctl
-[OPTIONS...] {COMMAND} [PID|COMM|EXE|MATCH...]	coredumpctl is a tool that can
+[OPTIONS...] <CMD> [PID|COMM|EXE|MATCH...]	coredumpctl is a tool that can
 be used to retrieve and process core dumps and metadata which were saved by
 systemd-coredump(8).  The following commands are understood: list List core
 dumps captured in the journal matching specified characteristics. If no

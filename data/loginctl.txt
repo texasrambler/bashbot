@@ -1,4 +1,4 @@
-loginctl - Control the systemd login manager loginctl [OPTIONS...] {COMMAND}
+loginctl - Control the systemd login manager loginctl [OPTIONS...] <CMD>
 [NAME...]  loginctl may be used to introspect and control the state of the
 systemd(1) login manager systemd-logind.service(8).  The following commands
 are understood: list-sessions List current sessions. The JSON format output

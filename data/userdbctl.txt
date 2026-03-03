@@ -1,5 +1,5 @@
 userdbctl - Inspect users, groups and group memberships userdbctl [OPTIONS...]
-{COMMAND} [NAME...]  userdbctl may be used to inspect user and groups (as well
+<CMD> [NAME...]  userdbctl may be used to inspect user and groups (as well
 as group memberships) of the system. This client utility inquires user/group
 information provided by various system services, both operating on JSON
 user/group records (as defined by the JSON User Records[1] and JSON Group

@@ -1,5 +1,5 @@
 localectl - Control the system locale and keyboard layout settings localectl
-[OPTIONS...] {COMMAND} localectl may be used to query and change the system
+[OPTIONS...] <CMD> localectl may be used to query and change the system
 locale and keyboard layout settings. It communicates with systemd-localed(8)
 to modify files such as /etc/locale.conf and /etc/vconsole.conf.  The system
 locale controls the language settings of system services and of the UI before

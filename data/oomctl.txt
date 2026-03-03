@@ -1,5 +1,5 @@
 oomctl - Analyze the state stored in systemd-oomd oomctl [OPTIONS...]
-{COMMAND} oomctl may be used to get information about the various contexts
+<CMD> oomctl may be used to get information about the various contexts
 read in by the systemd(1) userspace out-of-memory (OOM) killer, systemd-
 oomd(8).  The following commands are understood: dump Show the current state
 of the cgroups and system contexts stored by systemd-oomd.

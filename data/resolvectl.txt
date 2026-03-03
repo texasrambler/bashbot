@@ -1,6 +1,6 @@
 resolvectl, resolvconf - Resolve domain names, IPV4 and IPv6 addresses, DNS
 resource records, and services; introspect and reconfigure the DNS resolver
-resolvectl [OPTIONS...] {COMMAND} [NAME...]  resolvectl may be used to resolve
+resolvectl [OPTIONS...] <CMD> [NAME...]  resolvectl may be used to resolve
 domain names, IPv4 and IPv6 addresses, DNS resource records and services with
 the systemd-resolved.service(8) resolver service. By default, the specified
 list of parameters will be resolved as hostnames, retrieving their IPv4 and
