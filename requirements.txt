@@ -6,3 +6,8 @@ pymupdf
 sentence_transformers
 chromadb
 langchain-groq
+jupyterlab
+pandas
+numpy
+ipykernel
+ipywidgets

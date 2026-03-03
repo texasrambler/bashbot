@@ -1,0 +1,254 @@
+{
+  "linux_questions": [
+    {
+      "id": 1,
+      "question": "What is Linux?",
+      "answer": "Linux is an open-source, Unix-like operating system kernel used in many distributions (e.g., Ubuntu, RHEL) to provide a complete OS for servers, desktops, and embedded systems."
+    },
+    {
+      "id": 2,
+      "question": "What is a Linux distribution?",
+      "answer": "A Linux distribution (distro) bundles the Linux kernel with user-space tools, package management, libraries, and applications (e.g., Debian, Ubuntu, Fedora, Arch)."
+    },
+    {
+      "id": 3,
+      "question": "What is the difference between the kernel and the OS?",
+      "answer": "The kernel manages hardware/resources (CPU, memory, devices). The OS includes the kernel plus utilities, libraries, daemons, and user interfaces that make the system usable."
+    },
+    {
+      "id": 4,
+      "question": "What is the Linux shell?",
+      "answer": "The shell is a command interpreter (e.g., bash, zsh) that reads commands/scripts and executes them, providing an interface to the OS."
+    },
+    {
+      "id": 5,
+      "question": "How do you check the current working directory?",
+      "answer": "Use 'pwd'."
+    },
+    {
+      "id": 6,
+      "question": "How do you list files including hidden files?",
+      "answer": "Use 'ls -a' (or 'ls -la' for details)."
+    },
+    {
+      "id": 7,
+      "question": "Explain Linux file permissions.",
+      "answer": "Permissions are read (r), write (w), execute (x) for user/owner, group, and others. Example: '-rwxr-x---'."
+    },
+    {
+      "id": 8,
+      "question": "What does 'chmod' do? Give an example.",
+      "answer": "'chmod' changes file permissions. Example: 'chmod 644 file.txt' sets rw-r--r--; 'chmod u+x script.sh' adds execute for owner."
+    },
+    {
+      "id": 9,
+      "question": "What does 'chown' do?",
+      "answer": "'chown' changes file owner (and optionally group). Example: 'chown alice:dev file.txt'."
+    },
+    {
+      "id": 10,
+      "question": "What is the difference between a hard link and a symbolic link?",
+      "answer": "A hard link is another directory entry to the same inode/data; it cannot cross filesystems and usually not for directories. A symlink is a special file containing a path; it can cross filesystems but breaks if the target is removed/moved."
+    },
+    {
+      "id": 11,
+      "question": "How do you find a file by name?",
+      "answer": "Use 'find /path -name 'pattern'' (or '-iname' for case-insensitive)."
+    },
+    {
+      "id": 12,
+      "question": "How do you search for text inside files?",
+      "answer": "Use 'grep'. Example: 'grep -R \"error\" /var/log'."
+    },
+    {
+      "id": 13,
+      "question": "What does 'tail -f' do?",
+      "answer": "It prints the end of a file and follows it, streaming appended lines (commonly used for log monitoring)."
+    },
+    {
+      "id": 14,
+      "question": "How do you view running processes?",
+      "answer": "Use 'ps aux', 'top', or 'htop' (if installed)."
+    },
+    {
+      "id": 15,
+      "question": "How do you kill a process?",
+      "answer": "Use 'kill PID' (SIGTERM) or 'kill -9 PID' (SIGKILL). You can also use 'pkill name' or 'killall name'."
+    },
+    {
+      "id": 16,
+      "question": "What is a daemon?",
+      "answer": "A daemon is a background service process (e.g., sshd, cron) typically started at boot and managed by init/systemd."
+    },
+    {
+      "id": 17,
+      "question": "What is systemd?",
+      "answer": "systemd is a service manager and init system used by many Linux distros to start/stop services, manage boot, logging (journald), and units (service, socket, timer, etc.)."
+    },
+    {
+      "id": 18,
+      "question": "How do you check the status of a service with systemd?",
+      "answer": "Use 'systemctl status <service>' (e.g., 'systemctl status sshd')."
+    },
+    {
+      "id": 19,
+      "question": "How do you start/stop/enable a service with systemd?",
+      "answer": "Start: 'systemctl start svc'; Stop: 'systemctl stop svc'; Enable at boot: 'systemctl enable svc'; Disable: 'systemctl disable svc'."
+    },
+    {
+      "id": 20,
+      "question": "How do you view systemd logs for a service?",
+      "answer": "Use 'journalctl -u <service>' (add '-f' to follow)."
+    },
+    {
+      "id": 21,
+      "question": "What is the purpose of '/etc'?",
+      "answer": "'/etc' contains system-wide configuration files (service configs, users/groups, network configs, etc.)."
+    },
+    {
+      "id": 22,
+      "question": "What is the purpose of '/var'?",
+      "answer": "'/var' holds variable data like logs ('/var/log'), spools, caches, and stateful data that changes during runtime."
+    },
+    {
+      "id": 23,
+      "question": "What is the purpose of '/home'?",
+      "answer": "'/home' contains user home directories (personal files, configs, SSH keys, etc.)."
+    },
+    {
+      "id": 24,
+      "question": "What is the purpose of '/tmp'?",
+      "answer": "'/tmp' is for temporary files; contents may be cleaned on reboot or periodically."
+    },
+    {
+      "id": 25,
+      "question": "How do you check disk usage?",
+      "answer": "Use 'df -h' for filesystem usage and 'du -sh <dir>' for directory usage."
+    },
+    {
+      "id": 26,
+      "question": "How do you check memory usage?",
+      "answer": "Use 'free -h', or 'top/htop', or check '/proc/meminfo'."
+    },
+    {
+      "id": 27,
+      "question": "What is swap?",
+      "answer": "Swap is disk space used as virtual memory when RAM is insufficient; it can prevent immediate OOM but is slower than RAM."
+    },
+    {
+      "id": 28,
+      "question": "How do you check open network ports/listening services?",
+      "answer": "Use 'ss -tulpen' (modern) or 'netstat -tulpen' (older)."
+    },
+    {
+      "id": 29,
+      "question": "How do you test network connectivity and DNS resolution?",
+      "answer": "Connectivity: 'ping <host>'; routing: 'traceroute <host>'; DNS: 'dig <name>' or 'nslookup <name>'."
+    },
+    {
+      "id": 30,
+      "question": "What is SSH and what port does it typically use?",
+      "answer": "SSH is Secure Shell for encrypted remote login and command execution. Default port is 22."
+    },
+    {
+      "id": 31,
+      "question": "How do you copy files securely to a remote host?",
+      "answer": "Use 'scp' (e.g., 'scp file user@host:/path') or 'rsync -e ssh' for efficient syncing."
+    },
+    {
+      "id": 32,
+      "question": "What is 'sudo'?",
+      "answer": "'sudo' allows permitted users to run commands as another user (commonly root) according to '/etc/sudoers' policy."
+    },
+    {
+      "id": 33,
+      "question": "How do you become root?",
+      "answer": "Common approaches: 'sudo -i' (root login shell), 'sudo su -' (switch to root), or log in as root if permitted."
+    },
+    {
+      "id": 34,
+      "question": "How do you create and manage users?",
+      "answer": "Create: 'useradd' (often followed by 'passwd user') or 'adduser' (distro-specific helper). Modify: 'usermod'. Delete: 'userdel'."
+    },
+    {
+      "id": 35,
+      "question": "Where are user and group definitions stored?",
+      "answer": "Users: '/etc/passwd' (and '/etc/shadow' for password hashes). Groups: '/etc/group' (and '/etc/gshadow')."
+    },
+    {
+      "id": 36,
+      "question": "How do you check last logins?",
+      "answer": "Use 'last', 'lastlog', and authentication logs (e.g., '/var/log/auth.log' or '/var/log/secure', depending on distro)."
+    },
+    {
+      "id": 37,
+      "question": "What is a package manager? Give examples.",
+      "answer": "A package manager installs/updates/removes software. Examples: 'apt' (Debian/Ubuntu), 'dnf/yum' (RHEL/Fedora), 'pacman' (Arch), 'zypper' (SUSE)."
+    },
+    {
+      "id": 38,
+      "question": "How do you update packages on Debian/Ubuntu?",
+      "answer": "Typically: 'sudo apt update' then 'sudo apt upgrade'."
+    },
+    {
+      "id": 39,
+      "question": "How do you update packages on RHEL/CentOS/Fedora?",
+      "answer": "Use 'sudo dnf upgrade' (or 'sudo yum update' on older systems)."
+    },
+    {
+      "id": 40,
+      "question": "What are environment variables and how do you view them?",
+      "answer": "Environment variables are key-value pairs passed to processes (e.g., PATH). View with 'printenv' or 'env'; view one with 'echo $VAR'."
+    },
+    {
+      "id": 41,
+      "question": "What is PATH?",
+      "answer": "PATH is an environment variable listing directories searched for executables when you run a command (e.g., '/usr/bin:/bin')."
+    },
+    {
+      "id": 42,
+      "question": "How do you redirect stdout and stderr?",
+      "answer": "Stdout: 'cmd > out'; append: '>>'; stderr: 'cmd 2> err'; both: 'cmd > out 2>&1' (or 'cmd &> out' in bash)."
+    },
+    {
+      "id": 43,
+      "question": "What is a pipe in Linux?",
+      "answer": "A pipe ('|') sends the stdout of one command to the stdin of another (e.g., 'ps aux | grep nginx')."
+    },
+    {
+      "id": 44,
+      "question": "What is cron?",
+      "answer": "cron runs scheduled jobs at specified times. User crontabs are edited with 'crontab -e'; system schedules may live in '/etc/crontab' and '/etc/cron.*'."
+    },
+    {
+      "id": 45,
+      "question": "How do you check scheduled cron jobs?",
+      "answer": "For current user: 'crontab -l'. For another user (root): 'crontab -u user -l'. Also check '/etc/crontab' and '/etc/cron.d/'."
+    },
+    {
+      "id": 46,
+      "question": "What is the difference between 'tar' and 'zip'?",
+      "answer": "'tar' is primarily an archiver (often combined with compression like gzip/bzip2/xz). 'zip' is an archive format that typically includes compression by default."
+    },
+    {
+      "id": 47,
+      "question": "How do you create and extract a tar.gz archive?",
+      "answer": "Create: 'tar -czf archive.tar.gz dir/'. Extract: 'tar -xzf archive.tar.gz'."
+    },
+    {
+      "id": 48,
+      "question": "What is an inode?",
+      "answer": "An inode is a filesystem data structure storing metadata about a file (permissions, owner, timestamps, pointers to data blocks). Filenames map to inodes via directory entries."
+    },
+    {
+      "id": 49,
+      "question": "What is the '/proc' filesystem?",
+      "answer": "'/proc' is a virtual filesystem exposing kernel and process information (e.g., '/proc/cpuinfo', '/proc/<pid>/')."
+    },
+    {
+      "id": 50,
+      "question": "How do you troubleshoot high CPU load on Linux?",
+      "answer": "Check 'top/htop' for CPU-heavy processes, 'ps -eo pid,ppid,cmd,%cpu --sort=-%cpu', review logs, check I/O wait with 'iostat'/'vmstat', and verify runaway services with 'systemctl' and 'journalctl'."
+    }
+  ]
+}

@@ -135,14 +135,6 @@ def main():
 # ## Notebook Exploration
 
 # %% [markdown]
-# ### NOTE
-# If you want to use the existing vector db and skip parsing the docs, set the __USE_EXISTING=True__ below
-
-# %%
-USE_EXISTING=True
-VERBOSE = False
-
-# %% [markdown]
 # **Read data from files, and maybe an RDB**
 
 # %%
@@ -156,9 +148,6 @@ chunks = split_documents(corpus)
 
 # %%
 chunks[3]
-
-# %% [markdown]
-# ### Log Classes
 
 # %% [markdown]
 # ### Embedding Manager
@@ -187,7 +176,7 @@ class EmbeddingMgr:
     For now I am going to use a SentenceTransformer of
     some kind."""
 
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2", verbose: bool = False):
+    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         """
         ctor
 
@@ -199,9 +188,7 @@ class EmbeddingMgr:
 
         self.model_name = model_name
         self.model = None
-        self.verbose = verbose
         self._load_model()
-        
         
     def _load_model(self):
         """This method loads the model defined in the ctor."""
@@ -227,11 +214,9 @@ class EmbeddingMgr:
         if not self.model:
             raise ValueError("Model has not been loaded.")
 
-        if VERBOSE: 
-            print(f"Generating embeddings for {len(texts)} strings.")
-        embeddings = self.model.encode(texts, show_progress_bar=self.verbose)
-        if VERBOSE:
-            print(f"Generated embeddings with shape: {embeddings.shape}")
+        print(f"Generating embeddings for {len(texts)} strings.")
+        embeddings = self.model.encode(texts, show_progress_bar=True)
+        print(f"Generated embeddings with shape: {embeddings.shape}")
         return embeddings
     
 
@@ -240,7 +225,7 @@ class EmbeddingMgr:
 # Initialize the Embedding Manager
 
 # %%
-emb_mgr = EmbeddingMgr("all-MiniLM-L6-v2", verbose=False)
+emb_mgr = EmbeddingMgr()
 emb_mgr
 
 
@@ -269,7 +254,7 @@ class VectorStore:
         """Initialize the ChromaDB client and collection"""
         try:
             # Create the persistent ChromaDB client
-            os.makedirs(self.persist_directory, exist_ok=True)
+            os.makedirs(self.persist_directory, exist_ok=False)
             self.client = chromadb.PersistentClient(path=self.persist_directory)
 
             # Get or create the collection
@@ -348,230 +333,21 @@ vector_store
 
 # %%
 # get the text from the documents
-if not USE_EXISTING:
-    texts = [doc.page_content for doc in chunks]
+texts = [doc.page_content for doc in chunks]
 
-    # Use the EmbeddingMgr class to generate them
-    embeddings = emb_mgr.generate_embeddings(texts)
+# Use the EmbeddingMgr class to generate them
+embeddings = emb_mgr.generate_embeddings(texts)
 
-    # Add the documents to the vector store
-    vector_store.add_documents(chunks, embeddings)
+# Add the documents to the vector store
+vector_store.add_documents(chunks, embeddings)
 
 
 # %% [markdown]
 # ## Prompt and RAG Retrieval Pipeline
 
-# %% [markdown]
-# ### Retriever class
+# %%
 
 # %%
-class Retriever:
-    """Encodes a query and returns similar documents from the vector store db"""
-    
-    def __init__(self, vector_store: VectorStore, embedding_manager: EmbeddingMgr):
-        """
-        ctor
-
-        Args:
-            vector_store: The VectorStore of embeddings
-            embedding_manager: The EmbeddingMgr that handles encoding embeddings
-        """
-        self.store = vector_store
-        self.manager = embedding_manager
-
-    def fetch(self, query: str, top_k: int = 5, threshold: float = 0.0) -> List[Dict[str, Any]]:
-        """
-        Retrieves documents from the store
-
-        Args:
-            query: The user query
-            top_k: Number of results to return
-            threshold: Minimum similarity score
-
-        Returns:
-            List of dictionaries with the documents and metadata
-        """
-        if VERBOSE:
-            print(f"Fetching documents for '{query}'")
-            print(f"Top K: {top_k}. Threshold: {threshold}")
-
-        # create the embedding for the query
-        query_embedding = self.manager.generate_embeddings([query])[0]
-
-        # Search the vector store
-        try:
-            results = self.store.collection.query(
-                query_embeddings=[query_embedding.tolist()],
-                n_results=top_k
-            )
-
-            fetched_docs = []
-
-            if results['documents'] and results['documents'][0]:
-                documents = results['documents'][0]
-                metadatas = results['metadatas'][0]
-                distances = results['distances'][0]
-                ids = results['ids'][0]
-
-                for i, (doc_id, document, metadata, distance) in enumerate(zip(ids, documents, metadatas, distances)):
-                    # Convert distance to similarity score - cosine distance for chromadb
-                    similarity = 1 - distance
-
-                    if similarity >= threshold:
-                        fetched_docs.append({
-                            'id': doc_id,
-                            'content': document,
-                            'metadata': metadata,
-                            'similarity_score': similarity,
-                            'distance': distance,
-                            'rank': i + 1
-                        })
-                if VERBOSE:
-                    print(f"Fetched {len(fetched_docs)} documents (filtered by threshold)")
-            else:
-                if VERBOSE:
-                    print("No documents found")
-                    
-            return fetched_docs
-
-        except Exception as e:
-            print(f"Error fetching documents: {e}")
-            return []
-            
-
-
-# %%
-# RAG function to pull it all together
-def rag_call(query, retriever, llm, top_k=3) -> Tuple:
-    fetched_docs = retriever.fetch(query, top_k=top_k)
-    
-    # put all fetched documents into the context
-    if fetched_docs: 
-        found = len(fetched_docs)
-        context = "\n\n".join(doc['content'] for doc in fetched_docs)
-    else:
-        found  = 0
-        context = ""
-        
-    # Create the prompt
-    prompt = f"""You are a proffesional AI assistant theat specializes in asnwering
-        questions about Linux commands.
-        Use the following context to answer the question accurately and concisely.
-        Context:
-        {context}
-        
-        Question: {query}
-        
-        Answer:"""
-
-    response = llm.invoke([prompt.format(context=context, query=query)])
-    return (found, response.content)
-
-# %% [markdown]
-# ## Read the JSON questions and answers
-#
-# We need to call the function **rag_call(query, retriever, llm, top_k=3)** with each query from the JSON file and capture the LLM answer and the answer from the JSON test answer for each question and compare them. We may be able to use cosine similarity, but a manual inspection will probably be needed for accurate assessment.
-
-# %% [markdown]
-# ### submit a single question and return the answer
-
-# %%
-import json
-from langchain_groq import ChatGroq
-
-# %%
-api_key = os.getenv("GROQ_API_KEY")
-llm = ChatGroq(groq_api_key=api_key, model_name="llama-3.1-8b-instant", temperature=0.1, max_tokens=1024)
-fido = Retriever(vector_store, emb_mgr)
-
-# %% [markdown]
-# ### Load the JSON test data
-
-# %%
-with open("../test/test_questions.json", "r") as jsf:
-    test_data = json.load(jsf)
-
-# %%
-type(test_data)
-
-# %%
-import pandas as pd
-
-df_test = pd.DataFrame(test_data)
-
-# %%
-df_test.head()
-
-# %%
-results = []
-for item in test_data['linux_questions'][:20]:
-    result = rag_call(item['question'], fido, llm)
-    item['result'] = result
-    results.append(item)
-
-# %%
-len(results)
-
-# %%
-df_results = pd.DataFrame(results)
-df_results.head()
-
-
-# %% [markdown]
-# ## Function Definitions
-
-# %% [markdown]
-# #### Helper to calculate cosine similarity between the provided JSON answer and the LLM answer
-
-# %%
-def calculate_similarity(answer, llm):
-    """Calculates the cosine similarity between 2 embeddings"""
-    dot_product = np.dot(answer, llm)
-    norm_answer = np.linalg.norm(answer)
-    norm_llm = np.linalg.norm(llm)
-    if norm_answer == 0 or norm_llm == 0:
-        return 0
-    return dot_product / (norm_answer * norm_llm)
-
-
-
-# %% [markdown]
-# #### Test Loop
-
-# %%
-def test_similarity(data: Dict = None, iterations: int = 20) -> List[Dict]:
-    results = []
-    manager = EmbeddingMgr(model_name="all-MiniLM-L6-v2", verbose=False)
-    store = VectorStore()
-    api_key = os.getenv("GROQ_API_KEY")
-    llm = ChatGroq(groq_api_key=api_key, model_name="llama-3.1-8b-instant", temperature=0.1, max_tokens=1024)
-    fido = Retriever(store, manager)
-
-    for item in data['linux_questions'][:iterations]:
-        result = rag_call(item['question'], fido, llm)
-        X = manager.generate_embeddings(item['answer'])
-        Y = manager.generate_embeddings(result[1])
-        similarity = calculate_similarity(X, Y)
-        item['result'] = result
-        item['similarity'] = similarity
-        
-        results.append(item)
-
-    
-    return results
-
-# %%
-answer_emb = emb_mgr.generate_embeddings(df_results['answer'][0])
-llm_emb = emb_mgr.generate_embeddings(df_results['result'][0][1])
-
-# %%
-similarity = calculate_similarity(answer_emb, llm_emb)
-
-# %%
-print(similarity)
-
-# %%
-results = test_similarity(test_data, iterations=20)
 
 # %% [markdown]
 # ### Citations
@@ -593,23 +369,5 @@ results = test_similarity(test_data, iterations=20)
 #
 #
 # Tunstall, Lewis; Werra, Leandro von; Wolf, Thomas. Natural Language Processing with Transformers, Revised Edition (p. 4). (Function). Kindle Edition. 
-
-# %% [markdown]
-# #### Average Similrity
-
-# %%
-len(results)
-
-# %%
-df = pd.DataFrame(results)
-df.head()
-print(df['similarity'].mean())
-
-# %% [markdown]
-# #### Scrub the data
-
-# %%
-new_data = test_data['linux_questions'][::]
-new_data
 
 # %%
