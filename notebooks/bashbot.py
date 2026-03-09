@@ -23,20 +23,6 @@ from langchain_groq import ChatGroq
 # %% [markdown]
 # ### load the corpus from the text files in the data directory
 
-# %%
-# def load_txt_corpus():
-#     """ Loads all text files from the ./data directory."""
-#     loader = DirectoryLoader(
-#         "../data",
-#         glob="**/*.txt",
-#         loader_cls=TextLoader,
-#         loader_kwargs={'encoding': 'utf-8'},
-#         show_progress=True
-#     )
-#     corpus = loader.load()
-#
-#     return corpus
-
 # %% [markdown]
 # ### process text _(*.txt)_ files in the data directory
 
