@@ -6,3 +6,4 @@ scripts/__pycache__
 /.DS_Store
 /test/.ipynb_checkpoints
 .envrc
+.ipynb_checkpoints
