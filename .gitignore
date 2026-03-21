@@ -5,3 +5,4 @@ scripts/__pycache__
 /notebooks/__pycache__
 /.DS_Store
 /test/.ipynb_checkpoints
+.envrc
