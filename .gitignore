@@ -7,3 +7,4 @@ scripts/__pycache__
 /test/.ipynb_checkpoints
 .envrc
 .ipynb_checkpoints
+/hal_client.sh
