@@ -16,6 +16,7 @@ from vectorstore import VectorStore
 from embeddings import EmbeddingMgr
 from retriever import Retriever
 from langchain_groq import ChatGroq
+from ollama import chat
 
 # %% [markdown]
 # ## Function Definitions
