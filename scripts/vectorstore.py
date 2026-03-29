@@ -1,24 +1,8 @@
-# %% [markdown]
-# ### VectorSrore Database
-
-# %%
-import os
-import sys
-import numpy as np
-import uuid
-import shutil
-from pathlib import Path
-from sentence_transformers import SentenceTransformer
 import chromadb
+import uuid
 from chromadb.config import Settings
 from chromadb.utils.batch_utils import create_batches
-from typing import List, Dict, Any, Tuple
-from sklearn.metrics.pairwise import cosine_similarity
-from langchain_core.documents import Document
-from langchain_community.document_loaders import DirectoryLoader, TextLoader #,PyPDFLoader, PyMuPDFLoader for PDFs in the future
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-# %%
 class VectorStore:
     """Manages embeddings in a vector database"""
 
@@ -36,14 +20,6 @@ class VectorStore:
         self.collection = None
         self._initialize_store()
 
-    def remove_store(self):
-        """Removes any existing local db store files"""
-        # First remove any existing store if one is already there
-        store_path = Path(self.persist_directory)
-        if store_path.exists() and store_path.is_dir():
-            shutil.rmtree(store_path)
-            
-        
     def _initialize_store(self):
         """Initialize the ChromaDB client and collection"""
         try:
@@ -56,7 +32,7 @@ class VectorStore:
                 name=self.collection_name,
                 metadata={"description": "Bash commands document embeddings for RAG"}
             )
-            print(f"Vector store insitialized for collection {self.collection_name}")
+            print(f"Vector store initialized for collection {self.collection_name}")
             print(f"Exisiting documents in collection: {self.collection.count()}")
 
         except Exception as e:
@@ -97,7 +73,7 @@ class VectorStore:
             documents_text.append(doc.page_content)
 
             # Embedding vetor
-            embeddings_list.append(embedding.tolist())
+            embeddings_list.append(embedding)
 
         # Add it to the collection
         try:

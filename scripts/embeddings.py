@@ -1,71 +1,63 @@
-
-# %% [markdown]
-# ### Embedding Manager
-
-# %% [markdown]
-# I want the flexibility to have pluggable vector store implementations. I am going to wrap this part in classes.
-# Inspiration for this came from Krish Naik's YouTube video
-# https://youtu.be/o126p1QN_RI?si=7xC5H47A3iuu52RK
-# and pixegami https://youtu.be/2TJxpyO3ei4?si=zPNEsAFWWy5Cenzq
-#
-
-# %%
 import numpy as np
-import uuid
-import os
-from sentence_transformers import SentenceTransformer
 import chromadb
-from chromadb.config import Settings
-from chromadb.utils.batch_utils import create_batches
+import ollama
 from typing import List, Dict, Any, Tuple
-from sklearn.metrics.pairwise import cosine_similarity
+from langchain_community.document_loaders import TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_ollama import OllamaEmbeddings
+from langchain_classic.chains import RetrievalQA
+from langchain_community.llms import Ollama
 
-# %%
 class EmbeddingMgr:
     """This class manages the embedding implementation.
-    For now I am going to use a SentenceTransformer of
-    some kind."""
+    """
 
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+    def __init__(self, embedding_model_name: str = "nomic-embed-text") -> List[Any]:
         """
         ctor
 
         Args:
-            model_name: model name for sentence embeddings.
+            model_name: embedding model name for embeddings.
 
-        Notes: For now I am using HuggingFace models.
+        Returns:
+            List of embeddings
         """
 
-        self.model_name = model_name
+        self.embedding_model_name = embedding_model_name
         self.model = None
-        self._load_model()
+        self._load_components()
         
-    def _load_model(self):
-        """This method loads the model defined in the ctor."""
+    def _load_components(self):
+        """This method loads the embedding model defined in the ctor."""
         try:
-            print(f"Loading model {self.model_name}.")
-            self.model = SentenceTransformer(self.model_name)
-            print(f"Model loaded successfully.")
-            print(f"Embedding dimension: {self.model.get_sentence_embedding_dimension()}")
+            print(f"Loading Embedding model {self.embedding_model_name}.")
+            self.model = OllamaEmbeddings(model=self.embedding_model_name)
+            print(f"Embedding Model {self.model} loaded successfully.")
         except Exception as e:
-            print(f"Exception while loading model {self.model_name}: {e}")
+            print(f"Exception while loading {self.embedding_model_name}: {e}")
             raise
         
-    def generate_embeddings(self, texts: List[str]) -> np.ndarray:
+    def add_embeddings(self, texts):
         """
         Generate embeddings for a list of text strings
 
         Args:
             texts: List of strings
-
-        Returns:
-            numpy array of embeddings with shape (len(texts), embedding_dim)
         """
         if not self.model:
             raise ValueError("Model has not been loaded.")
-
+        
         print(f"Generating embeddings for {len(texts)} strings.")
-        embeddings = self.model.encode(texts, show_progress_bar=True)
-        print(f"Generated embeddings with shape: {embeddings.shape}")
+
+        embeddings = []
+        for chunk in texts:
+        # generate embeddings
+            embedding = ollama.embeddings(
+                model= self.embedding_model_name,
+                prompt=chunk.page_content
+            )["embedding"]
+
+            embeddings.append(embedding)
+
         return embeddings
-    
