@@ -93,7 +93,7 @@ def prompt_for_question(llm_name, embeddingmgr, vector_store) -> Tuple:
 # ### main()
 
 # %%
-def main():
+def main(llm_name: str = "granite3.3:8b"):
     """
     Main program to run bashbot
 
@@ -118,7 +118,6 @@ def main():
     args = parser.parse_args()
 
     # Parser passed so initialize the store and manager
-    llm_name = "llama3"
     loader = None
     emb_mgr = EmbeddingMgr()
     vector_store = VectorStore()
@@ -158,3 +157,5 @@ def main():
 if __name__ == "__main__":
    main()
 
+
+# %%
