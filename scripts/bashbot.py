@@ -2,7 +2,9 @@
 # %% [markdown]
 # # Source Code for bashbot.py
 #
-# This notebook is used by jupytext to convert to and from a Python script _'jupytext --from notebook --to py --output ../scripts/bashbot.py bashbot.ipynb'_
+# This notebook is used by jupytext to convert to and from a Python script
+#
+# `jupytext --from notebook --to py --output ../scripts/bashbot.py bashbot.ipynb`
 
 # %%
 import os
@@ -13,7 +15,10 @@ import ollama
 from typing import List, Dict, Any, Tuple
 from pathlib import Path
 from langchain_core.documents import Document
-from langchain_community.document_loaders import DirectoryLoader, TextLoader #,PyPDFLoader, PyMuPDFLoader for PDFs in the future
+from langchain_community.document_loaders import (
+    DirectoryLoader,
+    TextLoader,
+)  # ,PyPDFLoader, PyMuPDFLoader for PDFs in the future
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from vectorstore import VectorStore
 from embeddings import EmbeddingMgr
@@ -27,35 +32,35 @@ from ollama import chat
 # ### prompt for a single question and return the answer
 
 # %%
-def get_relavent_docs(query, embedding_manager, vector_store, top_k=3):
+def get_relavent_docs(query, embedding_manager, vector_store, top_k=3) -> List[List]:
     # Get embedding for question
     question_embedding = ollama.embeddings(
-        model=embedding_manager.embedding_model_name,
-        prompt=query
+        model=embedding_manager.embedding_model_name, prompt=query
     )["embedding"]
 
     # Find relevant chunks
     results = vector_store.collection.query(
-        query_embeddings=[question_embedding],
-        n_results=top_k
-    )         
-#    print(results)
+        query_embeddings=[question_embedding], n_results=top_k
+    )
+    #    print(results)
     return results
 
 
 # %%
-def send_question(query, llm, embedding_manager, vector_store, top_k=3, pure: bool = False) -> Tuple:
+def send_question(
+    query, llm, embedding_manager, vector_store, top_k=3, pure: bool = False
+) -> Tuple:
     contex = ""
     found = 0
 
     if not pure:
         results = get_relavent_docs(query, embedding_manager, vector_store, top_k)
         found = results["ids"]
-        if len(found[0]) > 0:    
+        if len(found[0]) > 0:
             # Build context from retrieved chunks
             context = "\n\n".join(results["documents"][0])
         else:
-            return ("No relavent documents found.", 0)   
+            return ("No relavent documents found.", 0)
 
     prompt = f"""You are a professional AI assistant that specializes in answering
         questions about Linux commands.
@@ -67,15 +72,9 @@ def send_question(query, llm, embedding_manager, vector_store, top_k=3, pure: bo
         Question: {query}
         
         Answer:"""
- 
-    # generate answer 
-    response = ollama.chat(
-        model=llm,
-        messages=[{
-            "role": "user",
-            "content": prompt
-        }]
-    )
+
+    # generate answer
+    response = ollama.chat(model=llm, messages=[{"role": "user", "content": prompt}])
 
     return (found, response["message"]["content"])
 
@@ -85,9 +84,20 @@ def prompt_for_question(llm_name, embeddingmgr, vector_store) -> Tuple:
     """prompt for a single question and return the answer"""
     question = input()
     if question.upper() == "QUIT":
-        return "QUIT"
+        return (0, "QUIT")
 
     return send_question(question, llm_name, embeddingmgr, vector_store)
+
+# %%
+def format_results(results: Tuple) -> str:
+    header = "==== Documents Found ===="
+    separator = "======== Answer ========="
+    footer = "-------------------------"
+    docs, answer = results
+    found = f"Found {len(docs[0])} documents."
+    doc_line = f"   {docs}"
+    return f"\n{header}\n\n{found}\n{doc_line}\n\n{separator}\n\n{answer}\n\n{footer}\n"
+
 
 # %% [markdown]
 # ### main()
@@ -105,15 +115,35 @@ def main(llm_name: str = "granite3.3:8b"):
     if sys.version_info.major != 3 or sys.version_info.minor < 12:
         print("python version 3.12 or greater is required.")
         return
-    
+
     # Parse commandline for args
     parser = argparse.ArgumentParser(
-                    prog='bashbot',
-                    description='RAG chatbot agent for linux commands.',
-                    epilog='Duplicate records are possible if run with --add flag.')
+        prog="bashbot",
+        description="RAG chatbot agent for linux commands.",
+        epilog="Duplicate records are possible if run with --add flag.",
+    )
 
-    parser.add_argument('-d', '--delete', action='store_const', const='delete', help='deletes the vector store')    # delete the current db 
-    parser.add_argument('-a', '--add', action='store_const', const='add', help='add entries to the vector store')   # add records to the db
+    parser.add_argument(
+        "-d",
+        "--delete",
+        action="store_const",
+        const="delete",
+        help="deletes the vector store",
+    )  # delete the current db
+    parser.add_argument(
+        "-a",
+        "--add",
+        action="store_const",
+        const="add",
+        help="add entries to the vector store",
+    )  # add records to the db
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_const",
+        const="verbose",
+        help="emit verbose output",
+    )  # verbose output
 
     args = parser.parse_args()
 
@@ -127,13 +157,29 @@ def main(llm_name: str = "granite3.3:8b"):
         print("Deleting the vector store...")
         store_path = Path("../data/vector_store/")
         print(f"Removing vector store at {store_path}.")
-        shutil.rmtree(store_path, ignore_errors=True) 
+        shutil.rmtree(store_path, ignore_errors=True)
         print("Store deleted. Rerun the application with -a to create with new data.")
-        return 0   
+        return 0
     elif args.add:
         print("Adding new data...")
+
+        # Create a Loader
         loader = Loader()
+
+        # Process the files
+        print("Processing files.")
         loader.process_files()
+
+        # Combine chunks into a corpus for embeddings
+        texts = [doc for doc in loader.chunks]
+
+        # Use the EmbeddingMgr class to generate them
+        print("Generating embeddings...")
+        embeddings = emb_mgr.add_embeddings(texts)
+
+        # Add the documents to the vector store
+        print("Inserting into vector store...")
+        vector_store.add_documents(loader.chunks, embeddings)
     else:
         print("Preparing LLM...")
 
@@ -141,21 +187,28 @@ def main(llm_name: str = "granite3.3:8b"):
             # Prompt for question
             print("\nEnter your question ('quit' to exit):")
             try:
-                docs_found, result = prompt_for_question(llm_name=llm_name, embeddingmgr=emb_mgr, vector_store=vector_store)
+                results = prompt_for_question(
+                    llm_name=llm_name, embeddingmgr=emb_mgr, vector_store=vector_store
+                )
+                found, answer = results
             except Exception as e:
                 print(f"An error occurred {e}")
                 return
 
             # Look for quit
-            if result == "QUIT":
+            if answer == "QUIT":
                 print("Goodbye.")
                 return
 
-            print(f"found {len(docs_found[0])}\n{docs_found}\n{result}")
+            if args.verbose:
+                print(format_results(results))
+            else:
+                found, answer = results
+                print(f"\n{answer}\n")
 
 # %%
 if __name__ == "__main__":
-   main()
+    main()
 
 
 # %%
