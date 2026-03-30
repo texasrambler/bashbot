@@ -1,7 +1,0 @@
-gst-stats-1.0 - print info gathered from a GStreamer log file gst-stats-1.0 is
-a tool that analyses information collected from a log file based on GStreamer
-tracer messages.  gst-stats-1.0 accepts the following arguments and options:
-Name of a file Print help synopsis and available FLAGS Show all help options
-Show Gstreamer options The GStreamer team at http://gstreamer.freedesktop.org/
-
-

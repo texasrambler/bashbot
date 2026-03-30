@@ -1,5 +1,0 @@
-unicode_stop - revert keyboard and console from unicode mode The command will
-more-or-less undo the effect of It puts the keyboard in ASCII (XLATE) mode,
-and clears the console UTF-8 mode.  Andries Brouwer <aeb@cwi.nl>
-
-

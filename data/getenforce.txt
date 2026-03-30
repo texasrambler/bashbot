@@ -1,4 +1,0 @@
-getenforce - get the current mode of SELinux reports whether SELinux is
-enforcing, permissive, or disabled.  Dan Walsh, <dwalsh@redhat.com>
-
-

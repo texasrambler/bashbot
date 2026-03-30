@@ -1,8 +1,0 @@
-setenforce - modify the mode SELinux is running in Use or to put SELinux in
-enforcing mode.
-Use or to put SELinux in permissive mode.
-
-If SELinux is disabled and you want to enable it, or SELinux is enabled and
-you want to disable it, please see Dan Walsh, <dwalsh@redhat.com>
-
-

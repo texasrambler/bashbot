@@ -1,6 +1,0 @@
-prtstat - print statistics of a process
-prints the statistics of the specified process.	 This information comes from
-the file.  Print the information in raw format.	 Show the version information
-for source of the information uses.
-
-

@@ -1,8 +1,0 @@
-uchardet - Universal Charset Detector uchardet CLI is an encoding detector
-utility, which takes one or several files in unknown character encoding
-without any additional information, and attempts to determine the encoding of
-the texts. Returned encoding names are iconv-compatible.  uchardet [Options]
-[File]...  -v Print version and build information.  -h Print help text.
-uchardet Command Line Interface
-
-
