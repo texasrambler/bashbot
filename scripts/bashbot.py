@@ -32,7 +32,7 @@ from ollama import chat
 # ### prompt for a single question and return the answer
 
 # %%
-def get_relavent_docs(query, embedding_manager, vector_store, top_k=3) -> List[List]:
+def get_relavent_docs(query, embedding_manager, vector_store, top_k=3, threshold=0.5, verbose=False) -> List[List]:
     # Get embedding for question
     question_embedding = ollama.embeddings(
         model=embedding_manager.embedding_model_name, prompt=query
@@ -42,25 +42,50 @@ def get_relavent_docs(query, embedding_manager, vector_store, top_k=3) -> List[L
     results = vector_store.collection.query(
         query_embeddings=[question_embedding], n_results=top_k
     )
-    #    print(results)
-    return results
+
+    # Return documents that meet the threshold
+    fetched_docs = []
+
+    if results['documents'] and results['documents'][0]:
+        ids = results['ids'][0]
+        documents = results['documents'][0]
+        metadatas = results['metadatas'][0]
+        distances = results['distances'][0]
+
+        for i, (doc_id, document, metadata, distance) in enumerate(zip(ids, documents, metadatas, distances)):
+            # Convert distances from chromadb cosine to similarity
+            similarity = 1 - distance
+            if similarity >= threshold:
+                fetched_docs.append({
+                    'id':doc_id,
+                    'content': document,
+                    'metadata': metadata,
+                    'similarity_score': similarity,
+                    'distance': distance,
+                    'rank': i + 1
+                })
+
+    return fetched_docs
 
 
 # %%
 def send_question(
-    query, llm, embedding_manager, vector_store, top_k=3, pure: bool = False
+    query, llm, embedding_manager, vector_store, top_k : int = 3, pure: bool = False, verbose: bool = False
 ) -> Tuple:
     contex = ""
     found = 0
 
     if not pure:
-        results = get_relavent_docs(query, embedding_manager, vector_store, top_k)
-        found = results["ids"]
-        if len(found[0]) > 0:
+        results = get_relavent_docs(query, embedding_manager, vector_store, top_k=top_k, verbose=verbose)
+        found = len(results)
+        if verbose:
+            print(f"Found {found} documents\n{results}")
+        if found > 0:
             # Build context from retrieved chunks
-            context = "\n\n".join(results["documents"][0])
+            for result in results:
+                context = "\n\n".join(result["content"])
         else:
-            return ("No relavent documents found.", 0)
+            return (0, "No documents found.")
 
     prompt = f"""You are a professional AI assistant that specializes in answering
         questions about Linux commands.
@@ -80,13 +105,13 @@ def send_question(
 
 
 # %%
-def prompt_for_question(llm_name, embeddingmgr, vector_store) -> Tuple:
+def prompt_for_question(llm_name, embeddingmgr, vector_store, verbose=False) -> Tuple:
     """prompt for a single question and return the answer"""
     question = input()
     if question.upper() == "QUIT":
         return (0, "QUIT")
 
-    return send_question(question, llm_name, embeddingmgr, vector_store)
+    return send_question(question, llm_name, embeddingmgr, vector_store, verbose=verbose)
 
 # %%
 def format_results(results: Tuple) -> str:
@@ -94,9 +119,8 @@ def format_results(results: Tuple) -> str:
     separator = "======== Answer ========="
     footer = "-------------------------"
     docs, answer = results
-    found = f"Found {len(docs[0])} documents."
-    doc_line = f"   {docs}"
-    return f"\n{header}\n\n{found}\n{doc_line}\n\n{separator}\n\n{answer}\n\n{footer}\n"
+    found = f"Found {docs} documents."
+    return f"\n{header}\n\n{found}\n\n{separator}\n\n{answer}\n\n{footer}\n"
 
 
 # %% [markdown]
@@ -188,7 +212,7 @@ def main(llm_name: str = "granite3.3:8b"):
             print("\nEnter your question ('quit' to exit):")
             try:
                 results = prompt_for_question(
-                    llm_name=llm_name, embeddingmgr=emb_mgr, vector_store=vector_store
+                    llm_name=llm_name, embeddingmgr=emb_mgr, vector_store=vector_store, verbose=args.verbose
                 )
                 found, answer = results
             except Exception as e:
