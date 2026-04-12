@@ -12,3 +12,5 @@ scripts/__pycache__
 /data.bak
 /data.mac
 /logs/ollama.log
+/.idea
+/notebooks/.DS_Store

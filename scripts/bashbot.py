@@ -11,6 +11,8 @@ import os
 import sys
 import argparse
 import shutil
+from tabnanny import verbose
+
 import ollama
 from typing import List, Dict, Any, Tuple
 from pathlib import Path
@@ -32,72 +34,79 @@ from ollama import chat
 # ### prompt for a single question and return the answer
 
 # %%
-def get_relavent_docs(query, embedding_manager, vector_store, top_k=3, threshold=0.5, verbose=False) -> List[List]:
+def get_relevant_docs(query, embedding_manager, vector_store, top_k=10, verbose=False, threshold=0.6):
     # Get embedding for question
     question_embedding = ollama.embeddings(
         model=embedding_manager.embedding_model_name, prompt=query
     )["embedding"]
 
     # Find relevant chunks
-    results = vector_store.collection.query(
+    query_results = vector_store.collection.query(
         query_embeddings=[question_embedding], n_results=top_k
     )
 
-    # Return documents that meet the threshold
-    fetched_docs = []
 
-    if results['documents'] and results['documents'][0]:
-        ids = results['ids'][0]
-        documents = results['documents'][0]
-        metadatas = results['metadatas'][0]
-        distances = results['distances'][0]
+    ç = []
+    if verbose:
+#        print(query_results)
+        print(f"filtering based on threshold {threshold}...")
 
-        for i, (doc_id, document, metadata, distance) in enumerate(zip(ids, documents, metadatas, distances)):
-            # Convert distances from chromadb cosine to similarity
-            similarity = 1 - distance
-            if similarity >= threshold:
-                fetched_docs.append({
-                    'id':doc_id,
-                    'content': document,
-                    'metadata': metadata,
-                    'similarity_score': similarity,
-                    'distance': distance,
-                    'rank': i + 1
-                })
+    filtered_results = []
+    for i, distance in enumerate(query_results['distances'][0]):
+        similarity = 1 - distance # Convert to similarity
+        if similarity >= threshold:
+            filtered_results.append({
+                "id": query_results['ids'][0][i],
+                "document": query_results['documents'][0][i],
+                "metadata": query_results['metadatas'][0][i],
+                "similarity": similarity
+            })
 
-    return fetched_docs
+    if verbose:
+        print(filtered_results)
+
+    return filtered_results
 
 
 # %%
 def send_question(
-    query, llm, embedding_manager, vector_store, top_k : int = 3, pure: bool = False, verbose: bool = False
+    query, llm, embedding_manager, vector_store, top_k=10, pure: bool = False, verbose=False, threshold=0.6
 ) -> Tuple:
-    contex = ""
+    context = ""
     found = 0
 
     if not pure:
-        results = get_relavent_docs(query, embedding_manager, vector_store, top_k=top_k, verbose=verbose)
+        results = get_relevant_docs(query, embedding_manager, vector_store, top_k, verbose, threshold)
         found = len(results)
-        if verbose:
-            print(f"Found {found} documents\n{results}")
         if found > 0:
             # Build context from retrieved chunks
-            for result in results:
-                context = "\n\n".join(result["content"])
+            documents = []
+            for res in results:
+                documents.append(res["document"])
+            context = "\n\n".join(documents)
         else:
-            return (0, "No documents found.")
+            return (0, "No relevent documents found.")
 
-    prompt = f"""You are a professional AI assistant that specializes in answering
-        questions about Linux commands.
-        Use ONLY the following context to answer the question accurately and concisely.
-        
-        Context:
-        {context}
-        
-        Question: {query}
-        
-        Answer:"""
+        prompt = f"""You are a professional AI assistant that specializes in answering
+            questions about Linux commands.
+            Use ONLY the following context to answer the question accurately and concisely.
 
+            Context:
+            {context}
+
+            Question: {query}
+
+            Answer:"""
+    else:
+        prompt = f"""You are a professional AI assistant that specializes in answering
+            questions about Linux commands.
+
+            Context:
+            {context}
+
+            Question: {query}
+
+            Answer:"""
     # generate answer
     response = ollama.chat(model=llm, messages=[{"role": "user", "content": prompt}])
 
@@ -105,13 +114,13 @@ def send_question(
 
 
 # %%
-def prompt_for_question(llm_name, embeddingmgr, vector_store, verbose=False) -> Tuple:
+def prompt_for_question(llm_name, embeddingmgr, vector_store, verbose=False, threshold=0.6) -> Tuple:
     """prompt for a single question and return the answer"""
     question = input()
     if question.upper() == "QUIT":
         return (0, "QUIT")
 
-    return send_question(question, llm_name, embeddingmgr, vector_store, verbose=verbose)
+    return send_question(question, llm_name, embeddingmgr, vector_store, verbose=verbose, threshold=threshold)
 
 # %%
 def format_results(results: Tuple) -> str:
@@ -168,6 +177,12 @@ def main(llm_name: str = "granite3.3:8b"):
         const="verbose",
         help="emit verbose output",
     )  # verbose output
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        type=float,
+        default=0.6, help="The similarity threshold (defaults to 0.6)"
+    )  # threshold
 
     args = parser.parse_args()
 
@@ -212,7 +227,7 @@ def main(llm_name: str = "granite3.3:8b"):
             print("\nEnter your question ('quit' to exit):")
             try:
                 results = prompt_for_question(
-                    llm_name=llm_name, embeddingmgr=emb_mgr, vector_store=vector_store, verbose=args.verbose
+                    llm_name=llm_name, embeddingmgr=emb_mgr, vector_store=vector_store, verbose=args.verbose, threshold=args.threshold
                 )
                 found, answer = results
             except Exception as e:
