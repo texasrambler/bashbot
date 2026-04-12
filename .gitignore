@@ -11,3 +11,4 @@ scripts/__pycache__
 /data
 /data.bak
 /data.mac
+/logs/ollama.log
