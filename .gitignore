@@ -14,3 +14,5 @@ scripts/__pycache__
 /logs/ollama.log
 /.idea
 /notebooks/.DS_Store
+main.py
+pyproject.toml
