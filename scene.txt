@@ -1,0 +1,63 @@
+1. Describe project 
+
+My chatbot project is RAG implementation using  a local Ollama model.
+
+My goal was to create an implementation that only returns results based on
+the context provided by  a local vector database.
+
+On the right is a crude diagram of the design. There are 2 pipelines that are
+utilized. The first is an ingestion pipeline that reads input from files located
+in the data directory and performs the cleaning, tokenization and embedding.
+
+These are stored as chunked documents in the vector database (currently a chromadb
+implementation backed by a sqllite file).
+
+The operational pipeline (the middle and right portions)
+then prompts a user for a question, performs a similarity
+search based on a threshold provided at runtime, or the default value of 0.6.
+
+The results are then returned  (currently the max number of results is 10).
+
+If there are no similar documents found in the vector database, then no LLM prompt
+is generated and no search performed.
+
+If documents are returned, thay are concatenated into a context that is placed into
+a prompt and sent to the LLM and the response is diplayed.
+
+
+2. Data generation
+
+I currently have 2 bash scripts that generate the data from the builtin commands and
+the exisitng manpages of commands on the system.
+
+-- run builtin
+-- start man2plain
+ 
+==========================================
+Scene 2
+==========================================
+-- bashbot -h
+the commandline script has a help function which is displayed
+
+start the bashbot -d
+
+==========================================
+Scene 3
+==========================================
+btop
+
+==========================================
+Scene 4
+==========================================
+demo without verbose
+
+describe the ls command
+how do you remove all files in a directory
+describe the chmod command
+what is an inode
+
+what is the unladen flight velocity of an african sparrow
+
+demo with verbose
+
+demo with threshold and verbose -t 0.65 0.66 0.67
