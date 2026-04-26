@@ -1,19 +1,11 @@
-import numpy as np
-import chromadb
 import ollama
-from typing import List, Dict, Any, Tuple
-from langchain_community.document_loaders import TextLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.vectorstores import Chroma
 from langchain_ollama import OllamaEmbeddings
-from langchain_classic.chains import RetrievalQA
-from langchain_community.llms import Ollama
 
 class EmbeddingMgr:
     """This class manages the embedding implementation.
     """
 
-    def __init__(self, embedding_model_name: str = "nomic-embed-text") -> List[Any]:
+    def __init__(self, embedding_model_name: str = "nomic-embed-text"):
         """
         ctor
 

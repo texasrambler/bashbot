@@ -1,6 +1,5 @@
 from pathlib import Path
-from langchain_core.documents import Document
-from langchain_community.document_loaders import DirectoryLoader, TextLoader #,PyPDFLoader, PyMuPDFLoader for PDFs in the future
+from langchain_community.document_loaders import TextLoader #,PyPDFLoader, PyMuPDFLoader for PDFs in the future
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 class Loader:
@@ -11,7 +10,7 @@ class Loader:
         self.documents = []
         self.path = Path(path_name)
         self.glob = glob
-        self.chunks = None
+        self.chunks = []
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
 

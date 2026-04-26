@@ -7,25 +7,16 @@
 # `jupytext --from notebook --to py --output ../scripts/bashbot.py bashbot.ipynb`
 
 # %%
-import os
 import sys
 import argparse
 import shutil
-from tabnanny import verbose
 
 import ollama
-from typing import List, Dict, Any, Tuple
+from typing import Tuple
 from pathlib import Path
-from langchain_core.documents import Document
-from langchain_community.document_loaders import (
-    DirectoryLoader,
-    TextLoader,
-)  # ,PyPDFLoader, PyMuPDFLoader for PDFs in the future
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from vectorstore import VectorStore
 from embeddings import EmbeddingMgr
 from loader import Loader
-from ollama import chat
 
 # %% [markdown]
 # ## Function Definitions
@@ -46,7 +37,6 @@ def get_relevant_docs(query, embedding_manager, vector_store, top_k=10, verbose=
     )
 
 
-    ç = []
     if verbose:
 #        print(query_results)
         print(f"filtering based on threshold {threshold}...")
@@ -229,7 +219,7 @@ def main(llm_name: str = "granite3.3:8b"):
                 results = prompt_for_question(
                     llm_name=llm_name, embeddingmgr=emb_mgr, vector_store=vector_store, verbose=args.verbose, threshold=args.threshold
                 )
-                found, answer = results
+                _, answer = results
             except Exception as e:
                 print(f"An error occurred {e}")
                 return
@@ -242,7 +232,7 @@ def main(llm_name: str = "granite3.3:8b"):
             if args.verbose:
                 print(format_results(results))
             else:
-                found, answer = results
+                _, answer = results
                 print(f"\n{answer}\n")
 
 # %%

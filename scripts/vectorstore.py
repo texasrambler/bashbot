@@ -1,10 +1,7 @@
-import numpy as np
+from chromadb.api.models.Collection import Collection
 import os
 import chromadb
 import uuid
-from chromadb.config import Settings
-from chromadb.utils.batch_utils import create_batches
-from typing import List, Dict, Any, Tuple
 
 class VectorStore:
     """Manages embeddings in a vector database"""
@@ -20,7 +17,7 @@ class VectorStore:
         self.collection_name = collection_name
         self.persist_directory = persist_directory
         self.client = None
-        self.collection = None
+        self.collection: Collection
         self._initialize_store()
 
     def _initialize_store(self):
@@ -42,7 +39,7 @@ class VectorStore:
             print(f"Error initializing vector store: {e}")
             raise
             
-    def add_documents(self, documents: List[Any], embeddings: np.ndarray):
+    def add_documents(self, documents, embeddings):
         """
         Add documents to the vector store
 
