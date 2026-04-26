@@ -75,7 +75,7 @@ def send_question(
                 documents.append(res["document"])
             context = "\n\n".join(documents)
         else:
-            return (0, "No relevent documents found.")
+            return (0, "No relevant documents found.")
 
         prompt = f"""You are a professional AI assistant that specializes in answering
             questions about Linux commands.
@@ -131,13 +131,13 @@ def main(llm_name: str = "granite3.3:8b"):
     Main program to run bashbot
 
     Args:
-        run_mode: [optional]
+        llm_name: [optional]
     """
 
     # Check for 3.13 minimum python version
     if sys.version_info.major != 3 or sys.version_info.minor < 12:
         print("python version 3.12 or greater is required.")
-        return
+        return None
 
     # Parse commandline for args
     parser = argparse.ArgumentParser(
@@ -177,7 +177,6 @@ def main(llm_name: str = "granite3.3:8b"):
     args = parser.parse_args()
 
     # Parser passed so initialize the store and manager
-    loader = None
     emb_mgr = EmbeddingMgr()
     vector_store = VectorStore()
 
@@ -209,6 +208,7 @@ def main(llm_name: str = "granite3.3:8b"):
         # Add the documents to the vector store
         print("Inserting into vector store...")
         vector_store.add_documents(loader.chunks, embeddings)
+        return 0
     else:
         print("Preparing LLM...")
 
@@ -222,12 +222,12 @@ def main(llm_name: str = "granite3.3:8b"):
                 _, answer = results
             except Exception as e:
                 print(f"An error occurred {e}")
-                return
+                return 1
 
             # Look for quit
             if answer == "QUIT":
                 print("Goodbye.")
-                return
+                return 0
 
             if args.verbose:
                 print(format_results(results))
